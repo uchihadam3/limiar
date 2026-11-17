@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LIMIAR</title>
+  <meta name="description" content="Terror e puzzle em primeira pessoa. Uma casa de muitas portas, e só uma saída verdadeira." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=IM+Fell+English+SC&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./src/style.css" />
+</head>
+<body>
+  <canvas id="view"></canvas>
+
+  <!-- HUD -->
+  <div id="hud" class="hidden">
+    <div id="crosshair"></div>
+    <div id="prompt"></div>
+    <div id="roomTitle"><div class="num"></div><div class="name"></div></div>
+    <div id="toast"></div>
+    <div id="invbar"></div>
+    <div id="hint-keys">E interagir · TAB inventário · J diário · ESC pausa</div>
+  </div>
+
+  <!-- Painéis -->
+  <div id="examine" class="panel hidden">
+    <div class="examine-inner">
+      <canvas id="examineCanvas" width="900" height="560"></canvas>
+      <div class="examine-text"></div>
+      <div class="close-hint">clique ou ESC para voltar</div>
+    </div>
+  </div>
+
+  <div id="inventory" class="panel hidden">
+    <div class="sheet">
+      <h2>Inventário</h2>
+      <div class="inv-grid"></div>
+      <div class="inv-desc"></div>
+      <div class="close-hint">TAB ou ESC para fechar</div>
+    </div>
+  </div>
+
+  <div id="journal" class="panel hidden">
+    <div class="sheet paper">
+      <h2>Diário</h2>
+      <div class="journal-list"></div>
+      <div class="close-hint">J ou ESC para fechar</div>
+    </div>
+  </div>
+
+  <div id="dial" class="panel hidden">
+    <div class="sheet dial-sheet">
+      <h2 class="dial-title"></h2>
+      <div class="dial-body"></div>
+      <div class="dial-actions">
+        <button class="btn" data-act="confirm">Confirmar</button>
+        <button class="btn ghost" data-act="cancel">Sair</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="pause" class="panel hidden">
+    <div class="sheet menu-sheet">
+      <h2>Pausa</h2>
+      <button class="btn" data-act="resume">Voltar ao jogo</button>
+      <button class="btn" data-act="options">Opções</button>
+      <button class="btn" data-act="savecode">Código de progresso</button>
+      <button class="btn ghost" data-act="tomenu">Menu principal</button>
+      <div class="save-note">O jogo salva sozinho a cada porta atravessada e a cada descoberta.</div>
+    </div>
+  </div>
+
+  <div id="menu">
+    <div class="menu-bg"></div>
+    <div class="menu-inner">
+      <h1 class="logo">LIMIAR</h1>
+      <div class="tagline">A casa tem muitas portas. Só uma é saída.</div>
+      <div class="menu-buttons">
+        <button class="btn" data-act="continue">Continuar</button>
+        <button class="btn" data-act="new">Novo jogo</button>
+        <button class="btn" data-act="endings">Finais</button>
+        <button class="btn" data-act="options">Opções</button>
+        <button class="btn" data-act="savecode">Código de progresso</button>
+      </div>
+      <div class="menu-foot">Use fones de ouvido. Jogue no escuro.</div>
+    </div>
+  </div>
+
+  <div id="modal" class="panel hidden">
+    <div class="sheet menu-sheet modal-sheet">
+      <h2 class="modal-title"></h2>
+      <div class="modal-body"></div>
+      <div class="modal-actions"><button class="btn" data-act="close">Fechar</button></div>
+    </div>
+  </div>
+
+  <div id="ending" class="hidden">
+    <div class="ending-text"></div>
+  </div>
+
+  <div id="fade"></div>
+  <div id="clickToPlay" class="hidden">Clique para continuar</div>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
