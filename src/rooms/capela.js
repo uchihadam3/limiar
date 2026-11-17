@@ -46,14 +46,18 @@ export function capela(game) {
     pew.position.set(x, 0, z); r.add(pew); r.collider(x - 1.07, x + 1.07, z - 0.22, z + 0.25);
   }
   // um banco com um xale esquecido
-  const shawl = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.02, 0.35), new THREE.MeshStandardMaterial({ color: 0x3a2a4a, roughness: 1 })); shawl.position.set(-1.2, 0.49, -1.6); r.add(shawl);
+  const shawl = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.02, 0.35), new THREE.MeshStandardMaterial({ color: 0x3a2a4a, roughness: 1 })); shawl.position.set(-1.2, 0.49, -0.75); r.add(shawl);
   r.interact(shawl, { label: 'Examinar o xale', onUse: () => game.ui.toast('Um xale de lã roxa, dobrado no banco da frente. Ainda tem cheiro de perfume. E está quente.') });
 
   // altar
   const altar = new THREE.Group();
   { const _o = new THREE.Mesh(new THREE.BoxGeometry(2.0, 1.0, 0.8), M.stone); altar.add(_o); _o.position.y = 0.5; }
-  const cloth = new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.02, 0.9), M.linen); cloth.position.y = 1.01; altar.add(cloth);
-  const drape = new THREE.Mesh(new THREE.PlaneGeometry(2.1, 0.5), new THREE.MeshStandardMaterial({ color: 0xd8d0c0, side: THREE.DoubleSide })); drape.position.set(0, 0.77, 0.45); altar.add(drape);
+  // toalha de linho (um tom mais escuro: perto do lampião, o branco puro estourava)
+  const linenM = new THREE.MeshStandardMaterial({ color: 0xa89c86, roughness: 1, side: THREE.DoubleSide });
+  const cloth = new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.02, 0.9), linenM); cloth.position.y = 1.01; altar.add(cloth);
+  const drape = new THREE.Mesh(new THREE.PlaneGeometry(2.1, 0.5), linenM); drape.position.set(0, 0.77, 0.45); altar.add(drape);
+  // levantada: a toalha fica dobrada lá atrás e a pedra do altar aparece
+  const foldCloth = () => { cloth.scale.set(1, 3, 0.32); cloth.position.set(0, 1.03, -0.29); drape.visible = false; };
   altar.traverse((o) => { o.castShadow = true; o.receiveShadow = true; });
   altar.position.set(0, 0.2, -4.6); r.add(altar);
   const step = new THREE.Mesh(new THREE.BoxGeometry(6, 0.2, 2.2), M.stone); step.position.set(0, 0.1, -4.4); step.receiveShadow = true; r.add(step);
@@ -64,11 +68,12 @@ export function capela(game) {
   const crossH = new THREE.Mesh(new THREE.BoxGeometry(0.28, 0.06, 0.04), M.brass); crossH.position.set(0, 1.6, -4.85); r.add(crossH);
   // caco V sob a toalha do altar
   let clothLifted = !!f['took:espelho5'];
+  if (f.toalha) foldCloth();
   r.hitbox(2.0, 0.3, 0.9, 0, 1.25, -4.6, {
     label: () => clothLifted ? 'A toalha do altar' : 'Levantar a toalha do altar', enabled: () => !(f.toalha && !f['took:espelho5']),
     onUse: () => {
       if (clothLifted) { game.ui.toast('Só pedra fria debaixo da toalha.'); return; }
-      clothLifted = true; game.flag('toalha', true); audio.paper();
+      clothLifted = true; game.flag('toalha', true); audio.paper(); foldCloth();
       placeItem(r, game, 'espelho5', 'espelho', 0.3, 1.24, -4.5, { label: 'Pegar o caco de espelho' });
       game.ui.toast('Sob a toalha, bem no centro do altar, um caco de espelho em forma de lágrima.');
     },
