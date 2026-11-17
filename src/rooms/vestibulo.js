@@ -2,6 +2,7 @@
 import * as THREE from 'three';
 import { Room, M, sparkle } from '../engine/room.js';
 import * as P from '../engine/props.js';
+import { stairsBehind } from './cima.js';
 import { paintTexture } from '../engine/textures.js';
 import { drawSymbol } from '../engine/symbols.js';
 import { audio } from '../engine/audio.js';
@@ -42,6 +43,14 @@ export function vestibulo(game) {
         audio.slam();
       },
     },
+  });
+
+  // a escadaria principal (parede leste), soterrada até ser liberada lá de cima
+  const escada = r.door({
+    id: 'escada', wall: 'e', at: 0, num: 20, symbol: 'coroa', style: 'arch', to: 'galeria', toDoor: 'escada', link: 'escada_principal',
+    label: 'a escadaria principal', verb: 'Subir a escadaria principal',
+    lock: { type: 'custom', check: () => !f.escada_livre, msg: 'A escadaria principal sobe para o andar de cima, mas está soterrada: vigas, uma cômoda partida, pedaços do teto.\nTudo caiu lá de cima. Daqui de baixo, não há como passar.' },
+    behind: (g) => { escada.rubble = stairsBehind(g, { up: true, rubble: !f.escada_livre }); },
   });
 
   // janelas ao lado da porta da frente
@@ -140,12 +149,14 @@ export function vestibulo(game) {
     ctx.fillStyle = '#0a0907';
     ctx.beginPath(); ctx.moveTo(w * 0.2, h * 0.85); ctx.lineTo(w * 0.2, h * 0.45); ctx.lineTo(w * 0.35, h * 0.3); ctx.lineTo(w * 0.5, h * 0.18); ctx.lineTo(w * 0.65, h * 0.3); ctx.lineTo(w * 0.8, h * 0.45); ctx.lineTo(w * 0.8, h * 0.85); ctx.fill();
     ctx.fillRect(w * 0.6, h * 0.12, w * 0.04, h * 0.15);
-    // janelas acesas: uma delas com uma pequena silhueta
+    // dez janelas escuras; só UMA acesa: andar de baixo (j === 1), a quarta da esquerda (i === 3), com uma criança
     for (let i = 0; i < 5; i++) for (let j = 0; j < 2; j++) {
       const x = w * (0.26 + i * 0.105), y = h * (0.5 + j * 0.16);
-      ctx.fillStyle = (i === 3 && j === 0) ? '#e8b060' : 'rgba(200,140,60,0.35)';
+      const on = i === 3 && j === 1;
+      ctx.fillStyle = on ? '#e8b060' : '#15110c';
       ctx.fillRect(x, y, w * 0.05, h * 0.09);
-      if (i === 3 && j === 0) { ctx.fillStyle = '#1a0d05'; ctx.beginPath(); ctx.arc(x + w * 0.025, y + h * 0.035, w * 0.008, 0, 7); ctx.fill(); ctx.fillRect(x + w * 0.018, y + h * 0.045, w * 0.014, h * 0.045); }
+      if (!on) { ctx.strokeStyle = '#2a2218'; ctx.lineWidth = 2; ctx.strokeRect(x, y, w * 0.05, h * 0.09); }
+      if (on) { ctx.fillStyle = '#1a0d05'; ctx.beginPath(); ctx.arc(x + w * 0.025, y + h * 0.035, w * 0.008, 0, 7); ctx.fill(); ctx.fillRect(x + w * 0.018, y + h * 0.045, w * 0.014, h * 0.045); }
     }
     ctx.fillStyle = '#d8d0c0'; ctx.beginPath(); ctx.arc(w * 0.85, h * 0.15, w * 0.03, 0, 7); ctx.fill();
   }, { key: 'casaPintura' });

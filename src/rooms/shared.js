@@ -44,13 +44,26 @@ export function drawPlaqueHalf(side) {
     }
     ctx.strokeStyle = '#3a2a10'; ctx.lineWidth = 10; ctx.strokeRect(12, 12, full - 24, h - 24);
     ctx.fillStyle = '#21160a';
-    ctx.font = `${Math.round(h * 0.1)}px "IM Fell English SC", Georgia, serif`;
     ctx.textBaseline = 'middle';
+    // cada linha é partida exatamente no ponto da rachadura: o pedaço "a" termina na
+    // borda quebrada da metade esquerda e o pedaço "b" começa na borda da metade direita
+    const breakAt = (y) => {
+      const t = (y / h) * (BREAK.length - 1), i = Math.min(BREAK.length - 2, Math.floor(t)), k = t - i;
+      return (BREAK[i] * (1 - k) + BREAK[i + 1] * k) * full;
+    };
+    const lineY = (i) => h * (0.24 + i * 0.18);
+    let size = Math.round(h * 0.1);
+    // a rachadura é em zigue-zague: olha a borda ao longo de toda a altura da letra
+    const edge = (y, sz, fn) => { let v = fn === 'min' ? Infinity : -Infinity; for (let k = -6; k <= 6; k++) { const x = breakAt(Math.max(0, Math.min(h - 1, y + (k / 6) * sz * 0.6))); v = fn === 'min' ? Math.min(v, x) : Math.max(v, x); } return v; };
+    const fits = (sz) => PLAQUE.every(([a, b], i) => {
+      const y = lineY(i);
+      return ctx.measureText(a).width <= edge(y, sz, 'min') - 46 && ctx.measureText(b).width <= full - edge(y, sz, 'max') - 72;
+    });
+    for (; size > 12; size--) { ctx.font = `${size}px "IM Fell English SC", Georgia, serif`; if (fits(size)) break; }
     PLAQUE.forEach(([a, b], i) => {
-      const y = h * (0.22 + i * 0.19);
-      const line = a + b;
-      ctx.textAlign = 'center';
-      ctx.fillText(line, full / 2, y);
+      const y = lineY(i);
+      ctx.textAlign = 'right'; ctx.fillText(a, edge(y, size, 'min') - 10, y);
+      ctx.textAlign = 'left'; ctx.fillText(b, edge(y, size, 'max') + 30, y);
     });
     ctx.restore();
     // borda quebrada escura
@@ -109,6 +122,9 @@ export function itemMesh(kind) {
     const face = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.85 });
     const disc = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.055, 0.018, 24), [side, face, face]);
     disc.position.y = 0.009; g.add(disc);
+  } else if (kind === 'pe') {
+    const bar = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.6, 8), M.iron); bar.rotation.z = Math.PI / 2; bar.position.y = 0.015; g.add(bar);
+    const hook = new THREE.Mesh(new THREE.TorusGeometry(0.035, 0.012, 6, 12, Math.PI), M.iron); hook.position.set(0.3, 0.05, 0); hook.rotation.z = -Math.PI / 2; g.add(hook);
   } else if (kind === 'vela') {
     const c = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.017, 0.12, 10), new THREE.MeshStandardMaterial({ color: 0x0c0a0a, roughness: 0.6 }));
     c.rotation.z = Math.PI / 2; c.position.y = 0.015; g.add(c);

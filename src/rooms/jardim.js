@@ -28,11 +28,12 @@ export function jardim(game) {
   };
   r.surfaceAt = (x, z) => (Math.abs(x) < 1.3 || Math.abs(z - 3) < 1.1) ? 'stone' : 'soil';
 
+  r.spawns = { sacada: { x: 6, z: 13.2, yaw: 0 } };
   r.door({ id: 'estufa', wall: 's', at: -6, num: 6, symbol: 'passaro', to: 'estufa', toDoor: 'portao', style: 'iron', link: 'portao' });
   r.door({ id: 'labirinto', wall: 'n', at: -6, num: 16, symbol: 'espiral', to: 'labirinto', toDoor: 'jardim', style: 'iron' });
   r.door({
-    id: 'capela', wall: 'n', at: 6, y: 5 * STEP_H, num: 17, symbol: 'sino', style: 'wood', link: 'capela',
-    lock: { type: 'key', item: 'chave_capela', msg: 'A porta da capela está trancada. Uma fechadura grande, antiga. Por uma fresta sai um cheiro de cera e flores secas.\nLá dentro, alguém deixou uma vela acesa.' },
+    id: 'capela', wall: 'n', at: 6, y: 5 * STEP_H, num: 17, symbol: 'sino', style: 'wood', link: 'capela', to: 'capela', toDoor: 'jardim',
+    lock: { type: 'key', item: 'chave_capela', consume: true, msg: 'A porta da capela está trancada. Uma fechadura grande, antiga. Por uma fresta sai um cheiro de cera e flores secas.\nLá dentro, alguém deixou uma vela acesa.' },
   });
   r.door({ id: 'jardineiro', wall: 'e', at: -2, num: 19, symbol: 'arvore', to: 'jardineiro', toDoor: 'jardim', style: 'wood' });
 
@@ -82,7 +83,7 @@ export function jardim(game) {
   // a criança na janela some quando você chega perto
   const childParts = childWin.children.filter((c) => c.material && c.material.color && c.material.color.getHex() === 0x1a0d05);
   r.onUpdate(() => { const d = Math.hypot(game.player.pos.x + 8, game.player.pos.z - 14); childParts.forEach((c) => { c.visible = d > 9; }); });
-  r.hitbox(24, 9, 0.3, 0, 4.5, 15.4, { label: 'Olhar a casa', dist: 20, enabled: () => game.player.pos.z > 6, onUse: () => game.ui.toast('A casa vista de trás. Seis janelas na fachada, e só algumas acesas.\nLá em cima, à direita, uma sacada com a porta fechada por cortinas.') });
+  r.hitbox(24, 9, 0.3, 0, 4.5, 15.4, { label: 'Olhar a casa', dist: 20, enabled: () => game.player.pos.z > 6, onUse: () => game.ui.toast('A casa vista de trás. Seis janelas na fachada, e só algumas acesas.\nLá em cima, à esquerda, uma sacada com a porta fechada por cortinas.') });
 
   // anexo de vidro da estufa (o caminho de volta)
   const gm = new THREE.MeshPhysicalMaterial({ color: 0x8aa0aa, roughness: 0.05, transparent: true, opacity: 0.14, side: THREE.DoubleSide, depthWrite: false });
@@ -113,9 +114,13 @@ export function jardim(game) {
     label: () => f.escada_sacada ? 'Subir até a sacada' : 'Olhar a sacada', dist: 3.2,
     onUse: () => {
       if (f.escada_sacada) {
-        audio.creak(0.08, 1.2, 220);
-        game.ui.toast('Você sobe até a sacada. A porta-balcão está trancada por dentro, e há algo pesado encostado do outro lado.\nAtrás das cortinas, uma voz de mulher cantarola a canção da caixinha. Quando você bate no vidro, ela para.', 8000);
-        setTimeout(() => audio.whisper(0.08), 1500);
+        if (!f.sacada_aberta) {
+          game.flag('sacada_aberta', true);
+          game.ui.toast('Você sobe. Antes que alcance a porta-balcão, escuta do outro lado um móvel pesado sendo arrastado.\nQuando chega lá em cima, a porta está entreaberta.', 6000);
+          setTimeout(() => game.transit('quarto_casal', 'sacada'), 2600);
+          return;
+        }
+        game.transit('quarto_casal', 'sacada');
         return;
       }
       if (f.escada_solta) {
@@ -153,6 +158,8 @@ export function jardim(game) {
     const st = new THREE.Mesh(new THREE.BoxGeometry(CAP_X1 - CAP_X0, (i + 1) * STEP_H, STEP_D * (5 - i)), M.stone);
     st.position.set(6, ((i + 1) * STEP_H) / 2, -12 + (STEP_D * (5 - i)) / 2); st.receiveShadow = true; st.castShadow = true; r.add(st);
   }
+  const crack = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 0.025), new THREE.MeshBasicMaterial({ color: 0x050505 }));
+  crack.rotation.x = -Math.PI / 2; crack.rotation.z = 0.08; crack.position.set(6, 3 * STEP_H + 0.003, -12 + STEP_D * 2.5); r.add(crack);
   r.hitbox(3.2, 1, 1.8, 6, 0.4, -11.1, { label: 'Contar os degraus', onUse: () => game.ui.toast('Cinco degraus de pedra gasta até a porta da capela. O do meio está rachado.') });
 
   // ---------- muros de sebe ao redor ----------
@@ -168,9 +175,8 @@ export function jardim(game) {
   const plank = surf('planks');
   const sbox = new THREE.Mesh(new THREE.BoxGeometry(5, 3.4, 6), plank); sbox.position.set(2.5, 1.7, 0); shed.add(sbox);
   const sroof = new THREE.Mesh(new THREE.BoxGeometry(5.8, 0.2, 7), M.dark); sroof.position.set(2.5, 3.6, 0); sroof.rotation.z = 0.25; shed.add(sroof);
-  const swin = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 0.7), lit); swin.position.set(-0.02, 1.7, 1.8); swin.rotation.y = -Math.PI / 2; shed.add(swin);
+  const swin = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 0.7), darkWin); swin.position.set(-0.02, 1.7, 1.8); swin.rotation.y = -Math.PI / 2; shed.add(swin);
   shed.position.set(12.05, 0, -2); r.add(shed);
-  r.light(0xffa050, 0.9, 4, 11.3, 1.8, -0.2, { flicker: 0.2 });
 
   // ---------- o lago, com a lua no fundo ----------
   const PX = -5, PZ = -3, PR = 3.0;
@@ -244,11 +250,9 @@ export function jardim(game) {
   // ---------- o anjo de pedra (sempre virado para você quando você volta) ----------
   const angel = angelStatue(); angel.position.set(-1.6, 0, -5.8); r.add(angel); r.collider(-2.0, -1.2, -6.2, -5.4);
   const ped = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.5, 0.9), M.stone); ped.position.set(-1.6, 0.25, -5.8); r.add(ped); angel.position.y = 0.5;
-  r.onEnter = (first) => {
-    const p = game.player.pos;
-    angel.lookAt(p.x, 0.5, p.z);
-    if (!first) setTimeout(() => audio.creak(0.03, 0.6, 90), 1200);
-  };
+  // virado para a torre da capela: o braço estendido aponta para o sino
+  angel.lookAt(3.6, 0.5, -13.25);
+  r.onEnter = (first) => { if (!first) setTimeout(() => audio.creak(0.03, 0.6, 90), 1200); };
   r.interact(angel, {
     label: 'Examinar o anjo',
     onUse: () => game.ui.toast('Um anjo de pedra, com um braço estendido. O musgo cobre tudo, menos o rosto: o rosto está limpo, como se alguém o lavasse todo dia.\nO dedo aponta para o alto da torre da capela.'),
@@ -264,9 +268,22 @@ export function jardim(game) {
   const wroof = new THREE.Mesh(new THREE.ConeGeometry(1.4, 0.8, 4), M.dark); wroof.rotation.y = Math.PI / 4; wroof.position.y = 2.6; well.add(wroof);
   well.traverse((o) => { o.castShadow = true; });
   well.position.set(-9.2, 0, 7.8); r.add(well); r.collider(-10.2, -8.2, 6.8, 8.8);
+  const newRope = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 1.3, 5), new THREE.MeshStandardMaterial({ color: 0x8a7a50 })); newRope.position.set(-9.2, 1.05, 7.8); newRope.visible = !!f.poco_corda; r.add(newRope);
+  const bucket = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.12, 0.25, 12, 1, true), new THREE.MeshStandardMaterial({ color: 0x5a4a32, side: THREE.DoubleSide })); bucket.position.set(-9.2, 0.95, 7.8); bucket.visible = !!f.poco_corda; r.add(bucket);
   r.interact(well, {
-    label: 'Olhar dentro do poço',
-    onUse: () => { audio.drip(); setTimeout(() => audio.drip(), 1400); game.ui.toast('A corda do balde apodreceu e caiu lá dentro. O poço é muito fundo. Lá embaixo, bem longe, algo prateado brilha.\nE você escuta água correndo, como um rio debaixo da terra.', 7000); },
+    label: () => f.poco_corda ? 'Olhar dentro do poço' : game.has('corda') ? 'Amarrar a corda e descer o balde' : 'Olhar dentro do poço',
+    onUse: () => {
+      if (!f.poco_corda && game.has('corda')) {
+        game.take('corda'); game.flag('poco_corda', true); newRope.visible = bucket.visible = true;
+        audio.creak(0.08, 2.5, 160);
+        setTimeout(() => { audio.drip(); audio.drip(); }, 1800);
+        setTimeout(() => { audio.creak(0.08, 2.0, 200); game.flag('took:ficha_peixe', true); game.give('ficha_peixe', true); game.ui.toast('Você amarra a corda nova no balde e desce, desce, desce. Lá no fundo, o balde bate em água corrente.<br>Quando você puxa de volta, dentro dele há <em>um disco de pedra com um peixe</em>, frio e prateado de lodo.', 7500); }, 3600);
+        game.ui.toast('A corda desenrola por um tempo longo demais...', 3000);
+        return;
+      }
+      audio.drip(); setTimeout(() => audio.drip(), 1400);
+      game.ui.toast(f.poco_corda ? 'A corda nova desce até sumir na escuridão. Lá embaixo, água corrente, como um rio debaixo da terra. A corda parece forte o bastante para aguentar uma pessoa.' : 'A corda do balde apodreceu e caiu lá dentro. O poço é muito fundo. Lá embaixo, bem longe, algo prateado brilha.\nE você escuta água correndo, como um rio debaixo da terra.', 7000);
+    },
   });
 
   // ---------- poste de luz no terraço ----------

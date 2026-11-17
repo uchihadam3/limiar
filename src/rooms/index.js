@@ -12,8 +12,12 @@ import { escadaria, adega, gabinete } from './subsolo.js';
 import { jardim } from './jardim.js';
 import { labirinto } from './labirinto.js';
 import { jardineiro } from './jardineiro.js';
+import { galeria, quarto_casal, sotao, observatorio } from './cima.js';
+import { capela } from './capela.js';
+import { musica } from './musica.js';
 
 export const ROOMS = {
   vestibulo, biblioteca, jantar, corredor, cozinha, estufa, quarto, escadaria, adega, gabinete,
   jardim, labirinto, jardineiro,
+  galeria, quarto_casal, sotao, observatorio, capela, musica,
 };

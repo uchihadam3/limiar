@@ -46,6 +46,20 @@ const DRAWINGS = {
     ctx.fillStyle = '#c84a6a'; ctx.font = 'bold 34px "Comic Sans MS", cursive'; ctx.textAlign = 'center';
     ctx.fillText('MEU ANIVERSÁRIO!', w / 2, h * 0.18); ctx.fillText('7', w / 2, h * 0.92);
   },
+  musica: (ctx, w, h) => {
+    kid(ctx, w, h);
+    ctx.fillStyle = '#3a2a6a'; ctx.font = 'bold 30px "Comic Sans MS", cursive'; ctx.textAlign = 'center';
+    ctx.fillText('MINHA MÚSICA', w / 2, 46);
+    // pauta torta e as bolinhas coloridas, na ordem em que se toca
+    crayon(ctx, '#555', 3);
+    for (let i = 0; i < 5; i++) { ctx.beginPath(); ctx.moveTo(30, 110 + i * 22); ctx.bezierCurveTo(w * 0.4, 105 + i * 22, w * 0.6, 118 + i * 22, w - 30, 110 + i * 22); ctx.stroke(); }
+    const seq = ['#c41e1e', '#2a5ac8', '#e8c020', '#2a9a4a', '#2a5ac8', '#7a3aa8', '#c41e1e'];
+    const ys = [176, 154, 120, 138, 154, 165, 176];
+    seq.forEach((c, i) => { ctx.fillStyle = c; ctx.beginPath(); ctx.arc(70 + i * ((w - 140) / 6), ys[i], 15, 0, 7); ctx.fill(); });
+    crayon(ctx, '#3a2a6a', 4);
+    ctx.beginPath(); ctx.moveTo(70, 230); ctx.lineTo(w - 70, 230); ctx.lineTo(w - 90, 220); ctx.moveTo(w - 70, 230); ctx.lineTo(w - 90, 240); ctx.stroke();
+    ctx.font = 'bold 20px "Comic Sans MS", cursive'; ctx.fillText('(É SÓ SEGUIR AS CORES!)', w / 2, h - 24);
+  },
   olho: (ctx, w, h) => {
     kid(ctx, w, h);
     crayon(ctx, '#4a3020', 6); ctx.strokeRect(w * 0.55, h * 0.3, w * 0.25, h * 0.55);
@@ -54,6 +68,8 @@ const DRAWINGS = {
     // homem alto e menina
     const person = (x, top, s) => { ctx.beginPath(); ctx.arc(x, top, 14 * s, 0, 7); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x, top + 14 * s); ctx.lineTo(x, top + 80 * s); ctx.moveTo(x, top + 80 * s); ctx.lineTo(x - 18 * s, top + 120 * s); ctx.moveTo(x, top + 80 * s); ctx.lineTo(x + 18 * s, top + 120 * s); ctx.moveTo(x - 25 * s, top + 40 * s); ctx.lineTo(x + 25 * s, top + 40 * s); ctx.stroke(); };
     person(w * 0.2, h * 0.32, 1.4); person(w * 0.38, h * 0.55, 0.8);
+    // de mãos dadas
+    ctx.beginPath(); ctx.moveTo(w * 0.2 + 35, h * 0.32 + 56); ctx.quadraticCurveTo(w * 0.29, h * 0.55 + 50, w * 0.38 - 20, h * 0.55 + 32); ctx.stroke();
     crayon(ctx, '#c84a6a', 4);
     for (let i = 0; i < 4; i++) { const x = w * 0.42 + i * 16, y = h * 0.42 - i * 14; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y - 18); ctx.lineTo(x + 8, y - 14); ctx.stroke(); ctx.beginPath(); ctx.arc(x - 3, y, 4, 0, 7); ctx.fill(); }
     ctx.fillStyle = '#2a2a6a'; ctx.font = 'bold 22px "Comic Sans MS", cursive'; ctx.textAlign = 'center';
@@ -95,6 +111,12 @@ export function quarto(game) {
   });
 
   // desenhos presos na parede sul
+  // desenho "minha música" preso na parede leste
+  {
+    const d = P.painting(r, 'e', -1.6, 1.55, 0.6, 0.45, DRAWINGS.musica, { key: 'draw:musica', frame: 0.0 });
+    d.group.rotation.z = 0.05;
+    r.interact(d.group, { label: 'Olhar o desenho', onUse: () => game.ui.examine({ canvas: d.texture.userData.canvas, text: '"Minha música". Sete bolinhas coloridas numa pauta torta, e uma seta dizendo para ler da esquerda para a direita.' }) });
+  }
   const pins = [['dormir', 1.6], ['bolo', 0.3], ['olho', -1.0]];
   for (const [k, at] of pins) {
     const d = P.painting(r, 's', at, 1.55, 0.6, 0.45, DRAWINGS[k], { key: 'draw:' + k, frame: 0.0 });

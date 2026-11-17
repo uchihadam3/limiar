@@ -193,6 +193,33 @@ export class Audio {
         timers.push(setInterval(() => { if (Math.random() < 0.3) this.drip(gain); }, 2600));
         break;
       }
+      case 'galeria':
+        drone(33, 0.045, 'sawtooth', 160, 9); drone(40, 0.02, 'triangle', 500);
+        noiseBed('lowpass', 250, 0.035, true);
+        sparse([57, 60, 64, 65, 69], 4.8, 0.045, 0, 'piano');
+        break;
+      case 'casal':
+        drone(38, 0.035, 'triangle', 400); drone(45, 0.02, 'sine', 700, 4);
+        timers.push(setInterval(() => { if (Math.random() < 0.45) { const i = (Math.random() * (GIRL_SONG.length - 2)) | 0; this.tone(GIRL_SONG[i] - 12, 0.03, 'piano', gain); setTimeout(() => this.tone(GIRL_SONG[i + 1] - 12, 0.025, 'piano', gain), 700); } }, 4200));
+        break;
+      case 'sotao':
+        drone(30, 0.05, 'sawtooth', 130, 12); noiseBed('lowpass', 600, 0.06);
+        timers.push(setInterval(() => { if (Math.random() < 0.4) this.creak(0.03, 1.2, 150 + Math.random() * 100); }, 5000));
+        timers.push(setInterval(() => { if (Math.random() < 0.3) this.tone(GIRL_SONG[(Math.random() * GIRL_SONG.length) | 0], 0.02, 'box', gain); }, 6000));
+        break;
+      case 'observatorio':
+        drone(48, 0.02, 'sine', 1500, 3); drone(55, 0.015, 'sine', 2000, 6); drone(36, 0.03, 'triangle', 300);
+        sparse([72, 76, 79, 83, 86], 3.6, 0.03, 0, 'bell');
+        break;
+      case 'capela':
+        drone(36, 0.05, 'sawtooth', 220, 3); drone(43, 0.04, 'sawtooth', 300, 3); drone(48, 0.02, 'triangle', 600, 2);
+        noiseBed('bandpass', 400, 0.01);
+        timers.push(setInterval(() => { if (Math.random() < 0.3) this.whisper(0.03, gain); }, 8000));
+        break;
+      case 'musica':
+        drone(33, 0.035, 'triangle', 400);
+        timers.push(setInterval(() => { if (Math.random() < 0.4) this.tone(GIRL_SONG[(Math.random() * GIRL_SONG.length) | 0] - 12, 0.03, 'piano', gain); }, 3800));
+        break;
       case 'corredor':
         drone(32, 0.055, 'sawtooth', 140, 18); drone(33, 0.03, 'sawtooth', 200, 3); // dissonância
         noiseBed('lowpass', 180, 0.04, true);

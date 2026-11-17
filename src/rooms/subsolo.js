@@ -109,10 +109,14 @@ export function adega(game) {
   r.collider(-1.6, 1.6, 3.9, 4.5);
   r.light(0x8899aa, 0.6, 4, 0, 2.5, 3.2, { flicker: 0.1 });
   const count = () => syms.filter(placed).length;
+  let sinkT = f.porta_pedra ? 1 : 0, sinking = false;
+  r.onUpdate((dt) => { if (sinking && sinkT < 1) sinkT = Math.min(1, sinkT + dt * 0.12); slab.position.y = -2.85 * sinkT; });
+  if (f.porta_pedra) { const hole = new THREE.Mesh(new THREE.PlaneGeometry(2.2, 2.6), new THREE.MeshBasicMaterial({ color: 0x010101 })); hole.position.set(0, 1.3, 4.48); hole.rotation.y = Math.PI; r.add(hole); }
   r.interact(slab, {
-    label: () => game.state.inventory.some((i) => i.startsWith('ficha_')) ? 'Encaixar as fichas de pedra' : 'Examinar a porta de pedra',
+    label: () => f.porta_pedra ? 'Descer os degraus' : game.state.inventory.some((i) => i.startsWith('ficha_')) ? 'Encaixar as fichas de pedra' : 'Examinar a porta de pedra',
     sub: () => `${count()} de 10 sinais`,
     onUse: () => {
+      if (f.porta_pedra) { audio.whisper(0.1); game.ui.toast('Você desce alguns degraus. Lá embaixo, água corrente, muita, e um vento gelado que dobra a chama do lampião até quase apagar.\nNa escuridão total, alguma coisa grande se move devagar. Você sobe de volta antes que o lampião morra.', 8000); return; }
       const held = game.state.inventory.filter((i) => i.startsWith('ficha_'));
       if (!held.length) { game.readNote('adega'); return; }
       held.forEach((id, k) => setTimeout(() => { audio.grind(); }, k * 700));
@@ -120,6 +124,12 @@ export function adega(game) {
       redraw();
       const names = held.map((id) => NAMES[id.slice(6)]).join(', ');
       const n = count();
+      if (n === 10) {
+        setTimeout(() => { audio.stinger(); audio.grind(); setTimeout(() => audio.grind(), 1200); game.film.uniforms.flash.value = 0.2; }, 1500);
+        setTimeout(() => game.ui.toast('Com o último sinal, a porta de pedra afunda inteira no chão, devagar, até sumir.<br>Atrás dela, degraus estreitos descem para uma escuridão que respira. Um vento frio sobe lá de baixo e quase apaga o seu lampião.', 9000), 2600);
+        game.flag('porta_pedra', true);
+        setTimeout(() => { sinking = true; }, 2000);
+      }
       game.ui.toast((held.length > 1 ? `Você encaixa as fichas ${names.replace(/, ([^,]*)$/, ' e $1')}. Elas giram sozinhas e afundam na pedra.<br>` : `Você encaixa a ficha ${names}. Ela gira sozinha e afunda na pedra.<br>`) + `<em>${n} de 10 sinais.</em>` + (n === 10 ? '' : ` Ainda faltam ${10 - n}.`), 6000);
       game.save();
     },
@@ -250,7 +260,7 @@ export function gabinete(game) {
     room('1', 210, 230, 90, 70); room('2', 100, 160, 90, 70); room('3', 320, 160, 70, 110);
     room('4', 130, 40, 40, 110); room('7', 60, 60, 60, 60); room('5', 400, 170, 60, 60); room('6', 400, 80, 70, 80);
     room('?', 60, 175, 30, 40); room('8', 228, 305, 50, 18, true); room('9', 220, 326, 70, 30, true);
-    room('10', 180, 50, 26, 26, false, true); room('11', 180, 85, 26, 26, false, true); room('12', 180, 120, 26, 26, false, true);
+    room('12', 180, 50, 26, 26, false, true); room('11', 180, 85, 26, 26, false, true); room('10', 180, 120, 26, 26, false, true);
     room('13', 135, 10, 30, 24);
     ctx.font = `italic ${Math.round(15 * S)}px Georgia`; ctx.fillStyle = '#f0d8a0';
     ctx.textAlign = 'left';
@@ -271,7 +281,7 @@ export function gabinete(game) {
       const x = 30 + Math.random() * (w - 90), y = 20 + Math.random() * (h - 80);
       ctx.save(); ctx.translate(x, y); ctx.rotate((Math.random() - 0.5) * 0.3);
       ctx.fillStyle = '#d0c4a0'; ctx.fillRect(0, 0, 60, 46);
-      ctx.fillStyle = '#3a2a1a'; for (let k = 0; k < 4; k++) ctx.fillRect(6, 8 + k * 9, 30 + Math.random() * 18, 2);
+      ctx.fillStyle = '#3a2a1a'; ctx.font = 'italic 8px Georgia'; for (let k = 0; k < 3; k++) ctx.fillText(i % 2 ? 'ONDE ELA ESTÁ' : 'onde ela está', 4, 12 + k * 11);
       if (i % 3 === 0) drawSymbol(ctx, ['olho', 'espiral', 'mao', 'lua'][i % 4], 44, 30, 10, '#6a1a10', 2);
       ctx.restore(); pts.push([x + 30, y + 4]);
     }

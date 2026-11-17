@@ -134,8 +134,11 @@ export function labirinto(game) {
   }, 'sundial');
   const sd = new THREE.Group();
   const pedestal = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.32, 0.9, 12), M.stone); pedestal.position.y = 0.45; sd.add(pedestal);
-  const dial = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.55, 0.06, 40), [M.stone, new THREE.MeshStandardMaterial({ map: dialTex, roughness: 0.85 }), M.stone]);
+  const dial = new THREE.Mesh(new THREE.CylinderGeometry(0.55, 0.55, 0.06, 40), M.stone);
   dial.position.y = 0.93; sd.add(dial);
+  // face do mostrador: XII aponta para o norte (-z), III para o leste (+x), como a leitura da sombra
+  const face = new THREE.Mesh(new THREE.CircleGeometry(0.55, 48), new THREE.MeshStandardMaterial({ map: dialTex, roughness: 0.85 }));
+  face.rotation.x = -Math.PI / 2; face.position.y = 0.961; sd.add(face);
   const gnomon = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.025, 0.24, 8), M.stone); gnomon.position.y = 1.08; sd.add(gnomon);
   const token = itemMesh('ficha:sol'); token.rotation.x = Math.PI / 2; token.position.set(0, 1.21, 0); token.scale.setScalar(1.1); sd.add(token);
   sd.traverse((o) => { o.castShadow = true; o.receiveShadow = true; });
@@ -207,7 +210,7 @@ export function labirinto(game) {
     ai = next; lastMove = { x: p.x, z: p.z }; placeAngel();
     audio.footstep('stone', 0.5); setTimeout(() => audio.footstep('stone', 0.4), 300);
   });
-  r.interact(angel, { label: 'Examinar o anjo', onUse: () => game.ui.toast('O mesmo anjo de pedra do jardim. Você tem certeza. A mesma rachadura no rosto. Agora ele está aqui, e o braço aponta para você.') });
+  r.interact(angel, { label: 'Examinar o anjo', onUse: () => game.ui.toast('O mesmo anjo de pedra do jardim, você tem certeza: o mesmo musgo no cabelo, o mesmo rosto limpo demais. Agora ele está aqui dentro, virado para você.') });
 
   // passos atrás de você, de vez em quando
   let stepT = 8;

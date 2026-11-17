@@ -48,7 +48,7 @@ No menu do jogo, toque em **Instalar o jogo**. Ele vira um aplicativo com ícone
 
 Um único lugar, todo conectado: a casa, o jardim, o andar de cima e o que existe debaixo da terra. O que você encontra no começo serve lá na frente, e o que está lá na frente te faz voltar ao começo. O jogo está sendo construído aos poucos, sempre seguindo o mapa completo em [`docs/DESIGN.md`](docs/DESIGN.md).
 
-**Já dá para jogar:** o térreo da casa (10 salas), o Jardim, o Labirinto e a Casa do Jardineiro. São mais de 12 enigmas encadeados, 2 finais, 3 cacos de espelho e 3 das 9 fichas de pedra da porta da Adega.
+**Já dá para jogar:** a casa inteira (térreo e andar de cima, com sótão e observatório), o Jardim, o Labirinto, a Capela e a Casa do Jardineiro. São cerca de 25 salas, mais de 25 enigmas encadeados, 2 finais, 5 dos 7 cacos de espelho e as 10 fichas que abrem a porta de pedra da Adega. A próxima área é o subterrâneo.
 
 | | |
 |---|---|

@@ -195,6 +195,37 @@ export class UI {
     this.openPanel('dial');
   }
 
+  // Piano: teclas com adesivos coloridos. Resolve quando as últimas notas tocadas batem com a sequência.
+  pianoDial({ title, keys, target, help, onSolve }) {
+    $('#dial .dial-title').textContent = title;
+    const body = $('#dial .dial-body');
+    body.innerHTML = '';
+    const kb = document.createElement('div'); kb.className = 'piano';
+    const played = [];
+    keys.forEach((k) => {
+      const el = document.createElement('button'); el.className = 'pkey';
+      el.innerHTML = `<span class="sticker" style="background:${k.color}"></span>`;
+      const press = (e) => {
+        e.preventDefault();
+        this.game.audio.tone(k.midi, 0.16, 'piano');
+        el.classList.add('down'); setTimeout(() => el.classList.remove('down'), 160);
+        played.push(k.midi); if (played.length > target.length) played.shift();
+        if (played.length === target.length && played.every((m, i) => m === target[i])) {
+          setTimeout(() => { this.close(); onSolve(); }, 700);
+        }
+      };
+      el.addEventListener('pointerdown', press);
+      kb.appendChild(el);
+    });
+    body.appendChild(kb);
+    if (help) { const h = document.createElement('div'); h.className = 'dial-help'; h.innerHTML = help; body.appendChild(h); }
+    const acts = $('#dial .dial-actions');
+    acts.querySelector('[data-act=confirm]').style.display = 'none';
+    acts.querySelector('[data-act=cancel]').onclick = () => { acts.querySelector('[data-act=confirm]').style.display = ''; this.close(); };
+    this.onClose = () => { acts.querySelector('[data-act=confirm]').style.display = ''; };
+    this.openPanel('dial');
+  }
+
   dialActions(cb) {
     const acts = $('#dial .dial-actions');
     acts.querySelector('[data-act=confirm]').onclick = () => { this.close(); cb(true); };
@@ -232,7 +263,29 @@ export class UI {
     };
     // um parágrafo por vez, no centro da tela
     for (const t of e.text) await show(t, 3200 + t.length * 25);
-    txt.innerHTML = `<div class="p title">${e.title}</div><div class="p kind">${e.kind}</div><div class="p"><button class="btn">Voltar ao menu</button></div>`;
+    const st = this.game.state, f = st.flags, meta = this.game.meta;
+    const shards = ['espelho1', 'espelho2', 'espelho3', 'espelho4', 'espelho5', 'espelho6', 'espelho7'].filter((k) => st.inventory.includes(k) || f['took:' + k]).length;
+    const tokens = 1 + ['sol', 'lua', 'estrela', 'sino', 'arvore', 'coroa', 'escada', 'peixe', 'ampulheta'].filter((k) => f['ficha:' + k] || st.inventory.includes('ficha_' + k) || f['took:ficha_' + k]).length;
+    const nEnd = Object.keys(meta.endings).length, totalEnd = Object.keys(ENDINGS).length;
+    // a primeira pergunta ainda sem resposta vira a pista para a próxima vez
+    const hints = [
+      [!f.estante_aberta, 'Na biblioteca, há um livro que não é um livro.'],
+      [!f.olho_aberto, 'Uma das portas não tem fechadura. Ela só acorda com uma canção.'],
+      [!st.visited.jardim, 'Uma chave em forma de pássaro espera numa gaiola, lá embaixo. Ela só cai quando a casa recebe uma vela.'],
+      [!f['took:ficha_sol'], 'No centro do labirinto, o sol nunca se põe. Basta você trazer a sua própria luz.'],
+      [!f.alcapao, 'Há um alçapão no teto do andar de cima. Algo comprido alcançaria o cordão.'],
+      [!f.porta12, 'O sino da capela sabe chamar uma porta que não existe.'],
+      [shards < 7, `O espelho quebrado do Vestíbulo ainda espera ${7 - shards} caco${7 - shards === 1 ? '' : 's'}.`],
+      [!meta.endings.setimo_lugar, 'Na sala de jantar, alguém deixou um prato limpo para você.'],
+      [!f.porta_pedra, 'Lá embaixo, dez sinais esperam para abrir a pedra.'],
+      [true, 'O retrato do Visitante, no corredor, ainda não terminou de secar.'],
+    ];
+    const hint = hints.find(([cond]) => cond)[1];
+    txt.innerHTML = `<div class="p title">${e.title}</div><div class="p kind">${e.kind}</div>
+      <div class="p after"><div class="after-h">O que ficou para trás</div>
+        <div class="after-stats">Cacos de espelho: <b>${shards} de 7</b> · Sinais de pedra: <b>${tokens} de 10</b> · Finais: <b>${nEnd} de ${totalEnd}</b></div>
+        <div class="after-hint">“${hint}”</div></div>
+      <div class="p"><button class="btn">Voltar ao menu</button></div>`;
     const ps = [...txt.querySelectorAll('.p')];
     for (const p of ps) { await wait(700); p.classList.add('show'); }
     return new Promise((res) => txt.querySelector('button').onclick = () => { el.classList.add('hidden'); res(); });

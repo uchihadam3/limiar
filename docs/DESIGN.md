@@ -89,23 +89,24 @@ Legenda: ✅ construído · 🔨 em construção · ⏳ planejado
 | 8 | Escadaria | descida |
 | 9 | Adega | porta de pedra com 10 encaixes; círculo de giz + gaiola (vela preta → **chave-pássaro**) |
 
-### 4.2 Jardim 🔨
+### 4.2 Jardim ✅
 | Nº | Sala | Conteúdo-chave |
 |---|---|---|
 | 15 | Jardim | lago com a **ficha da Lua** no fundo (precisa da rede); 7 roseiras (4 com fita vermelha); fachada com 6 janelas (3 acesas); capela com 5 degraus; sacada do Quarto do Casal; balanço da Clara; o anjo de pedra |
 | 16 | Labirinto | centro: **relógio de sol**. À noite não há sol: o jogador usa **a luz do próprio lampião** para fazer a sombra do gnômon marcar **9h40** e soltar a **ficha do Sol**. Beco sem saída: **caco III** |
-| 17 | Capela ⏳ | trancada (a chave está no Quarto do Casal). Túmulo vazio da Clara (data: **7/3**). Sino: tocar **12 vezes** abre a porta 12. Dentro do sino: **ficha do Sino**. Sob a toalha do altar: **caco V** |
-| 18 | Poço ⏳ | com a corda do Sótão: balde traz a **ficha do Peixe**; mais tarde, descida para o Rio |
+| 17 | Capela | trancada (a chave está no Quarto do Casal). Túmulo vazio da Clara (data: **7/3**). Plaquinha: "uma badalada por vela do último bolo" → **7 badaladas** soltam a **ficha do Sino**; **12** fazem a porta 12 existir. Sob a toalha do altar: **caco V** |
+| 18 | Poço | com a corda do Sótão: balde traz a **ficha do Peixe**; mais tarde, descida para o Rio (⏳) |
 | 19 | Casa do Jardineiro | rede, chave do jardineiro, diário do jardineiro; **escada comprida** presa por cadeado de 3 dígitos com os símbolos 🌹 🪟 ⛪: roseiras **com fita** (4) · janelas **acesas** (3) · degraus da capela (5) = **435** |
 
-### 4.3 Andar de cima ⏳
+### 4.3 Andar de cima ✅
 | Nº | Sala | Conteúdo-chave |
 |---|---|---|
-| 21 | Quarto do Casal | entrada pela sacada (escada do jardineiro). Bíblia da Helena com a **chave da capela**. Porta-joias com código de 4 dígitos = aniversário da Clara **0703** (lido no túmulo) → **ficha da Coroa** |
-| 20 | Galeria | olha para o Vestíbulo lá embaixo; entulho na escadaria principal (alavanca → atalho para o Vestíbulo) |
-| 23 | Sótão | **corda**, **ficha da Escada** (dentro do baú de brinquedos: a tampa abre com os blocos certos), **caco IV** |
-| 24 | Observatório | **planisfério**: girar os discos até a data **7/3** e a hora **9h40**; o telescópio mostra 4 estrelas formando um número, que abre o armário: **ficha da Estrela** |
-| 10 | Sala de Música (térreo, porta 10) | tábuas: arrancar com o pé de cabra (Sótão). Piano: as teclas têm adesivos coloridos da Clara; o desenho "minha música" (Quarto) traz a canção em bolinhas coloridas → **ficha da Ampulheta**. Na parede, texto espelhado (lido com um caco): pista do planisfério |
+| 21 | Quarto do Casal | entrada pela sacada (escada do jardineiro; alguém arrasta o móvel e abre a porta por dentro). Bíblia da Helena com a **chave da capela**. Porta-joias com código de 4 dígitos = aniversário da Clara **0703** (lido no túmulo) → **ficha da Coroa** |
+| 20 | Galeria | plantas "Revisão 12, 27, 41"; alçapão do sótão (puxar o cordão com o cabo da rede); entulho na escadaria principal (pé de cabra → atalho de volta ao Vestíbulo); porta 22 |
+| 22 | Quarto do Visitante ⏳ | "RESERVADO PARA O VISITANTE". Abre só perto do fim; peça-chave dos finais O Novo Dono e Limiar |
+| 23 | Sótão | **corda**, **pé de cabra**, baú "escreva o que a casa pede" = **FIQUE** (os blocos do Quarto) → **ficha da Escada**; casa de bonecas (miniatura da casa) com o **caco IV** no quartinho da menina |
+| 24 | Observatório | **planisfério**: girar os discos até a data **7/3** e a hora **9h40**; a luneta mostra estrelas desenhando **264**, que abre o armário: **ficha da Estrela** |
+| 10 | Sala de Música ✅ (térreo, porta 10) | tábuas: arrancar com o pé de cabra (Sótão). Piano: as teclas têm adesivos coloridos da Clara; o desenho "minha música" (Quarto) traz a canção em bolinhas coloridas → **ficha da Ampulheta**. Na parede, texto espelhado (lido com um caco): pista do planisfério |
 
 ### 4.4 Subterrâneo ⏳ (abre com as 10 fichas na porta de pedra)
 | Nº | Sala | Conteúdo-chave |
@@ -138,6 +139,9 @@ Legenda: ✅ construído · 🔨 em construção · ⏳ planejado
 
 ---
 
+## 5b. Depois de cada final
+A tela final mostra **o que ficou para trás** (cacos, sinais, finais) e **uma pista enigmática** sobre o primeiro segredo que o jogador ainda não descobriu, para dar vontade de jogar de novo.
+
 ## 6. Itens
 
 | Item | Onde | Para quê |
@@ -159,10 +163,10 @@ Legenda: ✅ construído · 🔨 em construção · ⏳ planejado
 
 ## 7. Ordem de construção
 1. ✅ Térreo
-2. 🔨 Jardim: Jardim, Labirinto, Casa do Jardineiro; gaiola da Adega; armário da Estufa; encaixes da porta de pedra
-3. ⏳ Andar de cima + escadaria principal no Vestíbulo + Capela + Poço
-4. ⏳ Sala de Música, Sótão, Observatório
-5. ⏳ Subterrâneo inteiro + atalhos
+2. ✅ Jardim: Jardim, Labirinto, Casa do Jardineiro; gaiola da Adega; armário da Estufa; encaixes da porta de pedra
+3. ✅ Andar de cima + escadaria principal no Vestíbulo + Capela + Poço
+4. ✅ Sala de Música, Sótão, Observatório → as 10 fichas já podem ser encontradas e a porta de pedra se abre
+5. 🔨 Subterrâneo inteiro + atalhos
 6. ⏳ Sala que se Repete, O Outro Lado, finais restantes
 
 ---

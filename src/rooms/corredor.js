@@ -17,7 +17,18 @@ export function corredor(game) {
     id: 'quarto', wall: 'w', at: -3.2, num: 7, symbol: 'coroa', to: 'quarto', toDoor: 'corredor', link: 'quarto',
     lock: { type: 'key', item: 'chave_latao', consume: true, msg: 'Trancada. Uma fechadura pequena e delicada, de latão, na altura dos olhos de uma criança.', msgUnlock: 'A chavinha de latão entra perfeitamente. Click.' },
   });
-  r.door({ id: 'p10', wall: 'e', at: 3.2, num: 10, symbol: 'ampulheta', boards: true, lock: { type: 'sealed', msg: 'Tábuas grossas pregadas no batente, com pregos enormes. Seria preciso alguma ferramenta para arrancá-las.\nDo outro lado, bem baixinho, uma nota de piano. Só uma.' } });
+  const p10 = r.door({
+    id: 'p10', wall: 'e', at: 3.2, num: 10, symbol: 'ampulheta', boards: !f.tabuas, to: 'musica', toDoor: 'corredor', link: 'p10',
+    lock: { type: 'custom', check: () => !f.tabuas, msg: 'Tábuas grossas pregadas no batente, com pregos enormes. Seria preciso alguma ferramenta para arrancá-las.\nDo outro lado, bem baixinho, uma nota de piano. Só uma.' },
+  });
+  p10.onUse = () => {
+    if (f.tabuas || !game.has('pe_de_cabra')) return;
+    game.flag('tabuas', true);
+    audio.creak(0.12, 0.5, 300); setTimeout(() => { audio.thud(0.3); audio.creak(0.1, 0.4, 340); }, 500); setTimeout(() => audio.thud(0.35), 1100);
+    p10.leaf.traverse((o) => { if (o.userData.board) o.visible = false; });
+    game.ui.toast('Você arranca as tábuas uma a uma com o pé de cabra. Os pregos gritam ao sair da madeira.<br>Atrás delas, a porta 10 não tem fechadura.', 6000);
+    return false;
+  };
   r.door({ id: 'p11', wall: 'e', at: -0.6, num: 11, symbol: 'peixe', lock: { type: 'sealed', msg: 'A fechadura está cheia de cera de vela endurecida. Por baixo da porta escorre um fio de água fria.\nPor este lado não há como abrir.' } });
   r.door({ id: 'p12', wall: 'e', at: -4.4, num: 12, symbol: 'mascara', lock: { type: 'sealed', msg: 'A maçaneta gira, mas a porta não se move. É como se do outro lado houvesse uma parede.\nNa madeira, alguém riscou: "ELA SÓ EXISTE QUANDO CHAMAM".' } });
   r.door({
@@ -43,10 +54,10 @@ export function corredor(game) {
 
   // retratos com olhos que seguem
   const fam = [
-    ['w', 6.3, { bg: '#2a2418', skin: '#9c8c7a', hair: '#9a9a90', cloth: '#1a1a1a', plate: 'DONA ESTER', seed: 21, long: true }],
-    ['w', 1.5, { bg: '#2c2418', skin: '#a88f74', hair: '#2a2016', beard: true, cloth: '#141010', collar: '#cfc6b0', plate: 'AURÉLIO', seed: 22 }],
-    ['w', -6.2, { bg: '#2a1c22', skin: '#b39a86', hair: '#3a2416', long: true, cloth: '#2a1020', plate: 'HELENA', seed: 23 }],
-    ['e', 5.6, { bg: '#28202a', skin: '#c4a890', hair: '#4a2a14', long: true, child: true, cloth: '#5a2a30', collar: '#e0d8c8', plate: 'CLARA, 7 ANOS', seed: 24, smile: true }],
+    ['w', 6.3, { bg: '#2a2418', skin: '#9c8c7a', hair: '#9a9a90', cloth: '#1a1a1a', plate: 'DONA ESTER', seed: 21, long: true, peel: true }],
+    ['w', 1.5, { bg: '#2c2418', skin: '#a88f74', hair: '#2a2016', beard: true, cloth: '#141010', collar: '#cfc6b0', plate: 'AURÉLIO', seed: 22, holds: 'compasso' }],
+    ['w', -6.2, { bg: '#2a1c22', skin: '#b39a86', hair: '#3a2416', long: true, cloth: '#2a1020', plate: 'HELENA', seed: 23, smile: true, redEyes: true }],
+    ['e', 5.6, { bg: '#28202a', skin: '#c4a890', hair: '#4a2a14', long: true, child: true, cloth: '#5a2a30', collar: '#e0d8c8', plate: 'CLARA, 7 ANOS', seed: 24, smile: true, holds: 'caixinha' }],
     ['e', 1.3, { bg: '#1c1c1c', skin: '#a09080', hair: '#1a1410', cloth: '#101010', scratched: true, plate: '', seed: 25 }],
     ['e', -2.6, { bg: '#20201a', skin: '#a89a88', hair: '#2a2a2a', cloth: '#22201a', plate: 'O VISITANTE', seed: 26 }],
   ];
@@ -58,7 +69,7 @@ export function corredor(game) {
         canvas: pt.texture.userData.canvas,
         text: {
           21: 'Uma senhora de cabelos brancos. A pintura é a mais antiga do corredor; a tinta descasca em volta da boca.',
-          22: 'O Arquiteto, jovem. Segura um compasso. Atrás dele, a planta de uma casa com portas demais.',
+          22: 'O Arquiteto, jovem. Segura um compasso. Atrás dele, no canto, a planta de uma casa com portas demais.',
           23: 'Helena, a esposa. Sorri, mas os olhos estão vermelhos, como se tivesse chorado antes de posar.',
           24: 'Clara. Nas mãos, uma caixinha de música pintada de azul com estrelas.',
           25: 'O rosto foi arranhado até sumir. Os arranhões são finos, de unha.',

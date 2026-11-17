@@ -254,6 +254,22 @@ export function drawPortrait(p) {
     // boca
     ctx.strokeStyle = 'rgba(60,20,15,0.8)'; ctx.lineWidth = 2;
     ctx.beginPath(); ctx.moveTo(w * 0.465, h * 0.43); ctx.quadraticCurveTo(w * 0.5, h * (p.smile ? 0.445 : 0.428), w * 0.535, h * 0.43); ctx.stroke();
+    // detalhes que as descrições citam
+    if (p.redEyes) { ctx.strokeStyle = 'rgba(170,30,30,0.85)'; ctx.lineWidth = 3; for (const sx of [-1, 1]) { ctx.beginPath(); ctx.ellipse(w * 0.5 + sx * w * 0.055, h * 0.352, w * 0.036, h * 0.02, 0, 0, Math.PI * 2); ctx.stroke(); } }
+    if (p.peel) { ctx.fillStyle = 'rgba(200,185,150,0.9)'; for (const [dx, dy, rr] of [[-0.04, 0.43, 0.02], [0.03, 0.44, 0.025], [0.0, 0.46, 0.018], [0.05, 0.42, 0.012]]) { ctx.beginPath(); ctx.ellipse(w * (0.5 + dx), h * dy, w * rr, h * rr * 0.6, dx * 9, 0, Math.PI * 2); ctx.fill(); } }
+    if (p.pregnant) { ctx.fillStyle = p.cloth ?? '#2a1020'; ctx.beginPath(); ctx.ellipse(w * 0.5, h * 0.9, w * 0.2, h * 0.14, 0, Math.PI, 0); ctx.fill(); ctx.strokeStyle = 'rgba(255,220,200,0.12)'; ctx.lineWidth = 3; ctx.beginPath(); ctx.ellipse(w * 0.5, h * 0.9, w * 0.19, h * 0.13, 0, Math.PI * 1.1, Math.PI * 1.9); ctx.stroke(); ctx.fillStyle = p.skin ?? '#b39a86'; for (const sx of [-1, 1]) { ctx.beginPath(); ctx.ellipse(w * (0.5 + sx * 0.08), h * 0.85, w * 0.035, h * 0.022, 0, 0, Math.PI * 2); ctx.fill(); } }
+    if (p.holds === 'caixinha') {
+      ctx.fillStyle = '#2a3a6a'; ctx.fillRect(w * 0.4, h * 0.76, w * 0.2, h * 0.09);
+      ctx.fillStyle = '#d8b860'; for (const [dx, dy] of [[0.43, 0.79], [0.48, 0.82], [0.53, 0.78], [0.57, 0.83], [0.46, 0.84]]) { ctx.beginPath(); ctx.arc(w * dx, h * dy, w * 0.006, 0, Math.PI * 2); ctx.fill(); }
+      ctx.fillStyle = p.skin ?? '#c4a890'; for (const sx of [-1, 1]) { ctx.beginPath(); ctx.ellipse(w * (0.5 + sx * 0.11), h * 0.81, w * 0.03, h * 0.025, 0, 0, Math.PI * 2); ctx.fill(); }
+    }
+    if (p.holds === 'compasso') {
+      ctx.fillStyle = 'rgba(40,70,110,0.9)'; ctx.fillRect(w * 0.06, h * 0.08, w * 0.24, h * 0.3);
+      ctx.strokeStyle = 'rgba(210,225,240,0.7)'; ctx.lineWidth = 1.5; ctx.strokeRect(w * 0.09, h * 0.12, w * 0.18, h * 0.2);
+      for (let k = 0; k < 6; k++) { ctx.fillStyle = '#f0d8a0'; ctx.fillRect(w * (0.1 + k * 0.03), h * 0.115, w * 0.012, h * 0.012); }
+      ctx.fillStyle = p.skin ?? '#a88f74'; ctx.beginPath(); ctx.ellipse(w * 0.66, h * 0.8, w * 0.04, h * 0.03, 0.4, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = '#c8b070'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(w * 0.66, h * 0.79); ctx.lineTo(w * 0.62, h * 0.95); ctx.moveTo(w * 0.66, h * 0.79); ctx.lineTo(w * 0.72, h * 0.95); ctx.stroke();
+    }
     // craquelado
     ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 1;
     const r = rng(p.seed ?? 3);

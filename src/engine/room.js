@@ -52,6 +52,17 @@ const WALL_SIGN = { n: 1, s: -1, w: -1, e: 1 };
 
 export const DOOR_W = 1.1, DOOR_H = 2.2;
 
+export function numberTexture(num) {
+  return paintTexture(256, 160, (ctx, w, h) => {
+    const gr = ctx.createLinearGradient(0, 0, w, h);
+    gr.addColorStop(0, '#d7b46a'); gr.addColorStop(0.5, '#8d6a2e'); gr.addColorStop(1, '#c79f55');
+    ctx.fillStyle = gr; ctx.beginPath(); ctx.ellipse(w / 2, h / 2, w / 2 - 4, h / 2 - 4, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = '#3c2a10'; ctx.lineWidth = 6; ctx.stroke();
+    ctx.fillStyle = '#21160a'; ctx.font = 'bold 96px "IM Fell English SC", Georgia, serif';
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(String(num), w / 2, h / 2 + 6);
+  }, 'num:' + num);
+}
+
 export class Room {
   constructor(game, cfg) {
     this.game = game;
@@ -272,14 +283,7 @@ export class Room {
     }
     // placa com número
     if (door.num != null) {
-      const tex = paintTexture(256, 160, (ctx, w, h) => {
-        const gr = ctx.createLinearGradient(0, 0, w, h);
-        gr.addColorStop(0, '#d7b46a'); gr.addColorStop(0.5, '#8d6a2e'); gr.addColorStop(1, '#c79f55');
-        ctx.fillStyle = gr; ctx.beginPath(); ctx.ellipse(w / 2, h / 2, w / 2 - 4, h / 2 - 4, 0, 0, Math.PI * 2); ctx.fill();
-        ctx.strokeStyle = '#3c2a10'; ctx.lineWidth = 6; ctx.stroke();
-        ctx.fillStyle = '#21160a'; ctx.font = 'bold 96px "IM Fell English SC", Georgia, serif';
-        ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(String(door.num), w / 2, h / 2 + 6);
-      }, 'num:' + door.num);
+      const tex = numberTexture(door.num);
       const plate = new THREE.Mesh(new THREE.PlaneGeometry(0.22, 0.14), new THREE.MeshStandardMaterial({ map: tex, metalness: 0.7, roughness: 0.35 }));
       plate.position.set(LW / 2, 1.55, LT / 2 + 0.017); leaf.add(plate);
     }
@@ -300,6 +304,18 @@ export class Room {
     // correntes / tábuas para portas especiais
     if (door.chains) this.addChains(leaf, LW, LT);
     if (door.boards) this.addBoards(leaf, LW, LT);
+    // arco sem folha (passagem aberta): a folha vira só uma área invisível de interação
+    if (style === 'arch') {
+      leaf.children.forEach((c) => { if (c !== slab) c.visible = false; });
+      slab.material = new THREE.MeshBasicMaterial({ visible: false });
+      slab.castShadow = false;
+      if (door.num != null) {
+        const tex = numberTexture(door.num);
+        const plate = new THREE.Mesh(new THREE.PlaneGeometry(0.22, 0.14), new THREE.MeshStandardMaterial({ map: tex, metalness: 0.7, roughness: 0.35 }));
+        plate.position.set(0, DOOR_H + 0.14, 0.17); g.add(plate);
+      }
+    }
+    if (door.behind) { g.remove(voidBox); door.behind(g); }
 
     g.position.y = door.y ?? 0;
     this.placeOnWall(g, door.wall, door.at * WALL_SIGN[door.wall]);
@@ -340,7 +356,7 @@ export class Room {
     const boards = [[0.6, 0.3], [1.3, -0.25], [1.85, 0.15]];
     for (const [y, rot] of boards) {
       const b = new THREE.Mesh(new THREE.BoxGeometry(1.3, 0.16, 0.035), bm);
-      b.position.set(LW / 2, y, LT / 2 + 0.03); b.rotation.z = rot; b.castShadow = true; leaf.add(b);
+      b.position.set(LW / 2, y, LT / 2 + 0.03); b.rotation.z = rot; b.castShadow = true; b.userData.board = true; leaf.add(b);
     }
   }
 

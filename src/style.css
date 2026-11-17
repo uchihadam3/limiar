@@ -250,3 +250,19 @@ body.touch .close-hint::after { content: 'toque para fechar'; font-size: 16px; }
 #updateNote.show { opacity: 1; }
 .install-steps { margin: 6px 0 0 18px; padding: 0; }
 .install-steps li { margin: 6px 0; }
+
+/* piano */
+.piano { display: flex; gap: 4px; justify-content: center; padding: 14px 10px 4px; background: linear-gradient(#1a0f08, #0a0604); border: 1px solid var(--line); }
+.pkey {
+  width: 44px; height: 170px; border: 1px solid #2a1c10; border-radius: 0 0 5px 5px; cursor: pointer;
+  background: linear-gradient(#efe6d2, #d8ccb0); position: relative; box-shadow: inset 0 -6px 0 rgba(0,0,0,.15);
+  transition: transform .06s, background .06s; touch-action: none;
+}
+.pkey.down { transform: translateY(3px); background: linear-gradient(#d8ccb0, #c0b090); }
+.pkey .sticker { position: absolute; left: 50%; bottom: 22px; width: 18px; height: 18px; margin-left: -9px; border-radius: 50%; box-shadow: 0 1px 2px rgba(0,0,0,.5); }
+@media (max-width: 600px) { .pkey { width: 34px; height: 130px; } }
+
+.ending-text .after { margin-top: 26px; font-size: 18px; color: var(--ink-dim); }
+.ending-text .after-h { font-family: 'IM Fell English SC', serif; letter-spacing: .14em; color: var(--ink-faint); font-size: 15px; margin-bottom: 8px; text-transform: uppercase; }
+.ending-text .after-stats b { color: var(--ink); font-weight: 600; }
+.ending-text .after-hint { margin-top: 14px; font-style: italic; color: var(--brass); font-size: 21px; }

@@ -33,10 +33,9 @@ export function jantar(game) {
   const seats = [
     [-0.95, -2.0, Math.PI / 2], [-0.95, -0.3, Math.PI / 2], [-0.95, 1.4, Math.PI / 2],
     [0.95, -2.0, -Math.PI / 2], [0.95, -0.3, -Math.PI / 2], [0.95, 1.4, -Math.PI / 2],
-    [0, -3.25, 0],
   ];
   seats.forEach(([x, z, ry]) => P.chair(r, x, z, ry));
-  const plates = [[-0.35, -2.0], [-0.35, -0.3], [0.35, -2.0], [0.35, -0.3], [0.35, 1.4], [0, -2.65], [0, 1.85]];
+  const plates = [[-0.35, -2.0], [-0.35, -0.3], [0.35, -2.0], [0.35, -0.3], [0.35, 1.4], [0, 1.85]]; // + o prato virado = 7 lugares
   plates.forEach(([x, z]) => {
     P.plate(r, x, 0.785, z);
     P.goblet(r, x + (x < 0 ? 0.12 : -0.12) * (x === 0 ? 0 : 1) + (x === 0 ? 0.18 : 0), 0.785, z - 0.2, Math.random() < 0.15);

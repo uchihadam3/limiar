@@ -152,9 +152,9 @@ export class Game {
     this.scene.fog.color.set(room.cfg.fogColor ?? 0x050403);
     this.hemi.intensity = (room.cfg.ambient ?? 0.5) * 2.7;
     this.player.room = room;
-    const door = viaDoor && room.doors[viaDoor];
+    const door = viaDoor && (room.doors[viaDoor] || room.spawns?.[viaDoor]);
     if (pos) this.player.place(pos.x, pos.z, pos.yaw);
-    else if (door) this.player.place(door.spawn.x, door.spawn.z, door.spawn.yaw);
+    else if (door) { const sp = door.spawn ?? door; this.player.place(sp.x, sp.z, sp.yaw); }
     else { const s = room.cfg.spawn ?? { x: 0, z: 0, yaw: 0 }; this.player.place(s.x, s.z, s.yaw); }
     this.player.lightLevel = room.cfg.lantern ?? 1;
     audio.setTheme(room.music);
@@ -273,6 +273,21 @@ export class Game {
     this.loadRoom(toRoom, toDoor);
     const arrive = this.room.doors[toDoor];
     if (arrive) { arrive.angle = 1.2; arrive.target = 0; setTimeout(() => audio.doorClose(), 650); }
+    await wait(150);
+    await this.ui.fade(0, 700);
+    this.busy = false; this.setControl(true);
+  }
+
+  // Transição sem porta (escadas de mão, alçapões, buracos)
+  async transit(toRoom, toDoor, { sound = 'creak', lookAt = null } = {}) {
+    if (this.busy) return;
+    this.busy = true; this.setControl(false);
+    if (sound === 'creak') audio.creak(0.08, 1.2, 220); else if (sound === 'step') { audio.footstep('wood'); setTimeout(() => audio.footstep('wood'), 300); }
+    if (lookAt) this.player.lookTarget = lookAt;
+    await wait(450);
+    await this.ui.fade(1, 500);
+    this.player.lookTarget = null;
+    this.loadRoom(toRoom, toDoor);
     await wait(150);
     await this.ui.fade(0, 700);
     this.busy = false; this.setControl(true);
