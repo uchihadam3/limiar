@@ -17,9 +17,9 @@ export function corredor(game) {
     id: 'quarto', wall: 'w', at: -3.2, num: 7, symbol: 'coroa', to: 'quarto', toDoor: 'corredor', link: 'quarto',
     lock: { type: 'key', item: 'chave_latao', consume: true, msg: 'Trancada. Uma fechadura pequena e delicada, de latão, na altura dos olhos de uma criança.', msgUnlock: 'A chavinha de latão entra perfeitamente. Click.' },
   });
-  r.door({ id: 'p10', wall: 'e', at: 3.2, num: 10, symbol: 'ampulheta', boards: true, lock: { type: 'sealed', msg: 'Tábuas pregadas por dentro e por fora. Alguém não queria que esta porta abrisse nunca mais. (Capítulo II)' } });
-  r.door({ id: 'p11', wall: 'e', at: -0.6, num: 11, symbol: 'peixe', lock: { type: 'sealed', msg: 'A fechadura está cheia de cera de vela endurecida. Por baixo da porta escorre um fio de água fria. (Capítulo II)' } });
-  r.door({ id: 'p12', wall: 'e', at: -4.4, num: 12, symbol: 'mascara', lock: { type: 'sealed', msg: 'A maçaneta gira, mas a porta não se move. É como se do outro lado houvesse uma parede. (Capítulo III)' } });
+  r.door({ id: 'p10', wall: 'e', at: 3.2, num: 10, symbol: 'ampulheta', boards: true, lock: { type: 'sealed', msg: 'Tábuas grossas pregadas no batente, com pregos enormes. Seria preciso alguma ferramenta para arrancá-las.\nDo outro lado, bem baixinho, uma nota de piano. Só uma.' } });
+  r.door({ id: 'p11', wall: 'e', at: -0.6, num: 11, symbol: 'peixe', lock: { type: 'sealed', msg: 'A fechadura está cheia de cera de vela endurecida. Por baixo da porta escorre um fio de água fria.\nPor este lado não há como abrir.' } });
+  r.door({ id: 'p12', wall: 'e', at: -4.4, num: 12, symbol: 'mascara', lock: { type: 'sealed', msg: 'A maçaneta gira, mas a porta não se move. É como se do outro lado houvesse uma parede.\nNa madeira, alguém riscou: "ELA SÓ EXISTE QUANDO CHAMAM".' } });
   r.door({
     id: 'p13', wall: 'n', at: 0, num: 13, symbol: 'mao', style: 'iron',
     lock: { type: 'sealed', msg: 'Do outro lado, alguém respira.\nQuando você prende a respiração, a respiração do outro lado também para.' },

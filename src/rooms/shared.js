@@ -2,6 +2,7 @@
 import * as THREE from 'three';
 import { M, sparkle } from '../engine/room.js';
 import { paintTexture } from '../engine/textures.js';
+import { drawSymbol } from '../engine/symbols.js';
 
 // A placa de bronze partida ao meio. A metade esquerda está na Biblioteca;
 // a direita, caída no chão da Estufa. Só lendo as duas o sentido aparece.
@@ -96,6 +97,18 @@ export function itemMesh(kind) {
     const shape = new THREE.Shape(); shape.moveTo(0, 0); shape.lineTo(0.09, 0.02); shape.lineTo(0.03, 0.12); shape.lineTo(-0.02, 0.05);
     const m = new THREE.Mesh(new THREE.ShapeGeometry(shape), new THREE.MeshStandardMaterial({ color: 0xc8d4e0, metalness: 1, roughness: 0.05, side: THREE.DoubleSide, emissive: 0x223344, emissiveIntensity: 0.6 }));
     m.rotation.x = -Math.PI / 2; g.add(m);
+  } else if (kind.startsWith('ficha:')) {
+    const sym = kind.slice(6);
+    const tex = paintTexture(128, 128, (ctx) => {
+      ctx.fillStyle = '#8a8478'; ctx.fillRect(0, 0, 128, 128);
+      for (let i = 0; i < 300; i++) { ctx.fillStyle = `rgba(0,0,0,${Math.random() * 0.15})`; ctx.fillRect(Math.random() * 128, Math.random() * 128, 2, 2); }
+      ctx.strokeStyle = '#3a362e'; ctx.lineWidth = 4; ctx.beginPath(); ctx.arc(64, 64, 58, 0, 7); ctx.stroke();
+      drawSymbol(ctx, sym, 64, 64, 40, '#2a2620', 5);
+    }, 'ficha:' + sym);
+    const side = new THREE.MeshStandardMaterial({ color: 0x7a7468, roughness: 0.9 });
+    const face = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.85 });
+    const disc = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.055, 0.018, 24), [side, face, face]);
+    disc.position.y = 0.009; g.add(disc);
   } else if (kind === 'vela') {
     const c = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.017, 0.12, 10), new THREE.MeshStandardMaterial({ color: 0x0c0a0a, roughness: 0.6 }));
     c.rotation.z = Math.PI / 2; c.position.y = 0.015; g.add(c);

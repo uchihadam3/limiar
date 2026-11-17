@@ -136,7 +136,7 @@ export class Room {
       const c = new THREE.Mesh(planeWU(w, d, 3), cm);
       c.rotation.x = Math.PI / 2; c.position.y = h; c.receiveShadow = true; this.add(c);
     }
-    for (const wall of ['n', 's', 'e', 'w']) this.buildWall(wall, opts);
+    if (opts.walls !== false) for (const wall of ['n', 's', 'e', 'w']) this.buildWall(wall, opts);
   }
 
   buildWall(wall, opts) {

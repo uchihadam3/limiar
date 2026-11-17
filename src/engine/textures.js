@@ -313,6 +313,64 @@ const builders = {
     grime(c, 47, 0.7, 3);
     return c;
   },
+  grass() { // grama alta, molhada, escura
+    const c = canvas(512), ctx = c.getContext('2d');
+    const n = makeNoise(61);
+    const img = ctx.createImageData(512, 512);
+    for (let y = 0; y < 512; y++) for (let x = 0; x < 512; x++) {
+      const g = fbm(n, x / 50, y / 50, 5);
+      const i = (y * 512 + x) * 4;
+      img.data[i] = 18 + g * 18; img.data[i + 1] = 30 + g * 32; img.data[i + 2] = 16 + g * 12; img.data[i + 3] = 255;
+    }
+    ctx.putImageData(img, 0, 0);
+    for (let i = 0; i < 5000; i++) {
+      const x = Math.random() * 512, y = Math.random() * 512, l = 3 + Math.random() * 7;
+      ctx.strokeStyle = `rgba(${40 + Math.random() * 40},${60 + Math.random() * 50},${30 + Math.random() * 20},0.6)`;
+      ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + (Math.random() - 0.5) * 3, y - l); ctx.stroke();
+    }
+    return c;
+  },
+  hedge() { // folhagem densa da sebe
+    const c = canvas(512), ctx = c.getContext('2d');
+    ctx.fillStyle = '#0d1a0c'; ctx.fillRect(0, 0, 512, 512);
+    for (let i = 0; i < 9000; i++) {
+      const x = Math.random() * 512, y = Math.random() * 512;
+      ctx.save(); ctx.translate(x, y); ctx.rotate(Math.random() * 6.3);
+      const l = 8 + Math.random() * 18;
+      ctx.fillStyle = `hsl(${95 + Math.random() * 30},${25 + Math.random() * 25}%,${8 + Math.random() * 16}%)`;
+      ctx.beginPath(); ctx.ellipse(0, 0, l / 2, l / 5, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.restore();
+    }
+    return c;
+  },
+  gravel() { // caminho de cascalho
+    const c = canvas(512), ctx = c.getContext('2d');
+    ctx.fillStyle = '#3a3630'; ctx.fillRect(0, 0, 512, 512);
+    for (let i = 0; i < 7000; i++) {
+      const v = 40 + Math.random() * 70;
+      ctx.fillStyle = `rgb(${v},${v * 0.96},${v * 0.9})`;
+      ctx.beginPath(); ctx.ellipse(Math.random() * 512, Math.random() * 512, 1 + Math.random() * 3, 1 + Math.random() * 2, Math.random() * 3, 0, Math.PI * 2); ctx.fill();
+    }
+    grime(c, 67, 0.5, 3);
+    return c;
+  },
+  planks() { // tábuas verticais da casa do jardineiro
+    const c = canvas(512), ctx = c.getContext('2d');
+    const n = makeNoise(71);
+    for (let p = 0; p < 8; p++) {
+      const l = 14 + Math.random() * 8;
+      const img = ctx.createImageData(64, 512);
+      for (let y = 0; y < 512; y++) for (let x = 0; x < 64; x++) {
+        const g = fbm(n, (x + p * 64) / 6, y / 80, 4);
+        const [r, gg, b] = hsl(28, 25, l * (0.7 + g * 0.6));
+        const i = (y * 64 + x) * 4; img.data[i] = r; img.data[i + 1] = gg; img.data[i + 2] = b; img.data[i + 3] = 255;
+      }
+      ctx.putImageData(img, p * 64, 0);
+      ctx.fillStyle = 'rgba(0,0,0,0.8)'; ctx.fillRect(p * 64, 0, 3, 512);
+    }
+    grime(c, 73, 0.6, 3);
+    return c;
+  },
   cave() { // rocha úmida
     const c = canvas(512), ctx = c.getContext('2d');
     const n = makeNoise(53);

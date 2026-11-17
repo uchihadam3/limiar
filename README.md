@@ -5,7 +5,7 @@
 
 ![Corredor dos Retratos](docs/prints/05-corredor.jpg)
 
-Você acorda no vestíbulo de uma casa antiga, sem lembrar como entrou. Cada porta mostra o número da sala para onde leva, e algumas mentem. Os quadros, os objetos e as inscrições nas paredes são as pistas. Há uma placa partida ao meio: uma metade na biblioteca, a outra caída no chão, num lugar bem longe dali. Há portas trancadas, passagens secretas, uma história para descobrir e **vários finais**.
+Você acorda no vestíbulo de uma casa antiga, sem lembrar como entrou. Cada porta mostra o número da sala para onde leva, e algumas mentem. Os quadros, os objetos e as inscrições nas paredes são as pistas. Há uma placa partida ao meio: uma metade na biblioteca, a outra caída no chão, num lugar bem longe dali. Há portas trancadas, passagens secretas, uma história para descobrir e **vários finais**, inclusive um final verdadeiro, o mais difícil de achar.
 
 Inspirado na mecânica do livro *MAZE* (Christopher Manson). A casa, a história, as salas e os enigmas são originais.
 
@@ -40,15 +40,21 @@ npm run dev
 - Os **finais descobertos** ficam guardados mesmo se você começar um novo jogo.
 - Para continuar em outro aparelho: **Menu → Código de progresso**. Copie o código num aparelho e cole no outro.
 
-## O que já existe: Capítulo I, "A Casa"
+## Instalar (PC e celular)
 
-10 salas (Vestíbulo, Biblioteca, Gabinete secreto, Sala de Jantar, Corredor dos Retratos, Cozinha, Estufa, Quarto da Menina, Escadaria e Adega), 7 enigmas encadeados, 2 finais, 2 cacos de espelho colecionáveis, música que muda em cada sala e muitos detalhes que reagem a você.
+No menu do jogo, toque em **Instalar o jogo**. Ele vira um aplicativo com ícone próprio, abre em tela cheia, funciona sem internet e **se atualiza sozinho** sempre que uma versão nova é publicada. O progresso salvo continua lá.
+
+## O jogo
+
+Um único lugar, todo conectado: a casa, o jardim, o andar de cima e o que existe debaixo da terra. O que você encontra no começo serve lá na frente, e o que está lá na frente te faz voltar ao começo. O jogo está sendo construído aos poucos, sempre seguindo o mapa completo em [`docs/DESIGN.md`](docs/DESIGN.md).
+
+**Já dá para jogar:** o térreo da casa (10 salas), o Jardim, o Labirinto e a Casa do Jardineiro. São mais de 12 enigmas encadeados, 2 finais, 3 cacos de espelho e 3 das 9 fichas de pedra da porta da Adega.
 
 | | |
 |---|---|
 | ![Vestíbulo](docs/prints/01-vestibulo.jpg) | ![Sala de jantar](docs/prints/04-jantar.jpg) |
 | ![Estufa](docs/prints/06-estufa.jpg) | ![Quarto](docs/prints/07-quarto.jpg) |
-| ![Escadaria](docs/prints/08-escadaria.jpg) | ![Adega](docs/prints/09-adega.jpg) |
+| ![Labirinto](docs/prints/13-labirinto.jpg) | ![Relógio de sol](docs/prints/14-relogio-de-sol.jpg) |
 
 ## Tecnologia
 
@@ -56,4 +62,4 @@ npm run dev
 - **Nenhum arquivo de arte ou áudio:** texturas, móveis, quadros e toda a música e os efeitos sonoros são gerados por código, na hora.
 - Pós-processamento com bloom, vinheta, granulação de filme e aberração cromática.
 
-O design completo (história, todos os enigmas, finais e o plano dos próximos capítulos) está em [`docs/DESIGN.md`](docs/DESIGN.md). **Contém spoilers.**
+O design completo (o mapa inteiro, a história, todos os enigmas e todos os finais) está em [`docs/DESIGN.md`](docs/DESIGN.md). **Contém spoilers.**

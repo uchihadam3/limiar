@@ -15,8 +15,8 @@ export function estufa(game) {
 
   r.door({ id: 'cozinha', wall: 's', at: 1.2, num: 5, symbol: 'arvore', to: 'cozinha', toDoor: 'estufa', style: 'white' });
   r.door({
-    id: 'portao', wall: 'n', at: 0, symbol: 'passaro', label: 'o portão do jardim', style: 'iron',
-    lock: { type: 'sealed', msg: 'O portão do jardim. Do outro lado, a névoa é tão espessa que parece uma parede.\nNo cadeado, um buraco de fechadura em forma de pássaro.' },
+    id: 'portao', wall: 'n', at: 0, num: 15, symbol: 'passaro', label: 'o portão do jardim', style: 'iron', to: 'jardim', toDoor: 'estufa', link: 'portao',
+    lock: { type: 'key', item: 'chave_passaro', consume: true, msg: 'O portão do jardim. Do outro lado, a névoa é tão espessa que parece uma parede.\nNo cadeado, um buraco de fechadura em forma de pássaro de asas abertas.', msgUnlock: 'A chave-pássaro entra no cadeado como um pássaro voltando ao ninho. O portão range e cede.' },
   });
 
   const glass = new THREE.MeshPhysicalMaterial({ color: 0x8aa0aa, roughness: 0.05, transparent: true, opacity: 0.12, side: THREE.DoubleSide, depthWrite: false });
@@ -140,6 +140,37 @@ export function estufa(game) {
           + (game.state.flags.viu_placa_esq ? '\n<em>As bordas quebradas se encaixariam na metade da biblioteca.</em>' : ''),
       });
       game.save();
+    },
+  });
+
+  // armário de sementes, trancado (a chave está com o jardineiro)
+  const cab = new THREE.Group();
+  const cw = new THREE.MeshStandardMaterial({ color: 0x5a6a5a, roughness: 0.8 });
+  for (const [w, h, d, x, y, z] of [[0.9, 1.6, 0.03, 0, 0.8, -0.21], [0.03, 1.6, 0.45, -0.435, 0.8, 0], [0.03, 1.6, 0.45, 0.435, 0.8, 0], [0.9, 0.03, 0.45, 0, 1.6, 0], [0.9, 0.1, 0.45, 0, 0.05, 0]]) {
+    const pnl = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), cw); pnl.position.set(x, y, z); cab.add(pnl);
+  }
+  const cdoorPivot = new THREE.Group(); cdoorPivot.position.set(-0.45, 0.85, 0.235); cab.add(cdoorPivot);
+  const cdoor = new THREE.Mesh(new THREE.BoxGeometry(0.88, 1.4, 0.03), cw); cdoor.position.x = 0.44; cdoorPivot.add(cdoor);
+  const clock = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.08, 0.03), M.iron); clock.position.set(0.8, 0, 0.03); cdoorPivot.add(clock);
+  const label = new THREE.Mesh(new THREE.PlaneGeometry(0.4, 0.12), M.paper); label.position.set(0.44, 0.45, 0.02); cdoorPivot.add(label);
+  for (let i = 0; i < 4; i++) { const sh = new THREE.Mesh(new THREE.BoxGeometry(0.84, 0.02, 0.4), cw); sh.position.set(0, 0.3 + i * 0.4, 0); cab.add(sh); }
+  for (let i = 0; i < 10; i++) { const pk = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.12, 0.02), M.paper); pk.position.set(-0.35 + i * 0.08, 0.37 + (i % 3) * 0.4, 0.05); pk.rotation.z = (Math.random() - 0.5) * 0.3; cab.add(pk); }
+  cab.traverse((o) => { o.castShadow = true; });
+  cab.position.set(-3.72, 0, 4.35); cab.rotation.y = Math.PI / 2; r.add(cab); r.collider(-4.0, -3.45, 3.9, 4.8);
+  let cabA = f.armario ? 1.8 : 0, cabT = cabA;
+  r.onUpdate((dt) => { cabA += (cabT - cabA) * (1 - Math.exp(-4 * dt)); cdoorPivot.rotation.y = -cabA; });
+  const spawnToken = () => placeItem(r, game, 'ficha_arvore', 'ficha:arvore', -3.58, 0.72, 4.35, { label: 'Pegar a ficha de pedra' });
+  if (f.armario) spawnToken();
+  r.interact(cab, {
+    enabled: () => !(f.armario && !f['took:ficha_arvore']),
+    label: () => f.armario ? 'O armário de sementes' : 'Abrir o armário de sementes', sub: 'etiqueta: "SEMENTES — NÃO MEXER"',
+    onUse: () => {
+      if (f.armario) { game.ui.toast('Pacotinhos de sementes com nomes escritos à mão. Todos de flores que nunca nasceram aqui.'); return; }
+      if (!game.has('chave_jardineiro')) { audio.doorLocked(); game.ui.toast('Trancado com um cadeado simples. A etiqueta diz: "SEMENTES — NÃO MEXER". A letra não é do Arquiteto.'); return; }
+      game.flag('armario', true); cabT = 1.8; audio.unlock(); setTimeout(() => audio.creak(0.08, 0.8, 300), 300);
+      game.take('chave_jardineiro');
+      spawnToken();
+      game.ui.toast('A chave do jardineiro abre o armário. Entre os pacotes de sementes, um disco de pedra com uma árvore entalhada.');
     },
   });
 

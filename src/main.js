@@ -1,10 +1,12 @@
 import { Game } from './game/game.js';
 import { audio } from './engine/audio.js';
 import { writeMeta, writeSave, exportCode, importCode, loadSave } from './game/state.js';
+import { setupInstall } from './game/install.js';
 
 const canvas = document.querySelector('#view');
 const game = new Game(canvas);
 window.__limiar = game; // útil para depuração no console
+setupInstall(game);
 
 const menu = document.querySelector('#menu');
 const btnContinue = menu.querySelector('[data-act=continue]');

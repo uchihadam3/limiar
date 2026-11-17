@@ -214,7 +214,7 @@ export class UI {
   endingsList(meta) {
     const rows = Object.entries(ENDINGS).map(([id, e]) => {
       const got = meta.endings[id];
-      return `<div class="ending-row ${got ? '' : 'locked'}"><span class="t">${got ? e.title : '???'}</span><span class="k">${got ? e.kind : (e.locked ? 'em breve · ' + e.kind : e.kind)}</span></div>`;
+      return `<div class="ending-row ${got ? '' : 'locked'}"><span class="t">${got ? e.title : '???'}</span><span class="k">${e.kind}</span></div>`;
     }).join('');
     const n = Object.keys(meta.endings).length, total = Object.keys(ENDINGS).length;
     this.modal('Finais', `<div style="margin-bottom:10px">Descobertos: <b style="color:var(--ink)">${n} de ${total}</b></div>${rows}<div class="save-note">Os finais descobertos ficam guardados mesmo se você começar um novo jogo.</div>`);

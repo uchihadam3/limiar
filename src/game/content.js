@@ -9,7 +9,18 @@ export const ITEMS = {
   espelho1: { name: 'Fragmento de espelho (I)', icon: '🪞', desc: 'Um caco de espelho antigo. No reflexo, por um instante, o cômodo atrás de você está diferente. Há um "I" riscado atrás.' },
   espelho2: { name: 'Fragmento de espelho (II)', icon: '🪞', desc: 'Outro caco do mesmo espelho. As bordas se encaixam no primeiro. Há um "II" riscado atrás.' },
   vela: { name: 'Toco de vela preta', icon: '🕯️', desc: 'Uma vela de cera preta, nunca acesa. Cheira a terra molhada.' },
+  chave_passaro: { name: 'Chave-pássaro', icon: '🐦', desc: 'Uma chave de bronze cujo cabo é um pássaro de asas abertas. Estava presa numa gaiola, como se fosse o próprio pássaro.' },
+  rede: { name: 'Rede de cabo longo', icon: '🥅', desc: 'Uma rede de limpar lago, com um cabo comprido de bambu. Ainda tem folhas presas na malha.' },
+  chave_jardineiro: { name: 'Chave do jardineiro', icon: '🗝️', desc: 'Uma chave de ferro com uma etiqueta de madeira: "ESTUFA — ARMÁRIO".' },
+  espelho3: { name: 'Fragmento de espelho (III)', icon: '🪞', desc: 'Um caco comprido, quase uma lâmina. Atrás, um "III". No reflexo, as sebes do labirinto parecem mais altas.' },
+  chave_capela: { name: 'Chave da capela', icon: '🗝️', desc: 'Uma chave grande e escura, com uma cruz vazada no cabo.' },
+  ficha_sol: { name: 'Ficha de pedra: Sol', icon: '☀️', desc: 'Um disco de pedra lisa com um sol entalhado. Era o gnômon do relógio de sol.' },
+  ficha_lua: { name: 'Ficha de pedra: Lua', icon: '🌙', desc: 'Um disco de pedra com uma lua crescente. Estava no fundo do lago, exatamente onde a lua se refletia.' },
+  ficha_arvore: { name: 'Ficha de pedra: Árvore', icon: '🌳', desc: 'Um disco de pedra com uma árvore sem folhas entalhada. Estava guardado entre sementes que nunca brotaram.' },
 };
+
+// Fichas de símbolo que encaixam na porta de pedra da Adega
+export const TOKENS = ['sol', 'lua', 'estrela', 'sino', 'arvore', 'coroa', 'escada', 'peixe', 'ampulheta'];
 
 // Bilhetes: aparecem no diário (J) depois de lidos.
 export const NOTES = {
@@ -39,11 +50,19 @@ export const NOTES = {
   },
   adega: {
     title: 'Inscrição na porta de pedra (adega)',
-    text: 'DEZ SINAIS. DEZ PORTAS.\nSÓ DESCE QUEM JÁ SUBIU.\n\n(Abaixo, nove encaixes vazios em forma de símbolo. O décimo já está ocupado: um olho aberto.)',
+    text: 'DEZ SINAIS. DEZ PORTAS.\nSÓ DESCE QUEM JÁ SUBIU.\n\n(Em volta, dez encaixes em forma de símbolo. Só um está ocupado: um olho aberto. Os outros nove esperam fichas de pedra.)',
+  },
+  jardineiro: {
+    title: 'Caderno do jardineiro',
+    text: '12 de março — O anjo de pedra amanheceu de novo virado para a casa. Desvirei. Não conto pra patroa.\n\n19 de março — A menina amarrou fitas vermelhas nas roseiras que ela mesma plantou. "Pra elas não se perderem de mim." Deixei as fitas.\n\n2 de abril — Escutei o sino da capela tocar sozinho. Contei doze badaladas. No dia seguinte o patrão me mostrou uma porta nova no corredor. Disse que sempre esteve lá.\n\n9 de abril — Prendi a escada comprida com cadeado. O patrão quer que ninguém suba na sacada da patroa. Usei os números do jardim, pra não esquecer.\n\n(As páginas seguintes estão em branco.)',
+  },
+  relogio_sol: {
+    title: 'Inscrição no relógio de sol (labirinto)',
+    text: 'AQUI O SOL NUNCA SE PÕE.\nMOSTRE-ME A HORA EM QUE ELA PARTIU\nE EU TE DAREI O MEU SOL.\n\n(O mostrador tem as doze horas em algarismos romanos. É noite: não há sol para fazer sombra.)',
   },
 };
 
-// Finais. O jogo completo terá todos; o Capítulo I tem os dois primeiros.
+// Finais. Os marcados com locked ainda não podem ser alcançados nesta versão do jogo.
 export const ENDINGS = {
   porta_frente: {
     title: 'A Porta da Frente', kind: 'Final mediano',
@@ -65,11 +84,10 @@ export const ENDINGS = {
       'A mesa está completa.',
     ],
   },
-  // Finais planejados para os próximos capítulos (aparecem como "???" na lista)
-  afogado: { title: 'Maré Baixa', kind: 'Final ruim', hint: 'Capítulo II', locked: true },
-  arquiteto: { title: 'A Planta da Casa', kind: 'Final bom', hint: 'Capítulo III', locked: true },
-  clara: { title: 'Mãos Dadas', kind: 'Final bom', hint: 'Capítulo III', locked: true },
-  hospede: { title: 'O Novo Dono', kind: 'Final mediano', hint: 'Capítulo III', locked: true },
+  afogado: { title: 'Maré Baixa', kind: 'Final ruim', hint: '???', locked: true },
+  arquiteto: { title: 'A Planta da Casa', kind: 'Final bom', hint: '???', locked: true },
+  clara: { title: 'Mãos Dadas', kind: 'Final bom', hint: '???', locked: true },
+  hospede: { title: 'O Novo Dono', kind: 'Final mediano', hint: '???', locked: true },
   espelho: { title: 'O Outro Lado do Espelho', kind: 'Final secreto', hint: '???', locked: true },
   limiar: { title: 'Limiar', kind: 'Final verdadeiro', hint: '???', locked: true },
 };

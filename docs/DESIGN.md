@@ -1,115 +1,179 @@
-# LIMIAR: documento de design
+# LIMIAR: documento de design (o jogo inteiro)
 
-> **Contém spoilers.** Este documento é a "bíblia" do jogo: história, regras, enigmas, finais e o plano dos próximos capítulos.
+> **Contém spoilers de tudo.** Este é o mapa mestre do jogo: um único lugar contínuo, todo conectado. Não existem capítulos. O jogo é construído aos poucos, mas sempre seguindo este plano. Cada coisa do começo tem uso lá na frente, e coisas lá da frente fazem o jogador voltar ao começo.
 
-## 1. A ideia
+---
 
-Um jogo de terror e enigmas em primeira pessoa, em 3D, inspirado na **mecânica** do livro *MAZE* (Christopher Manson, 1985). A casa, a história, as salas e os enigmas são **originais**. Do livro, vêm as ideias:
+## 1. Princípios
 
-- cada sala tem várias portas, e **cada porta mostra o número da sala para onde leva**;
-- **a decoração é a pista**: quadros, objetos, inscrições e detalhes da sala dizem coisas;
-- existe um "guia" (aqui, o Arquiteto e a própria casa) em que **nem sempre se pode confiar**;
-- o objetivo não é só sair, é **entender** a casa.
+1. **Um mundo só.** A casa, o jardim, o andar de cima e o subterrâneo formam um único mapa. Atalhos abertos mais tarde reconectam áreas (o jogador sempre volta ao Vestíbulo).
+2. **Observar é jogar.** Toda resposta está no cenário: quadros, objetos, números, sombras, sons.
+3. **Pistas partidas e cruzadas.** Nenhum enigma importante se resolve com informação de uma sala só.
+4. **Pistas falsas honestas.** Há respostas "quase certas" (ex.: 8h00 = "hora de dormir"), mas a pista completa sempre desfaz a dúvida.
+5. **Regras que se repetem e se aprofundam.** O jogo ensina poucas ideias e depois as usa de formas cada vez mais espertas (abaixo).
+6. **Medo sem morte.** Ninguém mata o jogador. Os finais ruins são escolhas.
 
-Pilares:
-1. **Observar é jogar.** Nada se resolve no impulso; tudo se resolve olhando.
-2. **Pistas partidas.** Informação dividida entre salas (a placa partida é o modelo).
-3. **Medo sem morte.** Não há inimigo que mate. O medo vem do som, da luz, do que se move quando você não olha.
-4. **Vários finais.** Saídas fáceis existem e são finais mais fracos. O final verdadeiro exige ter entendido tudo.
+### As regras da casa (o jogador aprende aos poucos)
+| Regra | Onde é ensinada | Onde é aprofundada |
+|---|---|---|
+| **A porta mostra o número do destino.** | Vestíbulo | Sala que se Repete (portas que mentem: número de cabeça para baixo, 6 que é 9) |
+| **Os 10 símbolos** (sol, lua, estrela, sino, árvore, coroa, escada, peixe, ampulheta, olho) | lintéis das portas | porta de pedra da Adega; rotas do Rio Subterrâneo |
+| **A canção da Clara** (13 notas) | caixinha de música e porta do Olho | piano da Sala de Música; Câmara dos Ecos |
+| **9h40, a hora em que ela partiu** | despertador + placa partida | relógio do Vestíbulo; relógio de sol do Labirinto (com a luz do lampião); planisfério do Observatório |
+| **O espelho mostra o que não está lá** | espelho quebrado do Vestíbulo | com um caco, inscrições escritas ao contrário ficam legíveis; os 7 cacos abrem O Outro Lado |
+| **O sino chama as portas pelo número** | diário do jardineiro | tocar o sino da capela 12 vezes faz a porta 12 "existir" |
 
-## 2. A história (o que o jogador vai descobrindo)
+---
 
-- **Aurélio Brandt**, arquiteto, construiu a casa para a esposa **Helena** e a filha **Clara**.
-- Na noite em que Clara fez 7 anos, ela sumiu **às 9h40** (o despertador do quarto parou nessa hora). O relógio grande do vestíbulo parou junto.
-- Aurélio descobriu que a casa **responde à planta**: o que ele desenha aparece. Desesperado, desenhou portas para "achar" a filha e pediu que a casa **nunca a deixasse sair**. A casa obedeceu, mas não do jeito que ele queria.
-- Ele quebrou o **espelho do salão**, que mostrava Clara do outro lado, e espalhou os cacos pela casa.
-- **O Visitante** (o jogador) acorda no vestíbulo. O bilhete diz "bem-vindo **de volta**". Há um retrato chamado "O Visitante" com a tinta fresca, e um casaco do seu tamanho, molhado de chuva.
-- Revelação do final verdadeiro (Capítulo III): remontar o espelho mostra que **o Visitante é a pessoa que a casa trouxe para ocupar o lugar de Clara**, e que "a casa" e "o Arquiteto" já não são coisas separadas ("ELE NÃO ERA O PAI DELA. ERA A CASA.", riscado a giz na adega).
+## 2. A história
 
-## 3. Capítulo I: A Casa (pronto)
+- **Aurélio Brandt**, arquiteto, construiu a casa para **Helena** e para a filha **Clara**.
+- Na noite do aniversário de 7 anos (7 de março), Clara sumiu **às 9h40**. Os relógios da casa pararam.
+- Aurélio descobriu que **a casa obedece à planta**: o que ele desenhava, aparecia. Desenhou portas para encontrar a filha e pediu à casa que **nunca deixasse Clara sair**. A casa obedeceu e a escondeu **do outro lado do espelho**.
+- Aurélio quebrou o espelho e espalhou os 7 cacos, para que ninguém a levasse embora. Com o tempo, **ele e a casa viraram a mesma coisa** ("ELE NÃO ERA O PAI DELA. ERA A CASA.").
+- **O Visitante** (o jogador) não lembra de nada. A casa o chamou para ocupar um lugar à mesa: o sétimo lugar. O bilhete diz "bem-vindo **de volta**", porque ele já esteve aqui antes e falhou. O retrato "O Visitante" tem a tinta fresca. Lá no fundo, o rosto dele vira o próprio rosto do jogador.
 
-### Salas
-| Nº | Sala | Portas (nº = destino) | Destaques |
-|---|---|---|---|
-| 1 | Vestíbulo | 2 ☉, 3 ☾, 8 olho, porta da frente | relógio de pé parado, espelho quebrado, quadro da casa |
-| 2 | Biblioteca | 1, 4 ✶, passagem secreta | metade esquerda da placa, carta do Arquiteto, estante giratória |
-| ? | Gabinete do Arquiteto | volta à biblioteca | diário, **planta da casa (mapa)**, caco de espelho I |
-| 3 | Sala de Jantar | 1, 5 sino | prato virado, cadeira caída (o "sétimo lugar") |
-| 4 | Corredor dos Retratos | 2, 7, 10, 11, 12, 13 | retratos cujos olhos seguem; o vulto |
-| 5 | Cozinha | 3, 6, despensa | forno, caderno de receitas, panelas que balançam |
-| 6 | Estufa | 5, portão do jardim | chuva, relâmpagos, **metade direita da placa (no chão, presa)**, estátua que se aproxima, caco II |
-| 7 | Quarto da Menina | 4 | despertador às 9h40, desenhos, caixinha de música, boneca que vira a cabeça |
-| 8 | Escadaria | 1, 9 | descida em pedra, tochas |
-| 9 | Adega | 8 | porta de pedra com 10 símbolos (gancho do Cap. II), círculo de giz, vela preta |
+---
 
-### Cadeia de enigmas
-1. **Placa partida.** Metade esquerda na Biblioteca, metade direita caída na Estufa (dá para ver, não dá para pegar). Juntas, dizem:
-   > QUEM QUISER A PORTA DA FRENTE, / ACORDE O RELÓGIO NA HORA EM QUE / A MENINA ADORMECEU PELA ÚLTIMA VEZ. / O OLHO SÓ ACORDA COM A CANÇÃO DELA.
-
-   Só com a metade esquerda, "a menina adorm…" engana: o desenho "hora de dormir" mostra **8h00**. A metade direita ("pela última vez") aponta para o **despertador parado em 9h40**.
-2. **Chave de latão.** Debaixo do único prato virado na Sala de Jantar. Abre a **porta 7** (Quarto).
-3. **Manivela.** No forno da Cozinha ("esconder o presente dentro do forno, onde a mamãe nunca olha", diz o caderno).
-4. **Caixinha de música** no Quarto + manivela = caixinha com corda.
-5. **Porta 8 (olho fechado)** no Vestíbulo: tocar a canção da menina diante dela faz o olho abrir. Pistas: o desenho "QUANDO EU CANTO O OLHO ACORDA" e a última linha da placa.
-6. **Relógio de pé às 9h40** → abre a base → **chave de ferro** → porta da frente.
-7. **Estante secreta.** "O vermelho abre" (entalhe sob a cadeira caída) → puxar o livro vermelho na Biblioteca → Gabinete.
-
-### Segredos e detalhes
-- Os olhos dos retratos acompanham o jogador.
-- A boneca do quarto vira a cabeça quando você não está olhando.
-- A estátua lá fora da estufa fica mais perto a cada visita.
-- Blocos de brinquedo formando "F I Q U E".
-- Ao voltar ao Vestíbulo pela primeira vez, uma vela do lustre apaga com um sussurro.
-- O vulto no fim do Corredor (uma única vez).
-- O quadro da casa mostra uma janela acesa com uma criança (4ª da esquerda).
-
-## 4. Finais
-
-| Final | Tipo | Como | Status |
-|---|---|---|---|
-| A Porta da Frente | mediano | relógio às 9h40 → chave de ferro → sair | **Cap. I** |
-| O Sétimo Lugar | ruim | erguer a cadeira caída e se sentar (duas vezes) | **Cap. I** |
-| Maré Baixa | ruim | (cavernas inundadas) | Cap. II |
-| A Planta da Casa | bom | confrontar o Arquiteto e redesenhar a planta | Cap. III |
-| Mãos Dadas | bom | encontrar Clara e sair com ela | Cap. III |
-| O Novo Dono | mediano | aceitar ficar e "ser" a casa | Cap. III |
-| O Outro Lado do Espelho | secreto | atravessar o espelho remontado sem todos os cacos | Cap. III |
-| **Limiar** | **verdadeiro** | todos os 7 cacos de espelho + entender quem é o Visitante | Cap. III |
-
-Os finais descobertos ficam salvos mesmo ao começar um novo jogo.
-
-## 5. Próximos capítulos (plano)
-
-### Capítulo II: Lá Embaixo
-- A porta de pedra da adega: **10 encaixes de símbolo**; cada símbolo vem de uma porta da casa (o olho já está encaixado). O jogador precisa achar **fichas de símbolo** escondidas.
-- Portas 10, 11 e 12 do Corredor abrem por dentro, vindo do subterrâneo (atalhos).
-- **Cavernas**: rio subterrâneo, maré que sobe e desce (o "Atlas das Marés" da biblioteca é a pista), salas inundadas, eco, criaturas que só se movem no escuro.
-- Portão do jardim (fechadura em forma de pássaro) leva ao **lado de fora**: jardim, labirinto de cerca viva, capela.
-- Cacos de espelho III, IV e V.
-
-### Capítulo III: O Andar de Cima e o Espelho
-- Escada principal até o 2º andar (quarto do casal, sótão, observatório).
-- Porta 13 ("NÃO ABRIR").
-- Remontar o espelho do vestíbulo. Finais bons e o verdadeiro.
-- Cacos VI e VII.
-
-## 6. Como o código é organizado
+## 3. O mapa inteiro
 
 ```
-src/
-  engine/   renderizador, jogador, áudio procedural, texturas, construtor de salas, móveis, toque
-  game/     núcleo (portas, itens, save, finais), interface, textos (itens, bilhetes, finais)
-  rooms/    uma função por sala; index.js registra todas
+                         [24 Observatório]
+                                │
+          [23 Sótão]──────[20 Galeria]──────[21 Quarto do Casal]──(sacada)──┐
+                                │ escadaria principal (entulho)              │ escada do jardineiro
+ ANDAR DE CIMA                  │                                            │
+ ═══════════════════════════════╪════════════════════════════════════════════╪═══════════
+ TÉRREO           [7 Quarto]   [1 VESTÍBULO]──(espelho: 7 cacos)──►[0 O OUTRO LADO]
+                     │          │   │   │                                    │
+ [13 NÃO ABRIR]──[4 Corredor]──[2 Biblioteca]  [3 Jantar]──[5 Cozinha]──[6 Estufa]──[15 JARDIM]
+     │  10 11 12   │      └[? Gabinete]     │        (despensa)          ├─[16 Labirinto]
+     │   │  │  │   │                        │            ▲               ├─[17 Capela]
+     │ [10 Música] [11 Banho] [12 Sala que se Repete]    │               ├─[18 Poço]
+     │             ▲                        │            │               └─[19 Casa do Jardineiro]
+     │             │                     [8 Escadaria]   │                    │
+ ════╪═════════════╪════════════════════════╪════════════╪════════════════════╪══════════
+ SUBTERRÂNEO       │                     [9 Adega]       │                    │ (poço)
+     │             │                        │ porta de pedra (10 sinais)      │
+     │             │                    [26 Câmara dos Dez Sinais]            │
+     │             └─────────[28 Rio Subterrâneo]──────┴─(alçapão da despensa)┘
+     │                     /            \
+     │          [27 Gruta das Marés]  [29 Câmara dos Ecos]
+     │                                      │
+     └───────────────────────────────[30 O Coração da Casa]
 ```
 
-### Para criar uma sala nova
-1. Crie `src/rooms/minhasala.js` exportando `function minhasala(game)` que monta um `Room`.
-2. Declare portas com `r.door({ id, wall, at, num, symbol, to, toDoor, lock })`, depois chame `r.finalize({...})`.
-3. Registre em `src/rooms/index.js`.
-4. Ligue uma porta de outra sala com `to: 'minhasala', toDoor: '<id da porta de chegada>'`.
+Atalhos que reconectam o mapa:
+- **Escadaria principal** (Galeria ↔ Vestíbulo): liberada por cima, empurrando o entulho. É a volta ao começo.
+- **Porta 11** (Banho inundado ↔ Corredor): aberta por dentro, vindo do Rio Subterrâneo.
+- **Despensa** (Cozinha ↔ Rio): o alçapão é destrancado por baixo. O "arranhar" na despensa era a água batendo.
+- **Poço** (Jardim → Rio): descida só de ida. Mais tarde, vista de baixo.
 
-Tipos de tranca: `key` (item), `flag` (condição), `custom` (função), `sealed` (nunca abre neste capítulo).
+---
 
-### Save
-- Automático: ao atravessar portas, pegar itens, resolver enigmas e a cada 15 s.
-- Fica no navegador (`localStorage`). Para trocar de aparelho, use **Código de progresso** no menu.
+## 4. Áreas, salas e enigmas
+
+Legenda: ✅ construído · 🔨 em construção · ⏳ planejado
+
+### 4.1 Térreo ✅
+| Nº | Sala | Conteúdo-chave |
+|---|---|---|
+| 1 | Vestíbulo | relógio de pé (9h40 → chave de ferro), espelho quebrado (destino dos 7 cacos), porta do Olho, porta da frente |
+| 2 | Biblioteca | metade esquerda da placa, carta, estante giratória (livro vermelho) |
+| ? | Gabinete do Arquiteto | diário, planta da casa (mapa), **caco I** |
+| 3 | Sala de Jantar | prato virado (chave de latão), sétimo lugar (final ruim) |
+| 4 | Corredor dos Retratos | portas 7, 10, 11, 12, 13; retratos que olham |
+| 5 | Cozinha | forno (manivela), despensa (atalho tardio) |
+| 6 | Estufa | metade direita da placa, **caco II**, armário de vasos trancado (**ficha da Árvore**, com a chave do jardineiro), portão do pássaro |
+| 7 | Quarto da Menina | despertador 9h40, desenhos, caixinha de música |
+| 8 | Escadaria | descida |
+| 9 | Adega | porta de pedra com 10 encaixes; círculo de giz + gaiola (vela preta → **chave-pássaro**) |
+
+### 4.2 Jardim 🔨
+| Nº | Sala | Conteúdo-chave |
+|---|---|---|
+| 15 | Jardim | lago com a **ficha da Lua** no fundo (precisa da rede); 7 roseiras (4 com fita vermelha); fachada com 6 janelas (3 acesas); capela com 5 degraus; sacada do Quarto do Casal; balanço da Clara; o anjo de pedra |
+| 16 | Labirinto | centro: **relógio de sol**. À noite não há sol: o jogador usa **a luz do próprio lampião** para fazer a sombra do gnômon marcar **9h40** e soltar a **ficha do Sol**. Beco sem saída: **caco III** |
+| 17 | Capela ⏳ | trancada (a chave está no Quarto do Casal). Túmulo vazio da Clara (data: **7/3**). Sino: tocar **12 vezes** abre a porta 12. Dentro do sino: **ficha do Sino**. Sob a toalha do altar: **caco V** |
+| 18 | Poço ⏳ | com a corda do Sótão: balde traz a **ficha do Peixe**; mais tarde, descida para o Rio |
+| 19 | Casa do Jardineiro | rede, chave do jardineiro, diário do jardineiro; **escada comprida** presa por cadeado de 3 dígitos com os símbolos 🌹 🪟 ⛪: roseiras **com fita** (4) · janelas **acesas** (3) · degraus da capela (5) = **435** |
+
+### 4.3 Andar de cima ⏳
+| Nº | Sala | Conteúdo-chave |
+|---|---|---|
+| 21 | Quarto do Casal | entrada pela sacada (escada do jardineiro). Bíblia da Helena com a **chave da capela**. Porta-joias com código de 4 dígitos = aniversário da Clara **0703** (lido no túmulo) → **ficha da Coroa** |
+| 20 | Galeria | olha para o Vestíbulo lá embaixo; entulho na escadaria principal (alavanca → atalho para o Vestíbulo) |
+| 23 | Sótão | **corda**, **ficha da Escada** (dentro do baú de brinquedos: a tampa abre com os blocos certos), **caco IV** |
+| 24 | Observatório | **planisfério**: girar os discos até a data **7/3** e a hora **9h40**; o telescópio mostra 4 estrelas formando um número, que abre o armário: **ficha da Estrela** |
+| 10 | Sala de Música (térreo, porta 10) | tábuas: arrancar com o pé de cabra (Sótão). Piano: as teclas têm adesivos coloridos da Clara; o desenho "minha música" (Quarto) traz a canção em bolinhas coloridas → **ficha da Ampulheta**. Na parede, texto espelhado (lido com um caco): pista do planisfério |
+
+### 4.4 Subterrâneo ⏳ (abre com as 10 fichas na porta de pedra)
+| Nº | Sala | Conteúdo-chave |
+|---|---|---|
+| 26 | Câmara dos Dez Sinais | 10 túneis com os 10 símbolos; só os que seguem a ordem das portas do corredor levam adiante |
+| 27 | Gruta das Marés | três comportas; a ordem certa vem do "Atlas das Marés" (o livro vermelho da Biblioteca). Esvaziar revela o **caco VI**. Mergulhar com a maré alta = **final Maré Baixa** |
+| 28 | Rio Subterrâneo | barco; bifurcações marcadas com símbolos; leva ao fundo do poço, ao alçapão da despensa e ao Banho (porta 11) |
+| 29 | Câmara dos Ecos | tocar a caixinha: o eco devolve a canção com **uma nota errada**; o símbolo que se acende nessa nota indica o túnel certo |
+| 30 | O Coração da Casa | Aurélio, fundido às raízes. Revela a verdade. **Caco VII**. Escolhas: **O Novo Dono** / **A Planta da Casa** |
+
+### 4.5 O fim: de volta ao começo ⏳
+- **12, Sala que se Repete** (sino × 12): todas as portas voltam para a mesma sala, a menos que se siga a sequência certa. Algumas portas **mentem** (números de cabeça para baixo). Saída: a porta 13 vista por dentro.
+- **Espelho do Vestíbulo** + 7 cacos = passagem para **0, O Outro Lado**: o Vestíbulo espelhado, iluminado, com Clara.
+- **13, NÃO ABRIR**: só abre por dentro, com Clara pela mão.
+
+---
+
+## 5. Finais (8)
+
+| Final | Tipo | Condição |
+|---|---|---|
+| **A Porta da Frente** | mediano | relógio 9h40 → chave de ferro → sair (possível desde o começo) |
+| **O Sétimo Lugar** | ruim | erguer a cadeira caída e sentar (2×) |
+| **Maré Baixa** | ruim | mergulhar na Gruta das Marés com a maré alta |
+| **O Novo Dono** | mediano | aceitar a pena do Arquiteto no Coração da Casa |
+| **A Planta da Casa** | bom | queimar a planta com a vela preta no Coração da Casa |
+| **Mãos Dadas** | bom | trazer Clara do Outro Lado e sair pela porta da frente |
+| **O Outro Lado do Espelho** | secreto | ficar no lugar de Clara |
+| **Limiar** | **verdadeiro** | 7 cacos + as 3 verdades (diário do Arquiteto, giz da Adega, o retrato "O Visitante" depois do Coração) + sair com Clara pela **porta 13** |
+
+---
+
+## 6. Itens
+
+| Item | Onde | Para quê |
+|---|---|---|
+| chave de latão | Jantar (prato) | porta 7 |
+| manivela + caixinha | Cozinha + Quarto | porta do Olho; Câmara dos Ecos |
+| chave de ferro | relógio do Vestíbulo | porta da frente |
+| vela preta | Adega | gaiola da Adega; queimar a planta (final) |
+| chave-pássaro | Adega (gaiola) | portão do jardim (Estufa) |
+| rede | Casa do Jardineiro | ficha da Lua (lago) |
+| chave do jardineiro | Casa do Jardineiro | armário da Estufa (ficha da Árvore) |
+| chave da capela | Quarto do Casal | Capela |
+| corda | Sótão | Poço |
+| pé de cabra | Sótão | tábuas da porta 10 |
+| 10 fichas de símbolo | espalhadas | porta de pedra |
+| 7 cacos de espelho | espalhados | O Outro Lado |
+
+---
+
+## 7. Ordem de construção
+1. ✅ Térreo
+2. 🔨 Jardim: Jardim, Labirinto, Casa do Jardineiro; gaiola da Adega; armário da Estufa; encaixes da porta de pedra
+3. ⏳ Andar de cima + escadaria principal no Vestíbulo + Capela + Poço
+4. ⏳ Sala de Música, Sótão, Observatório
+5. ⏳ Subterrâneo inteiro + atalhos
+6. ⏳ Sala que se Repete, O Outro Lado, finais restantes
+
+---
+
+## 8. Código
+```
+src/engine/   renderizador, jogador, áudio procedural, texturas, salas, móveis, toque, exterior
+src/game/     núcleo (portas, itens, save, finais), interface, textos, instalação/atualização
+src/rooms/    uma função por sala; index.js registra todas
+```
+Para criar uma sala: crie `src/rooms/x.js` exportando `function x(game)`, declare portas com `r.door({...})`, chame `r.finalize({...})` e registre em `src/rooms/index.js`.
+Tipos de tranca: `key`, `flag`, `custom`, `sealed`.
+
+O save é automático (localStorage). Instalado como app (PWA), o jogo se atualiza sozinho a cada versão publicada.

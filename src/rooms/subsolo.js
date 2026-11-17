@@ -85,36 +85,43 @@ export function adega(game) {
   const arch = new THREE.Mesh(new THREE.TorusGeometry(1.35, 0.15, 8, 24, Math.PI), M.stone); arch.position.y = 1.6; slab.add(arch);
   for (const sx of [-1, 1]) { const col = new THREE.Mesh(new THREE.BoxGeometry(0.3, 1.6, 0.4), M.stone); col.position.set(sx * 1.35, 0.8, 0); slab.add(col); }
   const syms = ['sol', 'lua', 'estrela', 'sino', 'arvore', 'coroa', 'escada', 'peixe', 'ampulheta', 'olho'];
-  const plateTex = paintTexture(512, 512, (ctx, w, h) => {
+  const NAMES = { sol: 'do Sol', lua: 'da Lua', estrela: 'da Estrela', sino: 'do Sino', arvore: 'da Árvore', coroa: 'da Coroa', escada: 'da Escada', peixe: 'do Peixe', ampulheta: 'da Ampulheta' };
+  const placed = (sy) => sy === 'olho' || !!f['ficha:' + sy];
+  const drawStone = (ctx, w, h) => {
     ctx.fillStyle = '#4a463e'; ctx.fillRect(0, 0, w, h);
-    syms.forEach((s, i) => {
+    syms.forEach((sy, i) => {
       const a = (i / syms.length) * Math.PI * 2 - Math.PI / 2;
       const cx = w / 2 + Math.cos(a) * 180, cy = h / 2 + Math.sin(a) * 180;
       ctx.fillStyle = '#1c1a16'; ctx.beginPath(); ctx.arc(cx, cy, 40, 0, 7); ctx.fill();
-      if (s === 'olho') { ctx.fillStyle = '#8a7040'; ctx.beginPath(); ctx.arc(cx, cy, 36, 0, 7); ctx.fill(); drawSymbol(ctx, 'olho', cx, cy, 28, '#1a1008'); }
-      else drawSymbol(ctx, s, cx, cy, 26, 'rgba(120,110,95,0.6)', 3);
+      if (placed(sy)) { ctx.fillStyle = '#8a7040'; ctx.beginPath(); ctx.arc(cx, cy, 36, 0, 7); ctx.fill(); drawSymbol(ctx, sy, cx, cy, 26, '#1a1008', 3); }
+      else drawSymbol(ctx, sy, cx, cy, 26, 'rgba(120,110,95,0.6)', 3);
     });
     ctx.strokeStyle = '#2a2620'; ctx.lineWidth = 6; ctx.beginPath(); ctx.arc(w / 2, h / 2, 110, 0, 7); ctx.stroke();
     ctx.fillStyle = '#2a2620'; ctx.font = '30px "IM Fell English SC", Georgia'; ctx.textAlign = 'center';
     ctx.fillText('DEZ SINAIS', w / 2, h / 2 - 10); ctx.fillText('DEZ PORTAS', w / 2, h / 2 + 30);
-  }, 'stonedoor');
+  };
+  const plateTex = paintTexture(512, 512, drawStone);
+  const redraw = () => { drawStone(plateTex.userData.canvas.getContext('2d'), 512, 512); plateTex.needsUpdate = true; };
   const plate = new THREE.Mesh(new THREE.CircleGeometry(0.9, 40), new THREE.MeshStandardMaterial({ map: plateTex, roughness: 0.9, bumpMap: plateTex, bumpScale: 3 }));
   plate.position.set(0, 1.45, 0.16); slab.add(plate);
   slab.traverse((o) => { o.castShadow = true; o.receiveShadow = true; });
   slab.position.set(0, 0, 4.35); slab.rotation.y = Math.PI; r.add(slab);
   r.collider(-1.6, 1.6, 3.9, 4.5);
   r.light(0x8899aa, 0.6, 4, 0, 2.5, 3.2, { flicker: 0.1 });
+  const count = () => syms.filter(placed).length;
   r.interact(slab, {
-    label: 'Examinar a porta de pedra',
+    label: () => game.state.inventory.some((i) => i.startsWith('ficha_')) ? 'Encaixar as fichas de pedra' : 'Examinar a porta de pedra',
+    sub: () => `${count()} de 10 sinais`,
     onUse: () => {
-      game.readNote('adega');
-      if (!f.fim_cap1) {
-        f.fim_cap1 = true; game.save();
-        game.ui.onClose = () => {
-          audio.stinger();
-          game.ui.toast('<em>FIM DO CAPÍTULO I</em><br>A casa continua lá embaixo. Ainda há segredos aqui em cima: finais, cacos de espelho, portas que você não abriu.', 9000);
-        };
-      }
+      const held = game.state.inventory.filter((i) => i.startsWith('ficha_'));
+      if (!held.length) { game.readNote('adega'); return; }
+      held.forEach((id, k) => setTimeout(() => { audio.grind(); }, k * 700));
+      for (const id of held) { f['ficha:' + id.slice(6)] = true; game.take(id); }
+      redraw();
+      const names = held.map((id) => NAMES[id.slice(6)]).join(', ');
+      const n = count();
+      game.ui.toast((held.length > 1 ? `Você encaixa as fichas ${names.replace(/, ([^,]*)$/, ' e $1')}. Elas giram sozinhas e afundam na pedra.<br>` : `Você encaixa a ficha ${names}. Ela gira sozinha e afunda na pedra.<br>`) + `<em>${n} de 10 sinais.</em>` + (n === 10 ? '' : ` Ainda faltam ${10 - n}.`), 6000);
+      game.save();
     },
   });
 
@@ -131,7 +138,60 @@ export function adega(game) {
   P.chair(r, 0.8, 0.2, 2.5);
   const ropeM = new THREE.MeshStandardMaterial({ color: 0x6a5a3a, roughness: 1 });
   for (let i = 0; i < 3; i++) { const rope = new THREE.Mesh(new THREE.TorusGeometry(0.24, 0.015, 6, 20), ropeM); rope.position.set(0.8, 0.35 + i * 0.2, 0.2); rope.rotation.x = Math.PI / 2; r.add(rope); }
-  r.hitbox(0.8, 1.1, 0.8, 0.8, 0.55, 0.2, { label: 'Examinar a cadeira', onUse: () => { audio.whisper(0.1); game.ui.toast('Cordas cortadas, não desamarradas. No assento, riscado a giz: <em>"ELE NÃO ERA O PAI DELA. ERA A CASA."</em>', 7000); } });
+  // a gaiola pendurada sobre a cadeira, com uma chave-pássaro dentro
+  const cage = new THREE.Group();
+  const bars = 14, cr = 0.22;
+  for (let i = 0; i < bars; i++) { const a = (i / bars) * Math.PI * 2; const b = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.004, 0.45, 4), M.brass); b.position.set(Math.cos(a) * cr, 0, Math.sin(a) * cr); cage.add(b); }
+  for (const y of [-0.22, 0.22]) { const ring = new THREE.Mesh(new THREE.TorusGeometry(cr, 0.008, 6, 24), M.brass); ring.rotation.x = Math.PI / 2; ring.position.y = y; cage.add(ring); }
+  const dome = new THREE.Mesh(new THREE.SphereGeometry(cr, 16, 8, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshStandardMaterial({ color: 0x6a5228, metalness: 0.8, roughness: 0.4, wireframe: true })); dome.position.y = 0.22; cage.add(dome);
+  const chainUp = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.006, 0.9, 4), M.iron); chainUp.position.y = 0.9; cage.add(chainUp);
+  const floorPivot = new THREE.Group(); floorPivot.position.set(-cr, -0.22, 0); cage.add(floorPivot);
+  const floorDisc = new THREE.Mesh(new THREE.CircleGeometry(cr, 20), new THREE.MeshStandardMaterial({ color: 0x5a4422, metalness: 0.8, roughness: 0.5, side: THREE.DoubleSide })); floorDisc.rotation.x = -Math.PI / 2; floorDisc.position.x = cr; floorPivot.add(floorDisc);
+  const birdKey = new THREE.Group();
+  const kb = new THREE.Mesh(new THREE.ConeGeometry(0.03, 0.08, 6), M.brass); kb.rotation.z = Math.PI / 2; birdKey.add(kb);
+  for (const sz of [-1, 1]) { const wing = new THREE.Mesh(new THREE.PlaneGeometry(0.07, 0.035), new THREE.MeshStandardMaterial({ color: 0xb08a48, metalness: 0.9, roughness: 0.3, side: THREE.DoubleSide })); wing.position.set(0, 0.015, sz * 0.03); wing.rotation.x = sz * 0.6; birdKey.add(wing); }
+  const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.005, 0.005, 0.08, 6), M.brass); shaft.rotation.z = Math.PI / 2; shaft.position.x = 0.07; birdKey.add(shaft);
+  birdKey.position.y = -0.18; cage.add(birdKey);
+  cage.position.set(0.8, 2.15, 0.2); r.add(cage);
+  const caught = { v: f.gaiola ? 1 : 0 };
+  if (f.gaiola) { floorPivot.rotation.z = -1.4; birdKey.visible = false; }
+  r.onUpdate((dt, t) => {
+    cage.rotation.y = Math.sin(t * 0.4) * 0.15;
+    if (caught.v > 0 && caught.v < 1) { caught.v = Math.min(1, caught.v + dt * 1.5); floorPivot.rotation.z = -1.4 * caught.v; }
+  });
+  r.hitbox(0.5, 0.6, 0.5, 0.8, 2.15, 0.2, {
+    label: 'Olhar a gaiola', dist: 3.2,
+    onUse: () => game.ui.toast(f.gaiola ? 'A gaiola está vazia, com o fundo aberto.' : 'Dentro da gaiola, em vez de um pássaro, uma chave em forma de pássaro. A portinhola não tem fechadura, e o fundo está preso por um trinco que você não alcança.\nNo chão, o círculo de giz tem uma marca de cera, como se faltasse alguma coisa ali.', 6500),
+  });
+  // a marca de cera no círculo: lugar da vela
+  const waxSpot = new THREE.Mesh(new THREE.CircleGeometry(0.08, 16), new THREE.MeshStandardMaterial({ color: 0x0a0808, roughness: 0.4 }));
+  waxSpot.rotation.x = -Math.PI / 2; waxSpot.position.set(0.8, 0.01, 1.55); r.add(waxSpot);
+  let placedCandle = null;
+  const putCandle = () => {
+    const c = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.017, 0.12, 10), new THREE.MeshStandardMaterial({ color: 0x0c0a0a, roughness: 0.6 }));
+    c.position.set(0.8, 0.07, 1.55); r.add(c);
+    placedCandle = P.fire(r, 0.8, 0.13, 1.55, { scale: 0.09, intensity: 1.2 });
+    placedCandle.light.color.set(0x8a9aff);
+  };
+  if (f.gaiola) putCandle();
+  r.hitbox(0.35, 0.2, 0.35, 0.8, 0.08, 1.55, {
+    label: () => f.gaiola ? 'A vela preta' : game.has('vela') ? 'Pôr a vela preta na marca de cera' : 'Examinar a marca de cera',
+    onUse: () => {
+      if (f.gaiola) { game.ui.toast('A chama é azulada e não esquenta. Não se apaga.'); return; }
+      if (!game.has('vela')) { game.ui.toast('Uma mancha de cera preta derretida, bem na borda do círculo. Do tamanho de uma vela.'); return; }
+      game.take('vela'); game.flag('gaiola', true); putCandle();
+      audio.whisper(0.12);
+      game.ui.toast('Você põe a vela na marca. <em>Ela se acende sozinha</em>, com uma chama azul.', 5000);
+      setTimeout(() => { audio.click(0.3, 1600); audio.creak(0.08, 0.6, 400); caught.v = 0.01; }, 1800);
+      setTimeout(() => {
+        birdKey.visible = false; audio.click(0.2, 3000);
+        placeItem(r, game, 'chave_passaro', 'chave_latao', 0.8, 0.49, 0.2, { label: 'Pegar a chave-pássaro' });
+        game.ui.toast('O fundo da gaiola se abre. A chave-pássaro cai no assento da cadeira.');
+      }, 2600);
+    },
+  });
+  if (f.gaiola) placeItem(r, game, 'chave_passaro', 'chave_latao', 0.8, 0.49, 0.2, { label: 'Pegar a chave-pássaro' });
+  r.hitbox(0.8, 1.1, 0.8, 0.8, 0.55, 0.2, { enabled: () => !(f.gaiola && !f['took:chave_passaro']), label: 'Examinar a cadeira', onUse: () => { audio.whisper(0.1); game.ui.toast('Cordas cortadas, não desamarradas. No assento, riscado a giz: <em>"ELE NÃO ERA O PAI DELA. ERA A CASA."</em>', 7000); } });
 
   // prateleiras de vinho
   const bottleGeo = new THREE.CylinderGeometry(0.04, 0.04, 0.32, 8); bottleGeo.rotateX(Math.PI / 2);
