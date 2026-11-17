@@ -59,7 +59,7 @@ export class UI {
       if (e.code === 'Tab') { e.preventDefault(); this.open === 'inventory' ? this.close() : !this.open && this.showInventory(); }
       if (e.code === 'KeyJ') { this.open === 'journal' ? this.close() : !this.open && this.showJournal(); }
     });
-    $('#examine').addEventListener('click', () => this.close());
+    $('#examine').addEventListener('click', (e) => { if (e.target.closest('.paper-note') && e.target.closest('.paper-note').scrollHeight > e.target.closest('.paper-note').clientHeight + 4) return; this.close(); });
     // fechar tocando fora da folha ou na dica (útil no celular)
     for (const id of ['inventory', 'journal']) {
       $('#' + id).addEventListener('click', (e) => { if (e.target.id === id || e.target.classList.contains('close-hint')) this.close(); });
@@ -83,15 +83,34 @@ export class UI {
   }
 
   // Mostra um objeto de perto. draw(ctx,w,h) desenha a imagem; text é a legenda.
-  examine({ draw, canvas, text, onClose }) {
+  examine({ draw, canvas, text, onClose, note }) {
     const c = $('#examineCanvas'), ctx = c.getContext('2d');
-    ctx.clearRect(0, 0, c.width, c.height);
+    // bilhetes e cadernos: papel em HTML, com letra grande e rolagem (legível em qualquer tela)
+    const pn = $('#examine .paper-note');
+    pn.classList.toggle('hidden', !note);
+    if (note) {
+      pn.querySelector('.pn-title').textContent = note.title || '';
+      pn.querySelector('.pn-text').textContent = note.text;
+      pn.scrollTop = 0;
+      c.style.display = 'none';
+      $('#examine .examine-text').innerHTML = text ?? '';
+      this.onClose = onClose; this.openPanel('examine');
+      return;
+    }
+    // resolução real da tela (nítido no celular), mantendo as medidas lógicas 900 x 560
+    const LW = 900, LH = 560, dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+    c.width = Math.round(LW * dpr); c.height = Math.round(LH * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, LW, LH);
     if (canvas) {
-      const s = Math.min(c.width / canvas.width, c.height / canvas.height);
-      const w = canvas.width * s, h = canvas.height * s;
-      ctx.drawImage(canvas, (c.width - w) / 2, (c.height - h) / 2, w, h);
+      const cw = canvas.__w ?? canvas.width, ch = canvas.__h ?? canvas.height;
+      const s = Math.min(LW / cw, LH / ch);
+      ctx.save(); ctx.translate((LW - cw * s) / 2, (LH - ch * s) / 2); ctx.scale(s, s);
+      if (canvas.__draw) { ctx.beginPath(); ctx.rect(0, 0, cw, ch); ctx.clip(); canvas.__draw(ctx, cw, ch); }
+      else ctx.drawImage(canvas, 0, 0, cw, ch);
+      ctx.restore();
       c.style.display = 'block';
-    } else if (draw) { draw(ctx, c.width, c.height); c.style.display = 'block'; }
+    } else if (draw) { draw(ctx, LW, LH); c.style.display = 'block'; }
     else c.style.display = 'none';
     $('#examine .examine-text').innerHTML = text ?? '';
     this.onClose = onClose;
@@ -128,7 +147,7 @@ export class UI {
     $('#dial .dial-title').textContent = title;
     const body = $('#dial .dial-body');
     body.innerHTML = '';
-    const c = document.createElement('canvas'); c.width = 400; c.height = 400; body.appendChild(c);
+    const c = document.createElement('canvas'); c.width = 800; c.height = 800; body.appendChild(c);
     const help = document.createElement('div'); help.className = 'dial-help';
     help.innerHTML = 'Os ponteiros estão emperrados, mas se movem.';
     const row = document.createElement('div'); row.className = 'dial-row';
@@ -139,6 +158,7 @@ export class UI {
     let H = h, Mi = m;
     const draw = () => {
       const x = c.getContext('2d');
+      x.setTransform(2, 0, 0, 2, 0, 0);
       x.clearRect(0, 0, 400, 400);
       x.fillStyle = '#d6c8a5'; x.beginPath(); x.arc(200, 200, 190, 0, Math.PI * 2); x.fill();
       x.strokeStyle = '#3a2a14'; x.lineWidth = 8; x.stroke();

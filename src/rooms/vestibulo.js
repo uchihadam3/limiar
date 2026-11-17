@@ -138,7 +138,15 @@ export function vestibulo(game) {
     };
     // os pedaços que sempre estiveram aqui, nas bordas
     for (const sh of [[[0, 0], [70, 0], [0, 120]], [[w, 0], [w - 70, 0], [w, 70]], [[0, 120], [60, 300], [0, 300]], [[0, h], [0, h - 212], [60, h]], [[w, h], [196, h], [w, h - 212]]]) fillPoly(sh, false);
-    SLOTS.forEach((pts, i) => { if (f['caco:' + (i + 1)]) fillPoly(pts, true); });
+    SLOTS.forEach((pts, i) => {
+      if (f['caco:' + (i + 1)]) { fillPoly(pts, true); return; }
+      // buraco vazio: fundo de madeira escura e a borda do vidro que sobrou em volta, bem visível
+      ctx.fillStyle = '#120c08'; ctx.beginPath(); pts.forEach((p, k) => (k ? ctx.lineTo(...p) : ctx.moveTo(...p))); ctx.closePath(); ctx.fill();
+      ctx.save(); ctx.strokeStyle = 'rgba(200,215,230,0.75)'; ctx.lineWidth = 3; ctx.setLineDash([]); ctx.stroke(); ctx.restore();
+      const cx = pts.reduce((a, p) => a + p[0], 0) / pts.length, cy = pts.reduce((a, p) => a + p[1], 0) / pts.length;
+      ctx.fillStyle = 'rgba(200,215,230,0.35)'; ctx.font = 'bold 22px "IM Fell English SC", Georgia'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(ROMAN7[i], cx, cy);
+    });
     if (placedCount() === 7) { ctx.fillStyle = 'rgba(255,230,190,0.35)'; ctx.fillRect(0, 0, w, h); }
   };
   const mirrorTex = paintTexture(256, 512, drawMirror);
@@ -205,8 +213,8 @@ export function vestibulo(game) {
 
   // cabideiro, banco, guarda-chuvas
   const rack = new THREE.Group();
-  rack.add(new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 1.8, 8), M.dark)).position.y = 0.9;
-  rack.add(new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.25, 0.04, 16), M.dark)).position.y = 0.02;
+  { const _o = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 1.8, 8), M.dark); rack.add(_o); _o.position.y = 0.9; }
+  { const _o = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.25, 0.04, 16), M.dark); rack.add(_o); _o.position.y = 0.02; }
   for (let i = 0; i < 4; i++) { const hk = new THREE.Mesh(new THREE.CylinderGeometry(0.01, 0.01, 0.25, 6), M.brass); hk.position.set(Math.cos(i * 1.57) * 0.1, 1.7, Math.sin(i * 1.57) * 0.1); hk.rotation.set(Math.sin(i * 1.57) * 0.8, 0, -Math.cos(i * 1.57) * 0.8); rack.add(hk); }
   const coat = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.25, 1.0, 10, 1, true), new THREE.MeshStandardMaterial({ color: 0x15100c, roughness: 1, side: THREE.DoubleSide }));
   coat.position.set(0.12, 1.15, 0); rack.add(coat);

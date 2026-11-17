@@ -371,6 +371,16 @@ const builders = {
     grime(c, 73, 0.6, 3);
     return c;
   },
+  burlap() { // juta dos sacos
+    const c = canvas(256), ctx = c.getContext('2d');
+    ctx.fillStyle = '#6a5636'; ctx.fillRect(0, 0, 256, 256);
+    for (let i = 0; i < 256; i += 4) {
+      ctx.fillStyle = `rgba(30,20,8,${0.25 + Math.random() * 0.15})`; ctx.fillRect(i, 0, 1.5, 256);
+      ctx.fillStyle = `rgba(30,20,8,${0.2 + Math.random() * 0.15})`; ctx.fillRect(0, i, 256, 1.5);
+    }
+    grime(c, 83, 0.5, 3);
+    return c;
+  },
   cave() { // rocha úmida
     const c = canvas(512), ctx = c.getContext('2d');
     const n = makeNoise(53);
@@ -441,6 +451,8 @@ export function paintTexture(w, h, draw, key) {
   const make = () => {
     const c = canvas(w, h);
     draw(c.getContext('2d'), w, h);
+    // guardamos o desenho para poder redesenhá-lo nítido, em qualquer resolução, ao examinar
+    c.__draw = draw; c.__w = w; c.__h = h;
     const t = new THREE.CanvasTexture(c);
     t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8;
     t.userData.canvas = c;

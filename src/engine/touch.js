@@ -19,6 +19,9 @@ export class TouchControls {
     this.move = { x: 0, y: 0 };
     this.stick = null; // {id, ox, oy}
     this.look = null;  // {id, x, y, t0, sx, sy, moved}
+    this.pinch = null; // {a, b, d0, z0}
+    this.pts = new Map(); // posição atual de cada dedo
+    this.lastTap = 0;
     this.build();
   }
 
@@ -59,6 +62,14 @@ export class TouchControls {
   start(e) {
     e.preventDefault();
     for (const t of e.changedTouches) {
+      this.pts.set(t.identifier, { x: t.clientX, y: t.clientY });
+      // um segundo dedo no lado direito enquanto o primeiro olha = pinça (zoom)
+      if (this.look && !this.pinch && t.clientX >= window.innerWidth * 0.45) {
+        const a = this.pts.get(this.look.id);
+        this.pinch = { a: this.look.id, b: t.identifier, d0: Math.hypot(a.x - t.clientX, a.y - t.clientY) || 1, z0: this.game.player.zoomTarget };
+        this.look.moved = true;
+        continue;
+      }
       if (t.clientX < window.innerWidth * 0.45 && !this.stick) {
         this.stick = { id: t.identifier, ox: t.clientX, oy: t.clientY };
         this.ring.style.transform = `translate(${t.clientX}px, ${t.clientY}px)`;
@@ -73,7 +84,13 @@ export class TouchControls {
   moveEv(e) {
     e.preventDefault();
     const R = Math.min(70, window.innerWidth * 0.09);
+    for (const t of e.changedTouches) this.pts.set(t.identifier, { x: t.clientX, y: t.clientY });
+    if (this.pinch) {
+      const a = this.pts.get(this.pinch.a), b = this.pts.get(this.pinch.b);
+      if (a && b) this.game.player.zoomTarget = this.pinch.z0 * (Math.hypot(a.x - b.x, a.y - b.y) / this.pinch.d0);
+    }
     for (const t of e.changedTouches) {
+      if (this.pinch && (t.identifier === this.pinch.a || t.identifier === this.pinch.b)) continue;
       if (this.stick && t.identifier === this.stick.id) {
         let dx = t.clientX - this.stick.ox, dy = t.clientY - this.stick.oy;
         const d = Math.hypot(dx, dy);
@@ -91,7 +108,7 @@ export class TouchControls {
         if (Math.hypot(t.clientX - this.look.sx, t.clientY - this.look.sy) > 10) this.look.moved = true;
         const p = this.game.player;
         if (!p.enabled) continue;
-        const s = 0.0052 * p.sensitivity;
+        const s = (0.0052 * p.sensitivity) / p.zoom;
         p.yaw -= dx * s; p.pitch -= dy * s;
         p.pitch = Math.max(-1.45, Math.min(1.45, p.pitch));
       }
@@ -100,12 +117,21 @@ export class TouchControls {
 
   end(e) {
     for (const t of e.changedTouches) {
+      this.pts.delete(t.identifier);
+      if (this.pinch && (t.identifier === this.pinch.a || t.identifier === this.pinch.b)) {
+        this.pinch = null; this.look = null; continue;
+      }
       if (this.stick && t.identifier === this.stick.id) {
         this.stick = null; this.move.x = 0; this.move.y = 0;
         this.ring.classList.remove('on'); this.dot.classList.remove('on');
       } else if (this.look && t.identifier === this.look.id) {
-        // toque rápido no lado direito = interagir
-        if (!this.look.moved && performance.now() - this.look.t0 < 260 && this.game.focus) this.game.useFocus();
+        // toque rápido no lado direito: interage se houver algo na mira; dois toques rápidos = zoom
+        if (!this.look.moved && performance.now() - this.look.t0 < 260) {
+          const now = performance.now();
+          if (this.game.focus) { this.game.useFocus(); this.lastTap = 0; }
+          else if (now - this.lastTap < 340) { const p = this.game.player; p.zoomTarget = p.zoomTarget > 1.3 ? 1 : 2.6; this.lastTap = 0; }
+          else this.lastTap = now;
+        }
         this.look = null;
       }
     }

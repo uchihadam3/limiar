@@ -13,6 +13,21 @@ import { makeClara } from '../rooms/statue.js';
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
+// A música é por ÁREA: ela continua, sem cortes, enquanto você anda pelos cômodos da mesma área.
+// Só alguns lugares têm música própria, porque ali a mudança significa alguma coisa.
+const MUSIC_ZONE = {
+  // a casa (térreo)
+  vestibulo: 'casa', biblioteca: 'casa', jantar: 'casa', cozinha: 'casa', gabinete: 'casa', despensa: 'casa', banho: 'casa', musica: 'casa',
+  // lá fora, na chuva
+  jardim: 'jardim', labirinto: 'jardim', estufa: 'jardim', jardineiro: 'jardim',
+  // o andar de cima (a Helena cantarolando, longe)
+  galeria: 'casal', quarto_casal: 'casal', sotao: 'casal', observatorio: 'casal', visitante: 'casal',
+  // debaixo da terra
+  escadaria: 'camara', adega: 'camara', camara: 'camara', gruta: 'camara', rio: 'camara',
+  // lugares com música própria
+  corredor: 'corredor', quarto: 'quarto', capela: 'capela', ecos: 'ecos', coracao: 'coracao', repete: 'repete', treze: 'treze', outro_lado: 'outro',
+};
+
 export class Game {
   constructor(canvas) {
     const r = createRenderer(canvas);
@@ -31,14 +46,15 @@ export class Game {
     this.time = 0;
     this.saveTimer = 0;
     this.debug = new URLSearchParams(location.search).has('debug');
+    if (this.debug) { window.__THREE = THREE; this.roomIds = Object.keys(ROOMS); }
     this.hemi = new THREE.HemisphereLight(0x8f9cc0, 0x3a2a1c, 0.5);
     this.scene.add(this.hemi);
     if (isTouchDevice()) {
       document.body.classList.add('touch');
       this.touch = new TouchControls(this);
       this.player.touchInput = this.touch.move;
-      this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.3));
-      this.composer.setPixelRatio(Math.min(window.devicePixelRatio, 1.3));
+      this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.6));
+      this.composer.setPixelRatio(Math.min(window.devicePixelRatio, 1.6));
       this.player.spot.shadow.mapSize.set(512, 512);
     }
     this.applyOptions();
@@ -134,6 +150,13 @@ export class Game {
       if ((e.code === 'KeyE' || e.code === 'Enter') && this.player.enabled && !e.repeat) this.useFocus();
       if (this.debug && e.code === 'Escape' && !this.ui.open) this.pause();
     });
+    // zoom no computador: rodinha, duplo clique, ou segurar o botão direito
+    const cv = this.renderer.domElement;
+    cv.addEventListener('wheel', (e) => { if (!this.playing || !this.player.enabled) return; e.preventDefault(); this.player.zoomTarget *= Math.exp(-e.deltaY * 0.0016); }, { passive: false });
+    cv.addEventListener('dblclick', () => { if (!this.playing || !this.player.enabled || this.focus) return; this.player.zoomTarget = this.player.zoomTarget > 1.3 ? 1 : 2.6; });
+    cv.addEventListener('contextmenu', (e) => e.preventDefault());
+    cv.addEventListener('mousedown', (e) => { if (e.button === 2 && this.playing) { this.rightZoom = this.player.zoomTarget; this.player.zoomTarget = 2.6; } });
+    document.addEventListener('mouseup', (e) => { if (e.button === 2 && this.rightZoom != null) { this.player.zoomTarget = this.rightZoom; this.rightZoom = null; } });
     this.renderer.domElement.addEventListener('mousedown', (e) => {
       if (!this.playing || e.button !== 0) return;
       if (this.player.locked || this.debug) { if (this.player.enabled) this.useFocus(); }
@@ -153,13 +176,14 @@ export class Game {
     this.scene.fog.color.set(room.cfg.fogColor ?? 0x050403);
     this.hemi.intensity = (room.cfg.ambient ?? 0.5) * 2.7;
     this.player.room = room;
+    this.player.zoomTarget = 1;
     const door = viaDoor && (room.doors[viaDoor] || room.spawns?.[viaDoor]);
     if (pos) this.player.place(pos.x, pos.z, pos.yaw);
     else if (door) { const sp = door.spawn ?? door; this.player.place(sp.x, sp.z, sp.yaw); }
     else { const s = room.cfg.spawn ?? { x: 0, z: 0, yaw: 0 }; this.player.place(s.x, s.z, s.yaw); }
     this.player.lightLevel = room.cfg.lantern ?? 1;
     this.player.setFlame(room.cfg.deep && this.state.flags.lampiao_azul ? 'azul' : 'normal');
-    audio.setTheme(room.music);
+    audio.setTheme(MUSIC_ZONE[id] ?? room.music);
     const first = !this.state.visited[id];
     this.state.visited[id] = true;
     this.state.room = id; this.state.door = viaDoor ?? null; this.state.pos = null;
@@ -198,7 +222,7 @@ export class Game {
     const isNew = !this.state.notes.includes(id);
     if (isNew) this.state.notes.push(id);
     this.ui.examine({
-      draw: (ctx, w, h) => drawPaper(ctx, w, h, n.text),
+      note: n,
       text: isNew ? (this.touch ? '<em>Anotado no diário.</em>' : '<em>Anotado no diário (J).</em>') : '',
     });
     this.save();

@@ -148,7 +148,7 @@ export function quarto_casal(game) {
 
   // penteadeira com o espelho coberto e o porta-joias
   const vanity = new THREE.Group();
-  vanity.add(new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.75, 0.5), M.dark)).position.y = 0.375;
+  { const _o = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.75, 0.5), M.dark); vanity.add(_o); _o.position.y = 0.375; }
   const mirrorFrame = new THREE.Mesh(new THREE.TorusGeometry(0.42, 0.04, 8, 30), M.brass); mirrorFrame.position.set(0, 1.35, -0.2); mirrorFrame.scale.y = 1.25; vanity.add(mirrorFrame);
   const sheet = new THREE.Mesh(new THREE.PlaneGeometry(1.0, 1.25, 8, 8), new THREE.MeshStandardMaterial({ color: 0xc8c0b0, roughness: 1, side: THREE.DoubleSide }));
   const sp = sheet.geometry.attributes.position; for (let i = 0; i < sp.count; i++) sp.setZ(i, Math.sin(sp.getX(i) * 9 + sp.getY(i) * 4) * 0.03 + 0.05); sheet.geometry.computeVertexNormals();
@@ -170,14 +170,14 @@ export function quarto_casal(game) {
   // porta-joias com 4 rodinhas
   const box = new THREE.Group();
   const bm = new THREE.MeshStandardMaterial({ color: 0x3a1a2a, roughness: 0.4 });
-  box.add(new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.1, 0.18), bm)).position.y = 0.05;
+  { const _o = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.1, 0.18), bm); box.add(_o); _o.position.y = 0.05; }
   const boxLidP = new THREE.Group(); boxLidP.position.set(0, 0.1, -0.09); box.add(boxLidP);
   const boxLid = new THREE.Mesh(new THREE.BoxGeometry(0.27, 0.03, 0.19), bm); boxLid.position.z = 0.095; boxLidP.add(boxLid);
   const crown = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.035, 0.02, 5), M.brass); crown.position.set(0, 0.02, 0.095); boxLidP.add(crown);
   for (let i = 0; i < 4; i++) { const wh = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.02, 10), M.brass); wh.rotation.z = Math.PI / 2; wh.position.set(-0.06 + i * 0.04, 0.05, 0.095); box.add(wh); }
   box.position.set(2.8, 0.75, 0.25); box.rotation.y = -Math.PI / 2; r.add(box);
   if (f.portajoias) boxLidP.rotation.x = -1.6;
-  const spawnCrown = () => placeItem(r, game, 'ficha_coroa', 'ficha:coroa', 2.82, 0.78, 0.25, { label: 'Pegar a ficha de pedra' });
+  const spawnCrown = () => placeItem(r, game, 'ficha_coroa', 'ficha:coroa', 2.8, 0.86, 0.25, { label: 'Pegar a ficha de pedra' });
   if (f.portajoias) spawnCrown();
   r.hitbox(0.35, 0.2, 0.35, 2.8, 0.8, 0.25, {
     label: () => f.portajoias ? 'O porta-joias' : 'Abrir o porta-joias', sub: 'quatro rodinhas de números',
@@ -265,7 +265,8 @@ export function sotao(game) {
   dh.position.set(-2.0, 0.5, -1.5); dh.rotation.y = Math.PI / 2; r.add(dh);
   const tableDh = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.5, 1.4), M.dark); tableDh.position.set(-2.1, 0.25, -1.5); r.add(tableDh); r.collider(-2.6, -1.7, -2.3, -0.7);
   placeItem(r, game, 'espelho4', 'espelho', -1.92, 0.53, -1.0, { label: 'Pegar o caquinho de espelho' });
-  r.hitbox(0.6, 1.0, 1.3, -2.0, 1.0, -1.5, {
+  // só o andar de cima e o telhado: o andar de baixo fica livre para pegar o caco
+  r.hitbox(0.6, 0.5, 1.3, -2.0, 1.25, -1.5, {
     label: 'Examinar a casa de bonecas',
     onUse: () => game.ui.toast('Uma casa de bonecas que é uma cópia da própria casa: o vestíbulo, a mesa de jantar, a cama do casal.\nNo quartinho de baixo, à esquerda, uma bonequinha de porcelana. Ao lado dela, algo brilha.', 6500),
   });
@@ -273,13 +274,15 @@ export function sotao(game) {
   // o baú de brinquedos: "escreva o que a casa pede"
   const chest = new THREE.Group();
   const cm = new THREE.MeshStandardMaterial({ color: 0x7a3a2a, roughness: 0.7 });
-  chest.add(new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.5, 0.5), cm)).position.y = 0.25;
+  for (const [w, h, d, x, y, z] of [[0.9, 0.04, 0.5, 0, 0.02, 0], [0.9, 0.5, 0.04, 0, 0.25, -0.23], [0.9, 0.5, 0.04, 0, 0.25, 0.23], [0.04, 0.5, 0.5, -0.43, 0.25, 0], [0.04, 0.5, 0.5, 0.43, 0.25, 0]]) { const pn = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), cm); pn.position.set(x, y, z); chest.add(pn); }
+  // brinquedos dentro do baú
+  for (const [x, z, c] of [[-0.25, 0.08, 0xc84a4a], [0.2, -0.1, 0x4a7ac8], [0.3, 0.1, 0xe0b040]]) { const toy = new THREE.Mesh(new THREE.SphereGeometry(0.06, 10, 8), new THREE.MeshStandardMaterial({ color: c })); toy.position.set(x, 0.1, z); chest.add(toy); }
   const clidP = new THREE.Group(); clidP.position.set(0, 0.5, -0.25); chest.add(clidP);
   const clid = new THREE.Mesh(new THREE.BoxGeometry(0.92, 0.08, 0.52), cm); clid.position.z = 0.25; clidP.add(clid);
   for (let i = 0; i < 5; i++) { const wl = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.1, 0.1), new THREE.MeshStandardMaterial({ color: ['#c84a4a', '#4a7ac8', '#e0b040', '#4aa060', '#a04ac8'][i] })); wl.position.set(-0.3 + i * 0.15, 0.3, 0.26); chest.add(wl); }
   chest.position.set(1.9, 0, 0.8); chest.rotation.y = -Math.PI / 2; r.add(chest); r.collider(1.6, 2.2, 0.3, 1.3);
   if (f.bau) clidP.rotation.x = -1.7;
-  const spawnLadderToken = () => placeItem(r, game, 'ficha_escada', 'ficha:escada', 1.9, 0.12, 0.8, { label: 'Pegar a ficha de pedra' });
+  const spawnLadderToken = () => placeItem(r, game, 'ficha_escada', 'ficha:escada', 1.9, 0.05, 0.8, { label: 'Pegar a ficha de pedra' });
   if (f.bau) spawnLadderToken();
   const L = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
   r.hitbox(0.6, 0.6, 1.0, 1.9, 0.35, 0.8, {
@@ -304,16 +307,18 @@ export function sotao(game) {
   });
   // corda e pé de cabra
   const coil = new THREE.Mesh(new THREE.TorusGeometry(0.18, 0.05, 8, 20), new THREE.MeshStandardMaterial({ color: 0x8a7a50, roughness: 1 }));
-  coil.position.set(-2.3, 1.6, 2.2); coil.rotation.y = Math.PI / 2; r.add(coil);
-  const peg = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.2, 6), M.dark); peg.rotation.z = Math.PI / 2; peg.position.set(-2.5, 1.78, 2.2); r.add(peg);
+  // pendurada num esteio de madeira que sobe até o telhado
+  const post = new THREE.Mesh(new THREE.BoxGeometry(0.12, 2.4, 0.12), M.dark); post.position.set(-2.5, 1.2, 2.2); post.castShadow = true; r.add(post); r.collider(-2.58, -2.42, 2.12, 2.28);
+  coil.position.set(-2.38, 1.5, 2.2); coil.rotation.y = Math.PI / 2; r.add(coil);
+  const peg = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.2, 6), M.dark); peg.rotation.z = Math.PI / 2; peg.position.set(-2.38, 1.66, 2.2); r.add(peg);
   coil.visible = !f['took:corda'];
   r.hitbox(0.4, 0.5, 0.5, -2.3, 1.6, 2.2, { label: 'Pegar a corda', enabled: () => coil.visible, onUse: () => { coil.visible = false; f['took:corda'] = true; game.give('corda'); } });
   P.crate(r, 2.0, 3.8, 0.6, 0.3);
   placeItem(r, game, 'pe_de_cabra', 'pe', 2.0, 0.62, 3.8, { label: 'Pegar o pé de cabra' });
   // cadeira de balanço que balança sozinha
   const rc = new THREE.Group();
-  rc.add(new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.05, 0.5), M.dark)).position.y = 0.45;
-  rc.add(new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.7, 0.05), M.dark)).position.set(0, 0.85, -0.25);
+  { const _o = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.05, 0.5), M.dark); rc.add(_o); _o.position.y = 0.45; }
+  { const _o = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.7, 0.05), M.dark); rc.add(_o); _o.position.set(0, 0.85, -0.25); }
   for (const sx of [-0.22, 0.22]) { const rk = new THREE.Mesh(new THREE.TorusGeometry(0.5, 0.02, 6, 20, 0.9), M.dark); rk.rotation.set(0, Math.PI / 2, Math.PI * 1.5 - 0.45); rk.position.set(sx, 0.52, 0); rc.add(rk); }
   rc.position.set(1.6, 0, -3.0); rc.rotation.y = 2.5; r.add(rc); r.collider(1.3, 1.9, -3.3, -2.7);
   r.onUpdate((dt, t) => { rc.rotation.x = Math.sin(t * 1.6) * 0.08; });
@@ -400,7 +405,7 @@ export function observatorio(game) {
   });
   // planisfério (discos giratórios)
   const plan = new THREE.Group();
-  plan.add(new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.1, 1.0, 8), M.dark)).position.y = 0.5;
+  { const _o = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.1, 1.0, 8), M.dark); plan.add(_o); _o.position.y = 0.5; }
   const disc = new THREE.Mesh(new THREE.CylinderGeometry(0.4, 0.4, 0.03, 32), new THREE.MeshStandardMaterial({ color: 0x1a2a4a, metalness: 0.3, roughness: 0.5 }));
   disc.position.y = 1.05; disc.rotation.x = 0.5; plan.add(disc);
   const ringP = new THREE.Mesh(new THREE.TorusGeometry(0.4, 0.02, 6, 32), M.brass); ringP.position.y = 1.05; ringP.rotation.x = 0.5 + Math.PI / 2; plan.add(ringP);
@@ -432,9 +437,11 @@ export function observatorio(game) {
   const cdP = new THREE.Group(); cdP.position.set(-0.5, 0.9, 0.25); cab.add(cdP);
   const cd = new THREE.Mesh(new THREE.BoxGeometry(1.0, 1.7, 0.03), cw2); cd.position.x = 0.5; cdP.add(cd);
   const star = new THREE.Mesh(new THREE.CircleGeometry(0.1, 5), M.brass); star.position.set(0.5, 0.3, 0.02); cdP.add(star);
+  { const shelf = new THREE.Mesh(new THREE.BoxGeometry(0.92, 0.03, 0.44), cw2); shelf.position.set(0, 0.92, 0); cab.add(shelf); }
+  for (let i = 0; i < 4; i++) { const roll = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 0.4, 8), M.paper); roll.rotation.z = Math.PI / 2; roll.position.set(-0.2 + i * 0.05, 1.3 + (i % 2) * 0.07, -0.05); cab.add(roll); }
   cab.position.set(2.2, 0, -1.2); cab.rotation.y = -Math.PI / 2 - 0.5; r.add(cab); r.collider(1.8, 2.7, -1.7, -0.7);
   if (f.cartas) cdP.rotation.y = -1.8;
-  const spawnStar = () => placeItem(r, game, 'ficha_estrela', 'ficha:estrela', 2.15, 0.95, -1.15, { label: 'Pegar a ficha de pedra' });
+  const spawnStar = () => placeItem(r, game, 'ficha_estrela', 'ficha:estrela', 2.15, 0.94, -1.15, { label: 'Pegar a ficha de pedra' });
   if (f.cartas) spawnStar();
   r.hitbox(0.8, 1.8, 1.0, 2.2, 0.9, -1.2, {
     label: () => f.cartas ? 'O armário de cartas celestes' : 'Abrir o armário de cartas celestes', sub: 'cadeado de três números',

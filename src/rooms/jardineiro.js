@@ -38,7 +38,7 @@ export function jardineiro(game) {
   for (let x = -2; x <= 2; x += 1) { const b = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.15, 6), M.dark); b.position.set(x, 2.9, 0); b.castShadow = true; r.add(b); }
   // lampião de querosene pendurado
   const lamp = new THREE.Group();
-  lamp.add(new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.004, 0.6, 4), M.iron)).position.y = 0.3;
+  { const _o = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.004, 0.6, 4), M.iron); lamp.add(_o); _o.position.y = 0.3; }
   const glass = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.08, 0.18, 12), new THREE.MeshStandardMaterial({ color: 0xffd090, emissive: 0xffa040, emissiveIntensity: 1.4, transparent: true, opacity: 0.8 })); lamp.add(glass);
   lamp.position.set(0.3, 2.2, 0.3); r.add(lamp);
   const ll = r.light(0xffaa60, 2.4, 7, 0.3, 2.05, 0.3, { flicker: 0.15, shadow: true });
@@ -110,19 +110,19 @@ export function jardineiro(game) {
 
   // catre com as botas ainda sujas de barro
   const cot = new THREE.Group();
-  cot.add(new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.12, 1.9), M.dark)).position.y = 0.4;
-  cot.add(new THREE.Mesh(new THREE.BoxGeometry(0.75, 0.1, 1.8), M.linen)).position.y = 0.5;
+  { const _o = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.12, 1.9), M.dark); cot.add(_o); _o.position.y = 0.4; }
+  { const _o = new THREE.Mesh(new THREE.BoxGeometry(0.75, 0.1, 1.8), M.linen); cot.add(_o); _o.position.y = 0.5; }
   const blanket = new THREE.Mesh(new THREE.BoxGeometry(0.78, 0.06, 1.1), new THREE.MeshStandardMaterial({ color: 0x3a3a2a, roughness: 1 })); blanket.position.set(0, 0.56, 0.3); cot.add(blanket);
-  for (const sx of [-0.35, 0.35]) for (const sz of [-0.85, 0.85]) cot.add(new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.4, 0.05), M.dark)).position.set(sx, 0.2, sz);
+  for (const sx of [-0.35, 0.35]) for (const sz of [-0.85, 0.85]) { const _o = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.4, 0.05), M.dark); cot.add(_o); _o.position.set(sx, 0.2, sz); }
   cot.traverse((o) => { o.castShadow = true; });
   cot.position.set(1.9, 0, 1.8); r.add(cot); r.collider(1.45, 2.35, 0.85, 2.75);
   for (const dz of [-0.1, 0.1]) { const boot = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.25, 0.26), new THREE.MeshStandardMaterial({ color: 0x1a120a })); boot.position.set(1.2, 0.125, 1.2 + dz * 1.4); r.add(boot); }
   r.hitbox(0.3, 0.3, 0.5, 1.2, 0.15, 1.2, { label: 'Olhar as botas', onUse: () => game.ui.toast('Botas de trabalho. O barro ainda está molhado.\nAs pegadas que saem delas vão até a parede e param ali.') });
   // sacos de sementes e um espantalho caído
-  for (let i = 0; i < 3; i++) { const sk = new THREE.Mesh(new THREE.SphereGeometry(0.25, 10, 8), new THREE.MeshStandardMaterial({ color: 0x8a7a5a, roughness: 1 })); sk.scale.set(1, 1.3, 0.9); sk.position.set(-1.3 + i * 0.45, 0.3, 2.6); r.add(sk); }
+  for (let i = 0; i < 3; i++) P.sack(r, -1.3 + i * 0.5, 2.6, { s: 1.0 + (i % 2) * 0.15, rotY: i, collide: false });
   r.collider(-1.6, 0.0, 2.3, 3.0);
   const scare = new THREE.Group();
-  scare.add(new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 1.8, 6), M.wood)).rotation.z = Math.PI / 2;
+  { const _o = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 1.8, 6), M.wood); scare.add(_o); _o.rotation.z = Math.PI / 2; }
   const sh = new THREE.Mesh(new THREE.SphereGeometry(0.16, 10, 8), new THREE.MeshStandardMaterial({ color: 0x9a8a6a, roughness: 1 })); sh.position.x = 0.95; scare.add(sh);
   const hat = new THREE.Mesh(new THREE.ConeGeometry(0.22, 0.2, 10), M.dark); hat.position.set(1.05, 0.12, 0); hat.rotation.z = -1.4; scare.add(hat);
   scare.position.set(0.2, 0.08, 1.9); scare.rotation.y = 0.3; r.add(scare);

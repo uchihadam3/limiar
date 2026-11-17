@@ -39,9 +39,9 @@ export function capela(game) {
   for (let i = 0; i < 6; i++) for (const sx of [-1, 1]) {
     const z = -1.6 + i * 1.05, x = sx * 1.55;
     const pew = new THREE.Group();
-    pew.add(new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.06, 0.4), M.dark)).position.y = 0.45;
-    pew.add(new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.5, 0.05), M.dark)).position.set(0, 0.75, 0.2);
-    for (const ex of [-1, 1]) pew.add(new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.9, 0.45), M.dark)).position.set(ex * 1.03, 0.45, 0);
+    { const _o = new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.06, 0.4), M.dark); pew.add(_o); _o.position.y = 0.45; }
+    { const _o = new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.5, 0.05), M.dark); pew.add(_o); _o.position.set(0, 0.75, 0.2); }
+    for (const ex of [-1, 1]) { const _o = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.9, 0.45), M.dark); pew.add(_o); _o.position.set(ex * 1.03, 0.45, 0); }
     pew.traverse((o) => { o.castShadow = true; o.receiveShadow = true; });
     pew.position.set(x, 0, z); r.add(pew); r.collider(x - 1.07, x + 1.07, z - 0.22, z + 0.25);
   }
@@ -51,7 +51,7 @@ export function capela(game) {
 
   // altar
   const altar = new THREE.Group();
-  altar.add(new THREE.Mesh(new THREE.BoxGeometry(2.0, 1.0, 0.8), M.stone)).position.y = 0.5;
+  { const _o = new THREE.Mesh(new THREE.BoxGeometry(2.0, 1.0, 0.8), M.stone); altar.add(_o); _o.position.y = 0.5; }
   const cloth = new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.02, 0.9), M.linen); cloth.position.y = 1.01; altar.add(cloth);
   const drape = new THREE.Mesh(new THREE.PlaneGeometry(2.1, 0.5), new THREE.MeshStandardMaterial({ color: 0xd8d0c0, side: THREE.DoubleSide })); drape.position.set(0, 0.77, 0.45); altar.add(drape);
   altar.traverse((o) => { o.castShadow = true; o.receiveShadow = true; });

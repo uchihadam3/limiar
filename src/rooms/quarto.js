@@ -125,7 +125,11 @@ export function quarto(game) {
     r.interact(d.group, {
       label: 'Olhar o desenho',
       onUse: () => {
-        if (k === 'olho') { game.readNote('desenho'); return; }
+        if (k === 'olho') {
+          if (!game.state.notes.includes('desenho')) game.state.notes.push('desenho');
+          game.ui.examine({ canvas: d.texture.userData.canvas, text: 'Uma menina e um homem alto de mãos dadas diante de uma porta com um olho pintado.<br>Em letras tortas: <em>"QUANDO EU CANTO O OLHO ACORDA"</em>.' });
+          game.save(); return;
+        }
         game.ui.examine({ canvas: d.texture.userData.canvas, text: k === 'dormir' ? 'Um desenho feito com giz de cera. Embaixo, em letra caprichada: "hora de dormir". O relógio do desenho marca oito horas.' : 'Um bolo com sete velas. "Meu aniversário!"' });
       },
     });
@@ -139,9 +143,9 @@ export function quarto(game) {
   // boneca na cadeirinha: vira a cabeça quando você não está olhando
   const doll = new THREE.Group();
   const dchair = new THREE.Group();
-  dchair.add(new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.03, 0.3), M.dark)).position.y = 0.3;
-  for (const sx of [-1, 1]) for (const sz of [-1, 1]) dchair.add(new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.3, 0.03), M.dark)).position.set(sx * 0.14, 0.15, sz * 0.13);
-  dchair.add(new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.35, 0.03), M.dark)).position.set(0, 0.5, -0.14);
+  { const _o = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.03, 0.3), M.dark); dchair.add(_o); _o.position.y = 0.3; }
+  for (const sx of [-1, 1]) for (const sz of [-1, 1]) { const _o = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.3, 0.03), M.dark); dchair.add(_o); _o.position.set(sx * 0.14, 0.15, sz * 0.13); }
+  { const _o = new THREE.Mesh(new THREE.BoxGeometry(0.32, 0.35, 0.03), M.dark); dchair.add(_o); _o.position.set(0, 0.5, -0.14); }
   doll.add(dchair);
   const dress = new THREE.Mesh(new THREE.ConeGeometry(0.11, 0.24, 12), new THREE.MeshStandardMaterial({ color: 0x6a1e2a, roughness: 0.9 })); dress.position.y = 0.43; doll.add(dress);
   const headPivot = new THREE.Group(); headPivot.position.y = 0.6; doll.add(headPivot);

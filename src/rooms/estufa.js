@@ -120,7 +120,8 @@ export function estufa(game) {
   const bowl = new THREE.Mesh(new THREE.SphereGeometry(0.4, 16, 8, 0, Math.PI * 2, Math.PI / 2, Math.PI / 2), M.stone); bowl.position.y = 1.4; font.add(bowl);
   font.traverse((o) => { o.castShadow = true; o.receiveShadow = true; });
   font.position.set(0, 0, 0.3); r.add(font); r.collider(-1.1, 1.1, -0.8, 1.4);
-  r.interact(water, { label: 'Olhar a água parada', onUse: () => { audio.whisper(0.06); game.ui.toast('A água está escura e parada. Seu reflexo aparece um pouco atrasado. Por um instante, há duas pessoas refletidas.'); } });
+  const waterHit = new THREE.Mesh(new THREE.CylinderGeometry(1.15, 1.15, 0.3, 20), new THREE.MeshBasicMaterial({ visible: false })); waterHit.position.set(0, 0.45, 0.3); r.add(waterHit);
+  r.interact(waterHit, { label: 'Olhar a água parada', onUse: () => { audio.whisper(0.06); game.ui.toast('A água está escura e parada. Seu reflexo aparece um pouco atrasado. Por um instante, há duas pessoas refletidas.'); } });
 
   // A METADE DIREITA DA PLACA, caída entre raízes, impossível de pegar
   const half = plaqueMesh('right', 0.62, 0.62);

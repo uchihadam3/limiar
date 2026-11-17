@@ -183,7 +183,7 @@ export function chandelier(room, x, z, { y = null, lit = true, intensity = 3 } =
   const top = y ?? room.h;
   const g = new THREE.Group();
   g.add(mesh(new THREE.CylinderGeometry(0.006, 0.006, 0.7, 4), M.iron, 0, top - 0.35, 0));
-  g.add(mesh(new THREE.TorusGeometry(0.42, 0.018, 8, 40), M.iron, 0, top - 0.75, 0)).rotation.x = Math.PI / 2;
+  { const _o = mesh(new THREE.TorusGeometry(0.42, 0.018, 8, 40), M.iron, 0, top - 0.75, 0); g.add(_o); _o.rotation.x = Math.PI / 2; }
   g.add(mesh(new THREE.SphereGeometry(0.06, 12, 8), M.iron, 0, top - 0.75, 0));
   for (let i = 0; i < 6; i++) {
     const a = (i / 6) * Math.PI * 2;
@@ -280,7 +280,9 @@ export function drawPortrait(p) {
     }
     if (p.plate) {
       ctx.fillStyle = '#8d6a2e'; ctx.fillRect(w * 0.3, h * 0.9, w * 0.4, h * 0.07);
-      ctx.fillStyle = '#1b1208'; ctx.font = `${Math.round(h * 0.04)}px Georgia, serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillStyle = '#1b1208'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      let fs = Math.round(h * 0.04);
+      do { ctx.font = `${fs}px Georgia, serif`; fs--; } while (fs > 6 && ctx.measureText(p.plate).width > w * 0.37);
       ctx.fillText(p.plate, w * 0.5, h * 0.935);
     }
   };
@@ -290,6 +292,8 @@ export function drawPortrait(p) {
 export function portrait(room, wall, at, y, w, h, p, key) {
   const pt = painting(room, wall, at, y, w, h, drawPortrait({ ...p, eyes: p.follow ? false : undefined }), { key });
   if (p.follow) {
+    // na parede, os olhos são peças 3D que seguem você; ao examinar de perto, o quadro mostra os olhos pintados
+    pt.texture.userData.canvas.__draw = drawPortrait({ ...p });
     const pupils = [];
     const eyeWhite = new THREE.MeshStandardMaterial({ color: 0xcfc4a8, roughness: 0.4, emissive: 0x111111 });
     const pupilM = new THREE.MeshBasicMaterial({ color: 0x0a0604 });
@@ -343,12 +347,12 @@ export function grandfatherClock(room, x, z, rotY = 0) {
   hourPivot.add(mesh(new THREE.BoxGeometry(0.018, 0.12, 0.004), handM, 0, 0.05, 0, { cast: false }));
   const minPivot = new THREE.Group(); minPivot.position.set(0, 1.92, 0.216); g.add(minPivot);
   minPivot.add(mesh(new THREE.BoxGeometry(0.01, 0.18, 0.004), handM, 0, 0.08, 0, { cast: false }));
-  g.add(mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.02, 8), M.brass, 0, 1.92, 0.22)).rotation.x = Math.PI / 2;
+  { const _o = mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.02, 8), M.brass, 0, 1.92, 0.22); g.add(_o); _o.rotation.x = Math.PI / 2; }
   // janela do pêndulo
   g.add(mesh(new THREE.PlaneGeometry(0.3, 0.9), M.glass, 0, 1.0, 0.172, { cast: false }));
   const pend = new THREE.Group(); pend.position.set(0, 1.5, 0.1); g.add(pend);
   pend.add(mesh(new THREE.BoxGeometry(0.012, 0.75, 0.01), M.brass, 0, -0.37, 0));
-  pend.add(mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.015, 24), M.brass, 0, -0.78, 0)).rotation.x = Math.PI / 2;
+  { const _o = mesh(new THREE.CylinderGeometry(0.08, 0.08, 0.015, 24), M.brass, 0, -0.78, 0); pend.add(_o); _o.rotation.x = Math.PI / 2; }
   // porta da base (se abre quando a hora certa é ajustada)
   const basePivot = new THREE.Group(); basePivot.position.set(-0.25, 0.32, 0.172); g.add(basePivot);
   const baseDoor = mesh(new THREE.BoxGeometry(0.5, 1.26, 0.02), m, 0.25, 0.63, 0); baseDoor.visible = false; basePivot.add(baseDoor);
@@ -455,7 +459,7 @@ export function barrel(room, x, z, { y = 0, lying = false, collide = true } = {}
   for (let i = 0; i <= 10; i++) { const t = i / 10; pts.push(new THREE.Vector2(0.28 + Math.sin(t * Math.PI) * 0.06, t * 0.9)); }
   const b = mesh(new THREE.LatheGeometry(pts, 20), wm); g.add(b);
   for (const hy of [0.12, 0.45, 0.78]) { const r = mesh(new THREE.TorusGeometry(0.31 + (hy === 0.45 ? 0.03 : 0), 0.012, 6, 24), M.iron, 0, hy, 0); r.rotation.x = Math.PI / 2; g.add(r); }
-  g.add(mesh(new THREE.CircleGeometry(0.28, 20), wm, 0, 0.9, 0)).rotation.x = -Math.PI / 2;
+  { const _o = mesh(new THREE.CircleGeometry(0.28, 20), wm, 0, 0.9, 0); g.add(_o); _o.rotation.x = -Math.PI / 2; }
   if (lying) { g.rotation.z = Math.PI / 2; g.position.y = 0.3; const w = new THREE.Group(); w.add(g); w.position.set(x, y, z); room.add(w); if (collide) room.collider(x - 0.5, x + 0.5, z - 0.35, z + 0.35); return w; }
   place(room, g, x, z, 0, y);
   if (collide) room.collider(x - 0.33, x + 0.33, z - 0.33, z + 0.33);
@@ -478,6 +482,21 @@ export function pot(room, x, z, { s = 1, plant = true, dead = false, broken = fa
     }
   }
   place(room, g, x, z, Math.random() * 6, y);
+  return g;
+}
+
+// saco de juta, amarrado no alto
+export function sack(room, x, z, { s = 1, y = 0, rotY = 0, collide = true } = {}) {
+  const g = new THREE.Group();
+  const pts = [];
+  for (let i = 0; i <= 12; i++) { const t = i / 12; const r = (0.26 + Math.sin(t * Math.PI * 0.9) * 0.06) * (t > 0.82 ? 1 - (t - 0.82) * 4.2 : 1); pts.push(new THREE.Vector2(Math.max(0.035, r) * s, t * 0.62 * s)); }
+  const bm = surf('burlap', { roughness: 1 });
+  const body = mesh(new THREE.LatheGeometry(pts, 14), bm); body.scale.z = 0.8; g.add(body);
+  const tie = mesh(new THREE.TorusGeometry(0.04 * s, 0.012 * s, 5, 10), new THREE.MeshStandardMaterial({ color: 0x8a7a50, roughness: 1 }), 0, 0.6 * s, 0); tie.rotation.x = Math.PI / 2; g.add(tie);
+  const tuft = mesh(new THREE.ConeGeometry(0.06 * s, 0.08 * s, 8), bm, 0, 0.66 * s, 0); tuft.rotation.x = Math.PI; g.add(tuft);
+  g.rotation.z = (Math.random() - 0.5) * 0.12;
+  place(room, g, x, z, rotY, y);
+  if (collide && y < 0.1) room.collider(x - 0.3 * s, x + 0.3 * s, z - 0.25 * s, z + 0.25 * s);
   return g;
 }
 

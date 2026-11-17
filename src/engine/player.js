@@ -19,6 +19,7 @@ export class Player {
     this.sensitivity = 1;
     this.room = null;
     this.lookTarget = null; // olhar forçado (cinemática)
+    this.zoom = 1; this.zoomTarget = 1; // zoom: 1 = normal, até 3.2x
 
     // Lampião na mão
     this.lantern = new THREE.Group();
@@ -68,7 +69,7 @@ export class Player {
     document.addEventListener('keyup', (e) => { this.keys[e.code] = false; });
     document.addEventListener('mousemove', (e) => {
       if (!this.locked || !this.enabled) return;
-      const s = 0.0022 * this.sensitivity;
+      const s = (0.0022 * this.sensitivity) / this.zoom;
       this.yaw -= e.movementX * s;
       this.pitch -= e.movementY * s;
       this.pitch = Math.max(-1.45, Math.min(1.45, this.pitch));
@@ -154,6 +155,10 @@ export class Player {
     const bx = Math.cos(this.bob) * bobAmp * 0.6;
 
     const cam = this.camera;
+    // zoom suave (campo de visão)
+    this.zoomTarget = Math.max(1, Math.min(3.2, this.zoomTarget));
+    const zNext = this.zoom + (this.zoomTarget - this.zoom) * (1 - Math.exp(-10 * dt));
+    if (Math.abs(zNext - this.zoom) > 0.0005) { this.zoom = zNext; cam.fov = 72 / this.zoom; cam.updateProjectionMatrix(); }
     cam.position.set(this.pos.x, this.pos.y + this.eye + by, this.pos.z);
     if (this.lookTarget) {
       const d = this.lookTarget.clone().sub(cam.position);

@@ -56,7 +56,7 @@ export function cozinha(game) {
   r.hitbox(0.4, 0.1, 0.35, 0.3, 0.88, 0.3, { label: 'Ler o caderno de receitas', onUse: () => game.readNote('receita') });
   const knife = new THREE.Group();
   const blade = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.003, 0.03), new THREE.MeshStandardMaterial({ color: 0xaaaaaa, metalness: 1, roughness: 0.2 })); blade.position.x = 0.1; knife.add(blade);
-  knife.add(new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.015, 0.022), M.dark)).position.x = -0.05;
+  { const _o = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.015, 0.022), M.dark); knife.add(_o); _o.position.x = -0.05; }
   knife.position.set(0.9, 0.86, 0.45); knife.rotation.y = 0.6; r.add(knife);
   const bread = new THREE.Mesh(new THREE.SphereGeometry(0.12, 12, 8), new THREE.MeshStandardMaterial({ color: 0x3a3020, roughness: 1 })); bread.scale.set(1.4, 0.6, 1); bread.position.set(0.0, 0.9, -0.05); r.add(bread);
   r.interact(bread, { label: 'Examinar o pão', onUse: () => game.ui.toast('Pão mofado, coberto de um bolor esverdeado. Alguém deu uma única mordida, pequena, de criança.') });
@@ -68,7 +68,7 @@ export function cozinha(game) {
   for (let i = 0; i < 5; i++) {
     const pv = new THREE.Group(); pv.position.set(-0.65 + i * 0.32, 0, 0); rack.add(pv);
     const hook = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.004, 0.18, 4), M.iron); hook.position.y = -0.09; pv.add(hook);
-    const pan = new THREE.Mesh(new THREE.CylinderGeometry(0.1 + (i % 3) * 0.02, 0.08, 0.1, 16, 1, true), new THREE.MeshStandardMaterial({ color: 0x6a3a1a, metalness: 0.9, roughness: 0.4, side: THREE.DoubleSide }));
+    const pan = new THREE.Mesh(new THREE.CylinderGeometry(0.1 + (i % 3) * 0.02, 0.08, 0.06, 16, 1, false), new THREE.MeshStandardMaterial({ color: 0x6a3a1a, metalness: 0.9, roughness: 0.4, side: THREE.DoubleSide }));
     pan.rotation.x = Math.PI / 2; pan.position.y = -0.3; pv.add(pan);
     pans.push({ pv, seed: i });
   }
@@ -79,7 +79,7 @@ export function cozinha(game) {
 
   // pia e prateleiras
   const sink = new THREE.Group();
-  sink.add(new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.8, 0.55), new THREE.MeshStandardMaterial({ color: 0x5a554c, roughness: 0.7 }))).position.y = 0.4;
+  { const _o = new THREE.Mesh(new THREE.BoxGeometry(0.9, 0.8, 0.55), new THREE.MeshStandardMaterial({ color: 0x5a554c, roughness: 0.7 })); sink.add(_o); _o.position.y = 0.4; }
   const basin = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.18, 0.4), new THREE.MeshStandardMaterial({ color: 0x1a1a18, roughness: 0.3, side: THREE.BackSide })); basin.position.y = 0.72; sink.add(basin);
   const pump = new THREE.Mesh(new THREE.CylinderGeometry(0.04, 0.04, 0.45, 10), M.iron); pump.position.set(0.25, 1.0, -0.15); sink.add(pump);
   const spout = new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, 0.2, 8), M.iron); spout.rotation.x = Math.PI / 2; spout.position.set(0.25, 1.15, -0.05); sink.add(spout);
@@ -103,7 +103,7 @@ export function cozinha(game) {
   }
   P.barrel(r, -2.9, 2.6);
   P.crate(r, -2.85, 1.6, 0.55, 0.3);
-  const sack = new THREE.Mesh(new THREE.SphereGeometry(0.3, 12, 8), new THREE.MeshStandardMaterial({ color: 0x8a7a5a, roughness: 1 })); sack.scale.set(1, 1.2, 0.9); sack.position.set(2.8, 0.32, -2.9); r.add(sack); r.collider(2.5, 3.1, -3.2, -2.6);
+  P.sack(r, 2.8, -2.9, { s: 1.2 }); P.sack(r, 2.3, -3.0, { s: 0.9, rotY: 0.6 });
 
   P.cobweb(r, -3.45, 3.1, -3.45, Math.PI / 4, 0.9);
   P.dust(r, 250);

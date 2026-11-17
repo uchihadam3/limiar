@@ -360,8 +360,15 @@ export function banho(game) {
   water.rotation.x = -Math.PI / 2; water.position.y = 0.08; r.add(water);
   // banheira de pés, transbordando
   const tub = new THREE.Group();
-  const tb = new THREE.Mesh(new THREE.CapsuleGeometry(0.45, 0.9, 6, 16), M.porcelain); tb.rotation.z = Math.PI / 2; tb.scale.set(1, 1, 0.75); tb.position.y = 0.6; tub.add(tb);
-  const tw = new THREE.Mesh(new THREE.PlaneGeometry(1.4, 0.55), new THREE.MeshStandardMaterial({ color: 0x0c1a1c, roughness: 0.02 })); tw.rotation.x = -Math.PI / 2; tw.position.y = 0.92; tub.add(tw);
+  // banheira de pés: casco branco, borda, água escura e pés de garra
+  const porc2 = new THREE.MeshStandardMaterial({ color: 0xe6dfd2, roughness: 0.25, side: THREE.DoubleSide });
+  // meio cilindro com a parte aberta para cima
+  const shell = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.42, 1.6, 20, 1, true, 0, Math.PI), porc2); shell.rotation.z = -Math.PI / 2; shell.position.y = 0.72; tub.add(shell);
+  for (const sx of [-0.8, 0.8]) { const end = new THREE.Mesh(new THREE.CircleGeometry(0.42, 20, Math.PI, Math.PI), porc2); end.rotation.y = Math.PI / 2; end.position.set(sx, 0.72, 0); tub.add(end); }
+  const rimT = new THREE.Mesh(new THREE.TorusGeometry(0.42, 0.03, 6, 24), M.porcelain); rimT.scale.set(1.95, 1, 1); rimT.rotation.x = Math.PI / 2; rimT.position.y = 0.72; tub.add(rimT);
+  const tw = new THREE.Mesh(new THREE.CircleGeometry(0.4, 20), new THREE.MeshStandardMaterial({ color: 0x0c1a1c, roughness: 0.02, metalness: 0.4 })); tw.scale.set(1.9, 1, 1); tw.rotation.x = -Math.PI / 2; tw.position.y = 0.66; tub.add(tw);
+  for (const sx of [-0.6, 0.6]) for (const sz of [-0.25, 0.25]) { const foot = new THREE.Mesh(new THREE.SphereGeometry(0.06, 8, 6), M.brass); foot.position.set(sx, 0.28, sz); tub.add(foot); const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.04, 0.12, 6), M.brass); leg.position.set(sx, 0.36, sz); tub.add(leg); }
+  const tap = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.3, 8), M.brass); tap.position.set(0.82, 0.88, 0); tub.add(tap);
   tub.position.set(1.2, 0, -1.6); r.add(tub); r.collider(0.4, 2.0, -2.1, -1.1);
   r.interact(tub, { label: 'Olhar dentro da banheira', onUse: () => { audio.drip(); game.ui.toast('A água está escura. Por um instante, sob a superfície, uma mão pequena aperta a borda por dentro.\nQuando você pisca, é só a corrente da torneira.'); } });
   // espelho rachado
@@ -410,7 +417,7 @@ export function despensa(game) {
   r.interact(root, { label: 'Examinar a raiz', onUse: () => game.ui.toast('Uma raiz grossa furou o assoalho e cresce em direção à porta. A ponta dela está gasta, lisa, de tanto arranhar a madeira.\nEla se mexe. Devagar. Como se procurasse alguém.') });
   const trap = new THREE.Mesh(new THREE.PlaneGeometry(0.9, 0.9), new THREE.MeshBasicMaterial({ color: 0x030202 })); trap.rotation.x = -Math.PI / 2; trap.position.set(0.3, 0.01, 0.5); r.add(trap);
   r.hitbox(1.0, 0.3, 1.0, 0.3, 0.1, 0.5, { label: 'Descer pelo alçapão', onUse: () => game.transit('rio', 'despensa') });
-  for (let i = 0; i < 3; i++) { const sk = new THREE.Mesh(new THREE.SphereGeometry(0.22, 10, 8), new THREE.MeshStandardMaterial({ color: 0x8a7a5a, roughness: 1 })); sk.scale.set(1, 1.3, 0.9); sk.position.set(-1.4 + i * 0.4, 0.28, 1.6); r.add(sk); }
+  for (let i = 0; i < 3; i++) P.sack(r, -1.4 + i * 0.45, 1.6, { s: 0.9, rotY: i * 0.7, collide: false });
   r.collider(-1.7, -0.3, 1.3, 1.9);
   r.light(0xffa860, 0.8, 5, 0, 2.6, 0, { flicker: 0.3 });
   return r;
@@ -522,7 +529,7 @@ export function coracao(game) {
   const top = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.06, 1.3), M.dark); top.position.y = 0.95; top.rotation.x = -0.25; desk.add(top);
   const sheet = new THREE.Mesh(new THREE.PlaneGeometry(1.9, 1.25), new THREE.MeshStandardMaterial({ map: plan, emissive: 0x6688aa, emissiveMap: plan, emissiveIntensity: 0.4 }));
   sheet.position.set(0, 0.99, 0); sheet.rotation.x = -Math.PI / 2 - 0.25; desk.add(sheet);
-  for (const sx of [-0.9, 0.9]) desk.add(new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.95, 0.06), M.dark)).position.set(sx, 0.47, 0);
+  for (const sx of [-0.9, 0.9]) { const _o = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.95, 0.06), M.dark); desk.add(_o); _o.position.set(sx, 0.47, 0); }
   const quill = new THREE.Mesh(new THREE.ConeGeometry(0.015, 0.35, 5), new THREE.MeshStandardMaterial({ color: 0xe8e0d0 })); quill.position.set(0.7, 1.08, 0.3); quill.rotation.z = 1.2; desk.add(quill);
   desk.position.set(0, 0, -2.4); r.add(desk); r.collider(-1.05, 1.05, -3.1, -1.7);
   r.light(0xff5a3a, 4.0, 14, 0, 3, -4, { flicker: 0.25 });

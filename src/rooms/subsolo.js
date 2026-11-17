@@ -55,7 +55,7 @@ export function escadaria(game) {
   { const b = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.05, 0.05), M.iron); b.position.set(1.9, 2.45, 0.2); r.add(b); P.fire(r, 1.82, 2.5, 0.2, { scale: 0.3, intensity: 3.0 }); }
   // musgo e poças
   for (let i = 0; i < 4; i++) {
-    const puddle = new THREE.Mesh(new THREE.CircleGeometry(0.3 + Math.random() * 0.4, 20), new THREE.MeshStandardMaterial({ color: 0x080a0a, roughness: 0.02, metalness: 0.5 }));
+    const puddle = new THREE.Mesh(new THREE.CircleGeometry(0.3 + Math.random() * 0.4, 20), new THREE.MeshStandardMaterial({ color: 0x1a2a30, roughness: 0.03, metalness: 0.3, transparent: true, opacity: 0.55 }));
     puddle.rotation.x = -Math.PI / 2; puddle.position.set((Math.random() - 0.5) * 3, 0.004, 3 + Math.random() * 2.2); r.add(puddle);
   }
   r.surfaceAt = (x, z) => z > 2.5 ? 'water' : 'stone';
@@ -121,6 +121,7 @@ export function adega(game) {
     },
   });
   r.interact(slab, {
+    enabled: () => !f.porta_pedra,
     label: () => f.porta_pedra ? (f.lampiao_azul ? 'Descer para o subterrâneo' : 'Descer os degraus') : game.state.inventory.some((i) => i.startsWith('ficha_')) ? 'Encaixar as fichas de pedra' : 'Examinar a porta de pedra',
     sub: () => `${count()} de 10 sinais`,
     onUse: () => {
@@ -259,32 +260,42 @@ export function gabinete(game) {
 
   // a planta da casa: um mapa, com anotações
   const plan = P.painting(r, 'n', 0.2, 1.6, 1.8, 1.15, (ctx, w, h) => {
+    // espaço lógico 512 x 330, sempre dentro do papel
+    const SX = w / 512, SY = h / 330;
+    const X = (v) => v * SX, Y = (v) => v * SY;
     ctx.fillStyle = '#1e3a5a'; ctx.fillRect(0, 0, w, h);
     ctx.strokeStyle = 'rgba(200,220,240,0.12)'; ctx.lineWidth = 1;
-    for (let x = 0; x < w; x += 16) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
-    for (let y = 0; y < h; y += 16) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
-    const S = w / 512;
-    ctx.strokeStyle = '#d8e4f0'; ctx.fillStyle = '#d8e4f0'; ctx.lineWidth = 2.5 * S;
-    ctx.font = `${Math.round(22 * S)}px "IM Fell English SC", Georgia`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    const room = (n, x, y, ww, hh, dashed = false, cross = false) => {
-      ctx.setLineDash(dashed ? [6 * S, 5 * S] : []); ctx.strokeRect(x * S, y * S, ww * S, hh * S); ctx.setLineDash([]);
-      ctx.fillText(n, (x + ww / 2) * S, (y + hh / 2) * S);
-      if (cross) { ctx.beginPath(); ctx.moveTo(x * S, y * S); ctx.lineTo((x + ww) * S, (y + hh) * S); ctx.moveTo((x + ww) * S, y * S); ctx.lineTo(x * S, (y + hh) * S); ctx.stroke(); }
+    for (let x = 0; x < w; x += X(16)) { ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke(); }
+    for (let y = 0; y < h; y += Y(16)) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke(); }
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    const room = (n, x, y, ww, hh, { dashed = false, cross = false } = {}) => {
+      ctx.strokeStyle = '#d8e4f0'; ctx.lineWidth = 2.5 * SX;
+      ctx.setLineDash(dashed ? [X(6), X(5)] : []); ctx.strokeRect(X(x), Y(y), X(ww), Y(hh)); ctx.setLineDash([]);
+      if (cross) { // X apagado por baixo; o número por cima, legível
+        ctx.strokeStyle = 'rgba(216,228,240,0.45)'; ctx.lineWidth = 1.5 * SX;
+        ctx.beginPath(); ctx.moveTo(X(x), Y(y)); ctx.lineTo(X(x + ww), Y(y + hh)); ctx.moveTo(X(x + ww), Y(y)); ctx.lineTo(X(x), Y(y + hh)); ctx.stroke();
+        ctx.fillStyle = '#1e3a5a'; ctx.fillRect(X(x + ww / 2 - 10), Y(y + hh / 2 - 8), X(20), Y(16));
+      }
+      ctx.fillStyle = '#d8e4f0'; ctx.font = `${Math.round(Math.min(X(20), Y(20)))}px "IM Fell English SC", Georgia`;
+      ctx.fillText(n, X(x + ww / 2), Y(y + hh / 2));
     };
-    room('1', 210, 230, 90, 70); room('2', 100, 160, 90, 70); room('3', 320, 160, 70, 110);
-    room('4', 130, 40, 40, 110); room('7', 60, 60, 60, 60); room('5', 400, 170, 60, 60); room('6', 400, 80, 70, 80);
-    room('?', 60, 175, 30, 40); room('8', 228, 305, 50, 18, true); room('9', 220, 326, 70, 30, true);
-    room('12', 180, 50, 26, 26, false, true); room('11', 180, 85, 26, 26, false, true); room('10', 180, 120, 26, 26, false, true);
-    room('13', 135, 10, 30, 24);
-    ctx.font = `italic ${Math.round(15 * S)}px Georgia`; ctx.fillStyle = '#f0d8a0';
-    ctx.textAlign = 'left';
-    ctx.fillText('o relógio guarda a frente', 305 * S, 300 * S);
-    ctx.fillText('ela canta → 8', 290 * S, 318 * S);
-    ctx.fillText('NÃO ABRIR', 170 * S, 22 * S);
-    ctx.fillText('10 portas lá embaixo?', 300 * S, 345 * S);
-    ctx.textAlign = 'center'; ctx.font = `${Math.round(20 * S)}px "IM Fell English SC", Georgia`; ctx.fillStyle = '#d8e4f0';
-    ctx.fillText('CASA BRANDT — PLANTA BAIXA (REVISÃO 41)', w / 2, h - 18 * S);
-  }, { key: 'planta' });
+    // título no alto
+    ctx.font = `${Math.round(X(15))}px "IM Fell English SC", Georgia`; ctx.fillStyle = '#d8e4f0';
+    ctx.fillText('CASA BRANDT — PLANTA BAIXA (REVISÃO 41)', X(330), Y(18));
+    // térreo
+    room('13', 135, 36, 34, 24); room('4', 130, 64, 44, 112); room('7', 64, 82, 58, 56);
+    room('12', 180, 70, 28, 28, { cross: true }); room('11', 180, 104, 28, 28, { cross: true }); room('10', 180, 138, 28, 28, { cross: true });
+    room('?', 62, 186, 30, 40); room('2', 100, 180, 92, 62); room('1', 212, 222, 92, 58);
+    room('3', 322, 160, 70, 104); room('5', 400, 174, 60, 58); room('6', 400, 84, 70, 82);
+    // lá embaixo, tracejado
+    room('8', 232, 286, 52, 16, { dashed: true }); room('9', 222, 306, 72, 20, { dashed: true });
+    // anotações à mão
+    ctx.font = `italic ${Math.round(X(13))}px Georgia`; ctx.fillStyle = '#f0d8a0'; ctx.textAlign = 'left';
+    ctx.fillText('NÃO ABRIR', X(174), Y(48));
+    ctx.fillText('o relógio guarda a frente', X(312), Y(278));
+    ctx.fillText('ela canta → 8', X(312), Y(296));
+    ctx.fillText('10 portas lá embaixo?', X(312), Y(314));
+  }, { key: 'planta2' });
   r.interact(plan.group, { label: 'Estudar a planta da casa', onUse: () => game.ui.examine({ canvas: plan.texture.userData.canvas, text: 'A planta da casa, desenhada e redesenhada dezenas de vezes. Os números das salas batem com os das portas.\nHá salas que você ainda não viu. E uma sem número, marcada só com "?".' }) });
 
   // parede de obsessão: papéis ligados por barbantes
@@ -308,7 +319,7 @@ export function gabinete(game) {
   // frascos
   for (let i = 0; i < 6; i++) {
     const jar = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, 0.2, 10), new THREE.MeshStandardMaterial({ color: 0x8a9a7a, transparent: true, opacity: 0.5, roughness: 0.1 }));
-    jar.position.set(1.65, 1.0 + (i % 2) * 0.45, -1.4 + Math.floor(i / 2) * 0.4); r.add(jar);
+    jar.position.set(1.85, 1.015 + (i % 2) * 0.45, -1.4 + Math.floor(i / 2) * 0.4); r.add(jar);
   }
   for (const y of [0.9, 1.35]) { const sh = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.03, 1.3), M.dark); sh.position.set(1.85, y, -1.0); r.add(sh); }
   P.dust(r, 200);

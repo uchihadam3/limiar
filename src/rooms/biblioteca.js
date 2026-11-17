@@ -90,16 +90,16 @@ export function biblioteca(game) {
   // poltrona perto da lareira + globo
   const arm = new THREE.Group();
   const cl = M.cloth;
-  arm.add(new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.4, 0.75), cl)).position.y = 0.3;
-  arm.add(new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.8, 0.18), cl)).position.set(0, 0.8, -0.3);
-  for (const sx of [-1, 1]) arm.add(new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.3, 0.75), cl)).position.set(sx * 0.37, 0.6, 0);
+  { const _o = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.4, 0.75), cl); arm.add(_o); _o.position.y = 0.3; }
+  { const _o = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.8, 0.18), cl); arm.add(_o); _o.position.set(0, 0.8, -0.3); }
+  for (const sx of [-1, 1]) { const _o = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.3, 0.75), cl); arm.add(_o); _o.position.set(sx * 0.37, 0.6, 0); }
   arm.traverse((o) => { o.castShadow = true; o.receiveShadow = true; });
   arm.position.set(-0.6, 0, -2.4); arm.rotation.y = 0.5; r.add(arm); r.collider(-1.05, -0.15, -2.85, -1.95);
   const globe = new THREE.Group();
   globe.add(new THREE.Mesh(new THREE.SphereGeometry(0.22, 24, 16), new THREE.MeshStandardMaterial({ color: 0x5a6a4a, roughness: 0.6 })));
   globe.children[0].position.y = 1.0;
   const gring = new THREE.Mesh(new THREE.TorusGeometry(0.25, 0.01, 6, 30), M.brass); gring.position.y = 1.0; gring.rotation.y = 0.4; globe.add(gring);
-  globe.add(new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.15, 0.75, 8), M.dark)).position.y = 0.4;
+  { const _o = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.15, 0.75, 8), M.dark); globe.add(_o); _o.position.y = 0.4; }
   globe.position.set(2.7, 0, -1.2); r.add(globe); r.collider(2.5, 2.9, -1.4, -1.0);
   r.interact(globe, { label: 'Girar o globo', onUse: () => { audio.creak(0.05, 0.8, 300); globe.children[0].rotation.y += 2; game.ui.toast('Os continentes estão no lugar errado. Alguém pintou um oceano onde deveria haver terra.'); } });
 

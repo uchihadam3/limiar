@@ -288,7 +288,7 @@ export function jardim(game) {
 
   // ---------- poste de luz no terraço ----------
   const lampPost = new THREE.Group();
-  lampPost.add(new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.07, 2.6, 8), M.iron)).position.y = 1.3;
+  { const _o = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.07, 2.6, 8), M.iron); lampPost.add(_o); _o.position.y = 1.3; }
   const lampHead = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.35, 0.25), new THREE.MeshBasicMaterial({ color: 0xffc070 })); lampHead.position.y = 2.75; lampPost.add(lampHead);
   lampPost.position.set(1.8, 0, 10.8); r.add(lampPost); r.collider(1.65, 1.95, 10.65, 10.95);
   r.light(0xffb060, 3.0, 9, 1.8, 2.6, 10.8, { flicker: 0.12 });

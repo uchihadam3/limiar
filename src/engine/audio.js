@@ -220,9 +220,9 @@ export class Audio {
         drone(33, 0.035, 'triangle', 400);
         timers.push(setInterval(() => { if (Math.random() < 0.4) this.tone(GIRL_SONG[(Math.random() * GIRL_SONG.length) | 0] - 12, 0.03, 'piano', gain); }, 3800));
         break;
-      case 'camara':
+      case 'camara': // toda a área debaixo da terra
         drone(26, 0.07, 'sawtooth', 120, 7); drone(38, 0.025, 'sine', 400, 2);
-        noiseBed('bandpass', 300, 0.04, true, 2);
+        noiseBed('bandpass', 300, 0.04, true, 2); noiseBed('bandpass', 700, 0.025, false, 0.6); // água correndo, longe
         timers.push(setInterval(() => { if (Math.random() < 0.6) this.drip(gain); }, 1500));
         sparse([50, 53, 57, 58], 6, 0.03, 0, 'bell');
         break;
@@ -240,8 +240,8 @@ export class Audio {
         sparse([55, 58, 62, 65], 7, 0.025, 12, 'bell');
         break;
       case 'ecos':
-        drone(31, 0.04, 'sine', 600, 3); drone(43, 0.02, 'sine', 900, 7);
-        timers.push(setInterval(() => { if (Math.random() < 0.35) { const n = GIRL_SONG[(Math.random() * 7) | 0]; this.tone(n, 0.02, 'bell', gain); setTimeout(() => this.tone(n, 0.012, 'bell', gain), 900); setTimeout(() => this.tone(n, 0.006, 'bell', gain), 1800); } }, 5000));
+        // quase silêncio: aqui o jogador precisa ouvir o eco da caixinha
+        drone(31, 0.03, 'sine', 500, 3);
         break;
       case 'coracao':
         drone(24, 0.08, 'sawtooth', 100, 15); drone(36, 0.03, 'sawtooth', 160, 2);
