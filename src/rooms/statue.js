@@ -34,3 +34,17 @@ export function angelStatue({ pointing = true } = {}) {
   g.traverse((o) => { o.castShadow = true; o.receiveShadow = true; });
   return g;
 }
+
+// a menina: vestido vinho, cabelo escuro, sempre um passo atrás de você
+export function makeClara() {
+  const g = new THREE.Group(), body = new THREE.Group(); g.add(body);
+  const dress = new THREE.Mesh(new THREE.ConeGeometry(0.26, 0.75, 14), new THREE.MeshStandardMaterial({ color: 0x6a1e2a, roughness: 0.9 })); dress.position.y = 0.55; body.add(dress);
+  const collar = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.11, 0.06, 12), new THREE.MeshStandardMaterial({ color: 0xe8e0d0 })); collar.position.y = 0.92; body.add(collar);
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.12, 16, 12), new THREE.MeshStandardMaterial({ color: 0xd8bca0, roughness: 0.7 })); head.position.y = 1.05; body.add(head);
+  const hair = new THREE.Mesh(new THREE.SphereGeometry(0.13, 16, 12, 0, Math.PI * 2, 0, Math.PI * 0.6), new THREE.MeshStandardMaterial({ color: 0x3a1a0a, roughness: 0.9 })); hair.position.y = 1.07; hair.rotation.x = -0.3; body.add(hair);
+  const braid = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.015, 0.3, 6), hair.material); braid.position.set(0, 0.92, -0.1); body.add(braid);
+  for (const s of [-1, 1]) { const arm = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.36, 6), head.material); arm.position.set(s * 0.17, 0.72, 0); arm.rotation.z = s * 0.25; body.add(arm); }
+  for (const s of [-1, 1]) { const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.2, 6), new THREE.MeshStandardMaterial({ color: 0xe8e0d0 })); leg.position.set(s * 0.07, 0.1, 0); body.add(leg); }
+  g.traverse((o) => { o.castShadow = true; });
+  return g;
+}

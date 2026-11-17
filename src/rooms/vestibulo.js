@@ -32,7 +32,7 @@ export function vestibulo(game) {
   };
   const frente = r.door({
     id: 'frente', wall: 's', at: 0, label: 'a porta da frente', chains: !f['open:frente'], style: 'wood',
-    link: 'frente', ending: 'porta_frente', verb: f['open:frente'] ? 'Sair pela porta da frente' : undefined,
+    link: 'frente', ending: () => (f.clara_junto ? 'clara' : 'porta_frente'), verb: f['open:frente'] ? 'Sair pela porta da frente' : undefined,
     lock: {
       type: 'key', item: 'chave_ferro',
       msg: 'Correntes grossas e um cadeado de ferro. Do outro lado, vento e chuva. Você precisaria de uma chave pesada.',
@@ -119,27 +119,65 @@ export function vestibulo(game) {
   }
   if (f.relogio) openClockBase();
 
-  // espelho grande, quebrado (os cacos estão espalhados pela casa)
-  const mirrorTex = paintTexture(256, 512, (ctx, w, h) => {
+  // espelho grande, quebrado: os 7 cacos estão espalhados pela casa inteira
+  const ROMAN7 = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
+  const placedCount = () => ROMAN7.filter((_, i) => f['caco:' + (i + 1)]).length;
+  // os sete buracos do meio, em forma de caco
+  const SLOTS = [
+    [[70, 0], [186, 0], [128, 120]], [[0, 120], [128, 120], [70, 0]], [[186, 0], [256, 70], [128, 120]],
+    [[0, 120], [128, 120], [60, 300]], [[128, 120], [256, 70], [256, 300]], [[60, 300], [128, 120], [256, 300], [196, 512]],
+    [[0, 300], [60, 300], [196, 512], [60, 512]],
+  ];
+  const drawMirror = (ctx, w, h) => {
     ctx.fillStyle = '#05070a'; ctx.fillRect(0, 0, w, h);
     ctx.strokeStyle = 'rgba(160,180,200,0.35)'; ctx.lineWidth = 2;
-    // apenas alguns cacos restam nas bordas
-    const shards = [[[0, 0], [70, 0], [0, 120]], [[w, 0], [w - 90, 0], [w, 70]], [[0, h], [0, h - 140], [60, h]], [[w, h], [w - 50, h], [w, h - 200]]];
-    for (const s of shards) {
-      const g = ctx.createLinearGradient(s[0][0], s[0][1], s[2][0], s[2][1]);
-      g.addColorStop(0, '#5a6a78'); g.addColorStop(1, '#1c242c');
-      ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(...s[0]); ctx.lineTo(...s[1]); ctx.lineTo(...s[2]); ctx.closePath(); ctx.fill(); ctx.stroke();
-    }
-  }, 'brokenmirror');
+    const fillPoly = (pts, light) => {
+      const g = ctx.createLinearGradient(pts[0][0], pts[0][1], pts[pts.length - 1][0], pts[pts.length - 1][1]);
+      g.addColorStop(0, light ? '#9aaab8' : '#5a6a78'); g.addColorStop(1, light ? '#4a5a68' : '#1c242c');
+      ctx.fillStyle = g; ctx.beginPath(); pts.forEach((p, i) => (i ? ctx.lineTo(...p) : ctx.moveTo(...p))); ctx.closePath(); ctx.fill(); ctx.stroke();
+    };
+    // os pedaços que sempre estiveram aqui, nas bordas
+    for (const sh of [[[0, 0], [70, 0], [0, 120]], [[w, 0], [w - 70, 0], [w, 70]], [[0, 120], [60, 300], [0, 300]], [[0, h], [0, h - 212], [60, h]], [[w, h], [196, h], [w, h - 212]]]) fillPoly(sh, false);
+    SLOTS.forEach((pts, i) => { if (f['caco:' + (i + 1)]) fillPoly(pts, true); });
+    if (placedCount() === 7) { ctx.fillStyle = 'rgba(255,230,190,0.35)'; ctx.fillRect(0, 0, w, h); }
+  };
+  const mirrorTex = paintTexture(256, 512, drawMirror);
+  const redrawMirror = () => { drawMirror(mirrorTex.userData.canvas.getContext('2d'), 256, 512); mirrorTex.needsUpdate = true; };
   const mirror = P.painting(r, 'e', 2.4, 1.9, 1.0, 2.0, null, {});
-  mirror.canvas.material = new THREE.MeshStandardMaterial({ map: mirrorTex, roughness: 0.15, metalness: 0.6 });
+  const mirrorM = new THREE.MeshStandardMaterial({ map: mirrorTex, roughness: 0.15, metalness: 0.6, emissive: 0xffd8a0, emissiveMap: mirrorTex, emissiveIntensity: placedCount() === 7 ? 0.6 : 0 });
+  mirror.canvas.material = mirrorM;
+  const mirrorLight = r.light(0xffe0b0, placedCount() === 7 ? 2.2 : 0, 6, 3.6, 1.9, 2.4, { flicker: 0.1 });
+  r.spawns = { espelho: { x: 3.3, z: 2.4, yaw: Math.PI / 2 } };
   r.interact(mirror.group, {
-    label: 'Examinar o espelho quebrado',
-    onUse: () => game.ui.examine({
-      canvas: mirrorTex.userData.canvas,
-      text: 'Um espelho de corpo inteiro, quase sem vidro. Faltam os cacos do meio.\nNos poucos pedaços que restam, seu reflexo demora um instante a mais para se mexer.'
-        + (game.has('espelho1') ? '\n\n<em>O caco que você carrega encaixaria aqui. Mas ainda faltam muitos.</em>' : ''),
-    }),
+    label: () => {
+      if (placedCount() === 7) return 'Atravessar o espelho';
+      return game.state.inventory.some((i) => /^espelho\d$/.test(i)) ? 'Encaixar os cacos no espelho' : 'Examinar o espelho quebrado';
+    },
+    sub: () => `${placedCount()} de 7 cacos`,
+    onUse: () => {
+      if (placedCount() === 7) {
+        if (f.clara_junto) { game.ui.toast('Clara aperta a sua mão e balança a cabeça. "Eu não volto para lá."'); return; }
+        audio.tone(76, 0.06, 'box');
+        game.ui.toast('Você encosta a mão no espelho. O vidro cede, frio como água.', 3000);
+        game.transit('outro_lado', 'espelho', { sound: 'step' });
+        return;
+      }
+      const held = game.state.inventory.filter((i) => /^espelho\d$/.test(i));
+      if (!held.length) {
+        game.ui.examine({ canvas: mirrorTex.userData.canvas, text: `Um espelho de corpo inteiro, quase sem vidro. Faltam os cacos do meio: ${7 - placedCount() === 1 ? 'um buraco' : (7 - placedCount()) + ' buracos'} com formas diferentes.\nNos poucos pedaços que restam, seu reflexo demora um instante a mais para se mexer.` });
+        return;
+      }
+      for (const id of held) { f['caco:' + id.slice(7)] = true; game.take(id); }
+      redrawMirror();
+      held.forEach((_, k) => setTimeout(() => audio.click(0.25, 3200 - k * 200), k * 350));
+      const n = placedCount();
+      if (n === 7) {
+        mirrorM.emissiveIntensity = 0.6; mirrorLight.userData.base = 2.2;
+        setTimeout(() => { audio.stinger(); audio.playGirlSong(() => { }); game.film.uniforms.flash.value = 0.3; }, 900);
+        game.ui.toast('O último caco se encaixa. As rachaduras somem, uma por uma, como se o vidro cicatrizasse.<br>No reflexo, o Vestíbulo está iluminado, de dia, com uma mesa de aniversário. <em>E há uma menina lá dentro.</em>', 9000);
+      } else game.ui.toast(`Você encaixa ${held.length === 1 ? 'o caco' : 'os cacos'} no espelho. ${held.length === 1 ? 'Ele entra' : 'Cada um entra'} no seu buraco como uma peça de quebra-cabeça.<br><em>${n} de 7.</em>`, 5000);
+      game.save();
+    },
   });
 
   // pintura da própria casa, entre as portas

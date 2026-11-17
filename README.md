@@ -48,7 +48,7 @@ No menu do jogo, toque em **Instalar o jogo**. Ele vira um aplicativo com ícone
 
 Um único lugar, todo conectado: a casa, o jardim, o andar de cima e o que existe debaixo da terra. O que você encontra no começo serve lá na frente, e o que está lá na frente te faz voltar ao começo. O jogo está sendo construído aos poucos, sempre seguindo o mapa completo em [`docs/DESIGN.md`](docs/DESIGN.md).
 
-**Já dá para jogar:** a casa inteira (térreo, andar de cima, sótão e observatório), o Jardim, o Labirinto, a Capela e todo o Subterrâneo, com a Câmara dos Dez Sinais, a Gruta das Marés, o Rio, a Câmara dos Ecos e o Coração da Casa. São mais de 30 salas, cerca de 35 enigmas encadeados, 5 dos 8 finais e os 7 cacos de espelho. Falta a parte final: o espelho, O Outro Lado e o final verdadeiro.
+**O jogo está completo, do começo ao fim:** a casa inteira (térreo, andar de cima, sótão e observatório), o Jardim, o Labirinto, a Capela, todo o Subterrâneo e a parte final atrás do espelho. São cerca de 37 salas, mais de 40 enigmas encadeados, 7 cacos de espelho, 10 sinais de pedra e **8 finais**: bons, ruins, um secreto e o verdadeiro.
 
 | | |
 |---|---|

@@ -288,6 +288,7 @@ export class Room {
       const tex = numberTexture(door.num);
       const plate = new THREE.Mesh(new THREE.PlaneGeometry(0.22, 0.14), new THREE.MeshStandardMaterial({ map: tex, metalness: 0.7, roughness: 0.35 }));
       plate.position.set(LW / 2, 1.55, LT / 2 + 0.017); leaf.add(plate);
+      if (door.flipPlate) plate.rotation.z = Math.PI; // placa pendurada de cabeça para baixo
     }
     // símbolo gravado no lintel
     if (door.symbol) {
@@ -299,6 +300,7 @@ export class Room {
       }, 'sym:' + door.symbol);
       const med = new THREE.Mesh(new THREE.CircleGeometry(0.17, 32), new THREE.MeshStandardMaterial({ map: tex, roughness: 0.5, metalness: 0.4 }));
       med.position.set(0, DOOR_H + 0.52, 0.06); g.add(med);
+      if (door.flipPlate) med.rotation.z = Math.PI;
       const rim = new THREE.Mesh(new THREE.TorusGeometry(0.175, 0.015, 8, 40), M.brass);
       rim.position.copy(med.position); g.add(rim);
       door.medallion = med;

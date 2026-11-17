@@ -26,6 +26,7 @@ export const ITEMS = {
   ficha_ampulheta: { name: 'Ficha de pedra: Ampulheta', icon: '⏳', desc: 'Um disco de pedra com uma ampulheta entalhada. Estava dentro do piano, presa entre as cordas.' },
   espelho6: { name: 'Fragmento de espelho (VI)', icon: '🪞', desc: 'Um caco largo, coberto de sal. Atrás, um "VI". Estava no fundo da Gruta das Marés, onde a água só some quando a lua manda.' },
   espelho7: { name: 'Fragmento de espelho (VII)', icon: '🪞', desc: 'O último caco, quente como uma mão. Atrás, um "VII". O Arquiteto o segurou por tanto tempo que as raízes cresceram em volta dos dedos dele.' },
+  chave_22: { name: 'Chave do quarto 22', icon: '🗝️', desc: 'Uma chave comum, de hotel, com uma etiqueta de papelão. Escrito à mão: "41".' },
   ficha_sol: { name: 'Ficha de pedra: Sol', icon: '☀️', desc: 'Um disco de pedra lisa com um sol entalhado. Era o gnômon do relógio de sol.' },
   ficha_lua: { name: 'Ficha de pedra: Lua', icon: '🌙', desc: 'Um disco de pedra com uma lua crescente. Estava no fundo do lago, exatamente onde a lua se refletia.' },
   ficha_arvore: { name: 'Ficha de pedra: Árvore', icon: '🌳', desc: 'Um disco de pedra com uma árvore sem folhas entalhada. Estava guardado entre sementes que nunca brotaram.' },
@@ -110,7 +111,23 @@ export const NOTES = {
   },
   coracao: {
     title: 'O que o Arquiteto disse (O Coração da Casa)',
-    text: '"Você voltou. Você sempre volta.\n\nNa noite do aniversário dela, eu pedi à casa que nunca a deixasse sair. A casa entendeu do jeito dela: escondeu Clara do outro lado do espelho, onde nada sai.\n\nQuebrei o espelho para que ninguém a levasse embora. Espalhei os cacos. Então a casa precisou de outra pessoa à mesa. Alguém de fora, que viesse e ficasse. Você.\n\nQuarenta vezes você entrou nesta casa. Quarenta vezes você saiu pela porta da frente, ou sentou à mesa, ou se afogou, ou ficou com a minha pena. E a cada vez a casa ganhou mais portas. Esta é a quadragésima primeira.\n\nSe quer mesmo sair, junte o espelho. Traga-a de volta. Mas saiba: do outro lado, quem fica preso é quem olha."',
+    text: '"Você voltou. Você sempre volta.\n\nNa noite do aniversário dela, eu pedi à casa que nunca a deixasse sair. A casa entendeu do jeito dela: escondeu Clara do outro lado do espelho, onde nada sai.\n\nQuebrei o espelho para que ninguém a levasse embora. Espalhei os cacos. Então a casa precisou de alguém à mesa. Alguém que voltasse sempre, sem lembrar. Você.\n\nQuarenta vezes você entrou nesta casa. Quarenta vezes você saiu pela porta da frente, ou sentou à mesa, ou se afogou, ou ficou com a minha pena, ou olhou para trás. E a cada vez a casa ganhou mais portas. Esta é a quadragésima primeira.\n\nSe quer mesmo sair, junte o espelho. Traga-a de volta. Mas saiba: do outro lado, quem fica preso é quem olha."\n\n(Ele diz "eu" como quem lembra da vida de outro homem. A cada "eu", as raízes da sala inteira se mexem junto.)',
+  },
+  clara: {
+    title: 'A menina do outro lado',
+    text: '"Você demorou."\n\n(Ela fala sem se virar, mexendo na manivela da caixinha de música.)\n\n"Aqui do lado de cá tudo anda ao contrário. O relógio, as portas, até as palavras. Só a música toca do jeito certo."\n\n"Você veio me buscar de novo, né? Uma vez você olhou para trás."\n\n(Ela se vira. Os olhos dela são iguaizinhos aos seus.)\n\n"Desta vez, segura forte."',
+  },
+  repete: {
+    title: 'Papel dobrado no chão (Sala que se Repete)',
+    text: 'Já passei por estas portas a noite inteira. Duas delas me trazem sempre de volta para cá.\n\nO bilhete do Vestíbulo tinha razão: algumas mentem.\nDuas mentem. A única que diz a verdade está pendurada de cabeça para baixo.\n\n(A letra é igual à sua.)',
+  },
+  visitante: {
+    title: 'Caderno nº 40, aberto sobre a escrivaninha',
+    text: 'Se você está lendo isto, sou eu de novo. Você de novo. A casa apaga tudo cada vez que a gente sai. Por isso escrevo.\n\nO QUE NÃO FAZER:\n— não sente à mesa;\n— não mergulhe atrás do brilho;\n— não pegue a pena;\n— não saia pela porta da frente sozinho.\n\nDO OUTRO LADO DO ESPELHO:\nela vai estar esperando. Segure a mão dela.\nNA VOLTA, NÃO OLHE. Atravesse o espelho de olhos fechados. Uma vez eu olhei, e fiquei lá dentro, e ela teve que voltar sozinha para me buscar.\n\nDEPOIS:\nno fim do corredor branco, atrás da porta 13, há uma porta sem número. Ela não abre para uma pessoa sozinha.\n\nVocê vai lembrar quem é quando atravessar. Eu prometo.',
+  },
+  foto: {
+    title: 'Fotografia na parede (quarto 22)',
+    text: 'Um homem alto, de colete, com uma menina no colo diante da porta da frente da casa. A menina segura uma caixinha de música azul com estrelas.\n\nO rosto do homem foi recortado da foto com uma tesoura, com muito cuidado. No verso: "nós dois, 7 de março".',
   },
   relogio_sol: {
     title: 'Inscrição no relógio de sol (labirinto)',
@@ -161,7 +178,16 @@ export const ENDINGS = {
       'Atrás de você, a casa é só uma casa. Pequena, abandonada.\nUma janela do térreo ainda está acesa.\nVocê não volta para ver quem está nela.',
     ],
   },
-  clara: { title: 'Mãos Dadas', kind: 'Final bom', hint: '???', locked: true },
+  clara: {
+    title: 'Mãos Dadas', kind: 'Final bom', hint: 'Saia pela frente, mas não sozinho.',
+    text: [
+      'A porta da frente se abre. Clara aperta a sua mão com força e não olha para trás.',
+      'Lá fora, o dia está nascendo. Pela primeira vez em muito tempo, não chove.',
+      'Na estrada, ela pergunta se você lembra o próprio nome. Você abre a boca e percebe que não. A casa ficou com ele.',
+      'Clara sorri mesmo assim. "Tudo bem", ela diz. "Eu lembro por nós dois."',
+      'Atrás de vocês, numa janela do andar de cima, um vulto feito de raízes observa.\nA casa vai esperar o próximo visitante. Ela tem paciência.',
+    ],
+  },
   hospede: {
     title: 'O Novo Dono', kind: 'Final mediano', hint: 'Aceite a pena.',
     text: [
@@ -172,6 +198,26 @@ export const ENDINGS = {
       'Daqui a muitos anos, alguém vai acordar no Vestíbulo, molhado de chuva, sem memória.\nVocê já escreveu o bilhete.',
     ],
   },
-  espelho: { title: 'O Outro Lado do Espelho', kind: 'Final secreto', hint: '???', locked: true },
-  limiar: { title: 'Limiar', kind: 'Final verdadeiro', hint: '???', locked: true },
+  espelho: {
+    title: 'O Outro Lado do Espelho', kind: 'Final secreto', hint: 'Olhe para trás.',
+    text: [
+      'Você segura a mão dela e atravessa o espelho de olhos abertos.',
+      'Clara pisa no chão frio do Vestíbulo de verdade e se vira para você, sorrindo.\nO sorriso desaparece. Você ainda está do lado de dentro do vidro.',
+      'Você bate no espelho. Do lado de lá, nenhum som. Ela encosta a mão no vidro e chora.',
+      'Os anos passam do outro lado. Clara cresce, vai embora, esquece. Um dia, já adulta, ela volta à casa numa noite de chuva, sem memória, sem saber por quê.',
+      'Do lado de dentro, você escreve no vidro, ao contrário, para que ela consiga ler:\nBEM-VINDA DE VOLTA.',
+    ],
+  },
+  limiar: {
+    title: 'Limiar', kind: 'Final verdadeiro', hint: 'A porta sem número.',
+    text: [
+      'No fim do corredor branco, a porta sem número se abre sozinha quando Clara encosta a mão nela.',
+      'Do outro lado não há sala. Só um batente de pedra e, depois dele, a estrada, a chuva fina, a manhã. Um limiar.',
+      'Antes de atravessar, você olha uma última vez para o espelho no fim do corredor.\nQuem segura a mão da menina é um homem que você conhece: o rapaz do retrato, o Arquiteto. Mais velho. Cansado. Você.',
+      'Aurélio. O nome volta inteiro, e com ele tudo o resto: a planta, as portas, o pedido. "Nunca a deixe sair."\nQuarenta vezes a casa apagou a sua memória, para que você voltasse sem saber que era o pai dela.',
+      '"Papai", Clara diz, como se sempre soubesse.',
+      'Vocês atravessam juntos. Atrás, a casa solta um suspiro longo, de madeira velha, e as portas, uma a uma, se fecham para sempre.',
+      'Lá embaixo, na planta mestra, aparece sozinha uma última linha: uma porta pequena, sem número, aberta.\nRevisão final.',
+    ],
+  },
 };

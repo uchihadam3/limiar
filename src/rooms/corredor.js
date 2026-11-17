@@ -30,10 +30,10 @@ export function corredor(game) {
     return false;
   };
   r.door({ id: 'p11', wall: 'e', at: -0.6, num: 11, symbol: 'peixe', to: 'banho', toDoor: 'corredor', link: 'p11', lock: { type: 'custom', check: () => !f.porta11, msg: 'A fechadura está cheia de cera de vela endurecida. Por baixo da porta escorre um fio de água fria.\nPor este lado não há como abrir.' } });
-  r.door({ id: 'p12', wall: 'e', at: -4.4, num: 12, symbol: 'mascara', lock: { type: 'sealed', msg: 'A maçaneta gira, mas a porta não se move. É como se do outro lado houvesse uma parede.\nNa madeira, alguém riscou: "ELA SÓ EXISTE QUANDO CHAMAM".' } });
+  r.door({ id: 'p12', wall: 'e', at: -4.4, num: 12, symbol: 'mascara', to: 'repete', toDoor: 's', link: 'p12', lock: { type: 'custom', check: () => !f.porta12, msg: 'A maçaneta gira, mas a porta não se move. É como se do outro lado houvesse uma parede.\nNa madeira, alguém riscou: "ELA SÓ EXISTE QUANDO CHAMAM".' } });
   r.door({
-    id: 'p13', wall: 'n', at: 0, num: 13, symbol: 'mao', style: 'iron',
-    lock: { type: 'sealed', msg: 'Do outro lado, alguém respira.\nQuando você prende a respiração, a respiração do outro lado também para.' },
+    id: 'p13', wall: 'n', at: 0, num: 13, symbol: 'mao', style: 'iron', to: 'treze', toDoor: 'corredor', link: 'p13',
+    lock: { type: 'custom', check: () => !f.treze_aberta, msg: 'Do outro lado, alguém respira.\nQuando você prende a respiração, a respiração do outro lado também para.' },
     onUse: () => { audio.heartbeat(0.35); },
   });
 

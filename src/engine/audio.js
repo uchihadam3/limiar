@@ -257,6 +257,24 @@ export class Audio {
         drone(30, 0.04, 'sawtooth', 150, 9);
         timers.push(setInterval(() => { if (Math.random() < 0.5) this.creak(0.025, 0.8, 300 + Math.random() * 200); }, 3000));
         break;
+      case 'repete':
+        drone(32, 0.05, 'sawtooth', 160, 6); drone(32.3, 0.04, 'sawtooth', 160, 6);
+        timers.push(setInterval(() => this.click(0.03, 2400, gain), 1000));
+        timers.push(setInterval(() => { if (Math.random() < 0.35) this.whisper(0.04, gain); }, 5000));
+        break;
+      case 'treze':
+        drone(60, 0.012, 'sine', 3000, 2); drone(67, 0.008, 'sine', 3000, 3);
+        noiseBed('bandpass', 4000, 0.008); noiseBed('bandpass', 120, 0.03, false, 8);
+        break;
+      case 'visitante':
+        drone(36, 0.03, 'triangle', 400); sparse([60, 64, 67, 71, 72], 5, 0.035, 0, 'piano');
+        break;
+      case 'outro': {
+        drone(48, 0.02, 'sine', 2000, 3); drone(55, 0.015, 'sine', 2000, 5);
+        const loopSong = () => { let acc = 0; GIRL_SONG.forEach((n, i) => { timers.push(setTimeout(() => this.tone(n, 0.05, 'box', gain), acc)); acc += [1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1, 3][i] * 420; }); };
+        loopSong(); timers.push(setInterval(loopSong, 11000));
+        break;
+      }
       case 'corredor':
         drone(32, 0.055, 'sawtooth', 140, 18); drone(33, 0.03, 'sawtooth', 200, 3); // dissonância
         noiseBed('lowpass', 180, 0.04, true);

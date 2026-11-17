@@ -123,10 +123,16 @@ Legenda: ✅ construído · 🔨 em construção · ⏳ planejado
 
 Depois do Coração, o retrato do corredor passa a se chamar **"O VISITANTE · 41ª VEZ"**.
 
-### 4.5 O fim: de volta ao começo ⏳
-- **12, Sala que se Repete** (sino × 12): todas as portas voltam para a mesma sala, a menos que se siga a sequência certa. Algumas portas **mentem** (números de cabeça para baixo). Saída: a porta 13 vista por dentro.
-- **Espelho do Vestíbulo** + 7 cacos = passagem para **0, O Outro Lado**: o Vestíbulo espelhado, iluminado, com Clara.
-- **13, NÃO ABRIR**: só abre por dentro, com Clara pela mão.
+### 4.5 O fim: de volta ao começo ✅
+| Nº | Sala | Conteúdo-chave |
+|---|---|---|
+| 12 | Sala que se Repete | aparece com 12 badaladas do sino. As portas 9 e 6 mentem e levam de volta à mesma sala (a cada volta, uma vela se apaga; depois de algumas, você mesmo aparece num canto). O bilhete: "duas mentem; a única que diz a verdade está pendurada de cabeça para baixo". A placa pendurada ao contrário é a **13**, a única que diz a verdade |
+| 13 | Corredor Branco | 39 lampiões apagados, de 1 a 39 (o 40 ficou na Gruta das Marés), casacos iguais ao seu, a **chave do 22** (etiqueta "41"), o espelho no fim, a porta 13 que abre por dentro (atalho para o Corredor) e **a porta sem número**, que "não abre para uma pessoa sozinha" |
+| 22 | Quarto do Visitante | 39 cadernos fechados e o **nº 40 aberto**, com a sua letra: o que não fazer e **"na volta, não olhe: atravesse o espelho de olhos fechados"**. Foto sem o rosto do pai, casaco com as iniciais "A. B.", calendário sempre em 7 de março |
+| 1 | Vestíbulo | o espelho recebe os 7 cacos, cicatriza e vira passagem |
+| 0 | O Outro Lado | o Vestíbulo de 1904, de dia, com a festa de 7 anos, relógio andando para trás e portas pintadas com números ao contrário. Clara: "Da outra vez você olhou para trás." |
+
+**A revelação (final verdadeiro):** o Visitante é **Aurélio**, o pai. A casa apagou a memória dele 40 vezes. A figura de raízes no Coração é a casa usando a forma dele ("ELE NÃO ERA O PAI DELA. ERA A CASA."). As pistas estão espalhadas desde o começo: o bilhete "bem-vindo de volta — A.", o casaco do seu tamanho, o cachimbo ainda morno, a Bíblia ("deixo a chave aqui, para você"), o retrato "O Visitante", o desenho do homem alto de mãos dadas com a menina, as iniciais "A. B.".
 
 ---
 
@@ -139,9 +145,9 @@ Depois do Coração, o retrato do corredor passa a se chamar **"O VISITANTE · 4
 | **Maré Baixa** | ruim | mergulhar na Gruta das Marés com a maré alta ✅ |
 | **O Novo Dono** | mediano | aceitar a pena do Arquiteto no Coração da Casa ✅ |
 | **A Planta da Casa** | bom | queimar a planta mestra com a chama azul no Coração da Casa ✅ |
-| **Mãos Dadas** | bom | trazer Clara do Outro Lado e sair pela porta da frente |
-| **O Outro Lado do Espelho** | secreto | ficar no lugar de Clara |
-| **Limiar** | **verdadeiro** | 7 cacos + as 3 verdades (diário do Arquiteto, giz da Adega, o retrato "O Visitante" depois do Coração) + sair com Clara pela **porta 13** |
+| **Mãos Dadas** | bom | trazer Clara do Outro Lado (de olhos fechados) e sair pela porta da frente ✅ |
+| **O Outro Lado do Espelho** | secreto | atravessar o espelho de volta **olhando**, com Clara: você fica preso no lugar dela ✅ |
+| **Limiar** | **verdadeiro** | 7 cacos → O Outro Lado → voltar com Clara **de olhos fechados** (o aviso do caderno 41) → a **porta sem número** no fim do Corredor Branco ✅ |
 
 ---
 
@@ -173,7 +179,7 @@ A tela final mostra **o que ficou para trás** (cacos, sinais, finais) e **uma p
 3. ✅ Andar de cima + escadaria principal no Vestíbulo + Capela + Poço
 4. ✅ Sala de Música, Sótão, Observatório → as 10 fichas já podem ser encontradas e a porta de pedra se abre
 5. ✅ Subterrâneo inteiro + atalhos (5 dos 8 finais)
-6. 🔨 Sala que se Repete, O Outro Lado, Quarto do Visitante, finais restantes (Mãos Dadas, O Outro Lado do Espelho, Limiar)
+6. ✅ Sala que se Repete, Corredor Branco, Quarto do Visitante, O Outro Lado e os 3 últimos finais. **O jogo está completo do começo ao fim.**
 
 ---
 

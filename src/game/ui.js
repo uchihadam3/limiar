@@ -264,7 +264,7 @@ export class UI {
     // um parágrafo por vez, no centro da tela
     for (const t of e.text) await show(t, 3200 + t.length * 25);
     const st = this.game.state, f = st.flags, meta = this.game.meta;
-    const shards = ['espelho1', 'espelho2', 'espelho3', 'espelho4', 'espelho5', 'espelho6', 'espelho7'].filter((k) => st.inventory.includes(k) || f['took:' + k]).length;
+    const shards = [1, 2, 3, 4, 5, 6, 7].filter((n) => st.inventory.includes('espelho' + n) || f['took:espelho' + n] || f['caco:' + n]).length;
     const tokens = 1 + ['sol', 'lua', 'estrela', 'sino', 'arvore', 'coroa', 'escada', 'peixe', 'ampulheta'].filter((k) => f['ficha:' + k] || st.inventory.includes('ficha_' + k) || f['took:ficha_' + k]).length;
     const nEnd = Object.keys(meta.endings).length, totalEnd = Object.keys(ENDINGS).length;
     // a primeira pergunta ainda sem resposta vira a pista para a próxima vez
@@ -282,9 +282,14 @@ export class UI {
       [!f.gruta_seca, 'Na Gruta das Marés, a água obedece à lua que vai embora.'],
       [!f.eco, 'Lá embaixo, uma das notas do eco mente.'],
       [!f.verdade_coracao, 'O Arquiteto ainda está lá embaixo, esperando você voltar. Você sempre volta.'],
+      [!f.leu_visitante, 'No quarto reservado para o Visitante, há um caderno com a sua letra.'],
+      [!f.clara_mao, 'Do outro lado do espelho, alguém espera desde 1904.'],
+      [!meta.endings.espelho, 'Do outro lado, quem fica preso é quem olha.'],
+      [!meta.endings.limiar, 'A porta sem número não abre para uma pessoa sozinha.'],
       [true, 'O retrato do Visitante, no corredor, ainda não terminou de secar.'],
     ];
-    const hint = hints.find(([cond]) => cond)[1];
+    let hint = hints.find(([cond]) => cond)[1];
+    if (id === 'limiar') hint = nEnd < totalEnd ? `Ainda há ${totalEnd - nEnd} ${totalEnd - nEnd === 1 ? 'final' : 'finais'} que você não viu. A casa tem paciência.` : 'Você viu todos os finais. A casa, enfim, está em silêncio. Obrigado por jogar.';
     txt.innerHTML = `<div class="p title">${e.title}</div><div class="p kind">${e.kind}</div>
       <div class="p after"><div class="after-h">O que ficou para trás</div>
         <div class="after-stats">Cacos de espelho: <b>${shards} de 7</b> · Sinais de pedra: <b>${tokens} de 10</b> · Finais: <b>${nEnd} de ${totalEnd}</b></div>

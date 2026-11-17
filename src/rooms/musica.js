@@ -96,7 +96,8 @@ export function musica(game) {
     lines.forEach((l, i) => ctx.fillText(l, w / 2, h * (0.32 + i * 0.25)));
     ctx.restore();
   }, { key: 'espelhada', frame: 0.0 });
-  const hasShard = () => game.state.inventory.some((i) => i.startsWith('espelho'));
+  // um caco na mão, ou o espelho do Vestíbulo já com cacos (você lembra como ler ao contrário)
+  const hasShard = () => game.state.inventory.some((i) => i.startsWith('espelho')) || [1, 2, 3, 4, 5, 6, 7].some((n) => game.state.flags['caco:' + n]);
   r.interact(wallText.group, {
     label: 'Ler a inscrição na parede',
     onUse: () => {

@@ -41,8 +41,8 @@ export function galeria(game) {
   const f = game.state.flags;
   r.door({ id: 'quarto_casal', wall: 'e', at: -4, num: 21, symbol: 'coroa', to: 'quarto_casal', toDoor: 'galeria' });
   r.door({
-    id: 'p22', wall: 'e', at: 2.6, num: 22, symbol: 'mascara',
-    lock: { type: 'sealed', msg: 'Trancada. Sob o número, um cartão de visita preso com um alfinete. Escrito à mão, com a tinta ainda molhada:\n"RESERVADO PARA O VISITANTE".' },
+    id: 'p22', wall: 'e', at: 2.6, num: 22, symbol: 'mascara', to: 'visitante', toDoor: 'galeria', link: 'p22',
+    lock: { type: 'key', item: 'chave_22', consume: true, msgUnlock: 'A chave com a etiqueta "41" entra sem esforço, como se a fechadura estivesse esperando por ela.', msg: 'Trancada. Sob o número, um cartão de visita preso com um alfinete. Escrito à mão, com a tinta ainda molhada:\n"RESERVADO PARA O VISITANTE".' },
   });
   const arch = r.door({
     id: 'escada', wall: 's', at: 0, num: 1, symbol: 'coroa', style: 'arch', to: 'vestibulo', toDoor: 'escada', link: 'escada_principal',

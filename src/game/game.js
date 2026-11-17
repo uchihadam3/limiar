@@ -9,6 +9,7 @@ import { ITEMS, NOTES, ENDINGS } from './content.js';
 import { newState, loadSave, writeSave, clearSave, loadMeta, writeMeta, START_ROOM } from './state.js';
 import { ROOMS } from '../rooms/index.js';
 import { TouchControls, isTouchDevice } from '../engine/touch.js';
+import { makeClara } from '../rooms/statue.js';
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -164,6 +165,7 @@ export class Game {
     this.state.room = id; this.state.door = viaDoor ?? null; this.state.pos = null;
     if (first || !pos) this.ui.showRoomTitle(room.num != null ? room.num : '', room.name);
     room.onEnter && room.onEnter(first);
+    if (this.claraModel) { this.claraModel.position.set(this.player.pos.x, this.player.pos.y, this.player.pos.z); }
     this.save();
   }
 
@@ -251,7 +253,7 @@ export class Game {
       if (L && L.onLocked) L.onLocked();
       return;
     }
-    if (door.ending) { this.triggerEnding(door.ending, door); return; }
+    if (door.ending) { const end = typeof door.ending === 'function' ? door.ending() : door.ending; if (end) { this.triggerEnding(end, door); return; } }
     this.travel(door);
   }
 
@@ -295,6 +297,11 @@ export class Game {
   }
 
   async triggerEnding(id, door) {
+    if (this.state.flags.clara_junto && !['clara', 'limiar', 'espelho'].includes(id)) {
+      audio.tone(76, 0.05, 'box');
+      this.ui.toast('Clara puxa a sua mão com força. "Não. Vamos embora daqui."', 4500);
+      return;
+    }
     this.busy = true; this.setControl(false);
     if (door) { audio.doorOpen(); door.target = 1.65; }
     await wait(900);
@@ -309,6 +316,29 @@ export class Game {
     if (door) { door.target = 0; door.angle = 0; }
     this.toMenu();
     if (first) setTimeout(() => this.ui.toast(''), 10);
+  }
+
+  // ---------- Clara, de mãos dadas ----------
+  updateClara(dt) {
+    const on = this.playing && this.state.flags.clara_junto && this.room && !this.room.cfg.noClara;
+    if (!this.claraModel) {
+      if (!on) return;
+      this.claraModel = makeClara(); this.scene.add(this.claraModel);
+      this.claraModel.position.copy(this.player.pos);
+    }
+    const c = this.claraModel; c.visible = !!on;
+    if (!on) return;
+    const p = this.player.pos, yaw = this.player.yaw;
+    // um passo atrás e à direita de você
+    const tx = p.x + Math.sin(yaw) * 0.6 + Math.cos(yaw) * 0.5, tz = p.z + Math.cos(yaw) * 0.6 - Math.sin(yaw) * 0.5;
+    c.position.x += (tx - c.position.x) * (1 - Math.exp(-3 * dt));
+    c.position.z += (tz - c.position.z) * (1 - Math.exp(-3 * dt));
+    // dentro de alguma área caminhável da sala
+    const inside = this.room.walk.some((a) => c.position.x > a.minX + 0.2 && c.position.x < a.maxX - 0.2 && c.position.z > a.minZ + 0.2 && c.position.z < a.maxZ - 0.2);
+    if (!inside) { c.position.x += (p.x - c.position.x) * 0.2; c.position.z += (p.z - c.position.z) * 0.2; }
+    c.position.y = this.room.heightAt ? this.room.heightAt(c.position.x, c.position.z) : 0;
+    let dr = (yaw + Math.PI) - c.rotation.y; dr = Math.atan2(Math.sin(dr), Math.cos(dr)); c.rotation.y += dr * (1 - Math.exp(-4 * dt));
+    c.children[0].position.y = Math.abs(Math.sin(this.time * 6)) * 0.02 * Math.min(1, this.player.vel.length());
   }
 
   // ---------- interação ----------
@@ -342,6 +372,7 @@ export class Game {
       if (this.saveTimer > 15) { this.saveTimer = 0; this.save(); }
     }
     this.player.update(dt, this.time);
+    this.updateClara(dt);
     if (this.room) this.room.update(dt, this.time);
     if (this.playing) this.updateFocus();
     if (this.touch) this.touch.update();
@@ -391,3 +422,4 @@ export function wrap(ctx, text, maxW) {
   }
   return out;
 }
+
