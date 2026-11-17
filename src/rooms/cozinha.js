@@ -102,7 +102,7 @@ export function cozinha(game) {
     }
   }
   P.barrel(r, -2.9, 2.6);
-  P.crate(r, -2.85, 1.6, 0.55, 0.3);
+  P.crate(r, -2.9, -0.5, 0.55, 0.3); // encostado na parede, longe da porta 3 (antes bloqueava a entrada)
   P.sack(r, 2.8, -2.9, { s: 1.2 }); P.sack(r, 2.3, -3.0, { s: 0.9, rotY: 0.6 });
 
   P.cobweb(r, -3.45, 3.1, -3.45, Math.PI / 4, 0.9);

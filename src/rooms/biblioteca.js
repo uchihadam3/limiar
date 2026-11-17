@@ -20,6 +20,8 @@ export function biblioteca(game) {
   });
 
   r.finalize({ floor: 'wood', wall: 'damask', wallLow: 'panel', wainH: 0.95, wallColor: 0x9fb0a0 });
+  // quem volta do gabinete chega um pouco ao lado, para não encostar na estante aberta
+  r.doors.gabinete.spawn.z = 0.4;
 
   P.rug(r, 0.6, 0.3, 3.4, 4.2, 0.0);
   P.chandelier(r, 0, 0, { intensity: 1.3 });
