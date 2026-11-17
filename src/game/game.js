@@ -75,6 +75,8 @@ export class Game {
 
   start(fresh) {
     audio.init();
+    this.busy = false; // nunca começa travado
+
     if (fresh) { clearSave(); this.state = newState(); }
     else this.state = loadSave() || newState();
     document.querySelector('#menu').classList.add('hidden');

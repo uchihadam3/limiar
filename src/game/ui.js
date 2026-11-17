@@ -315,9 +315,11 @@ export class UI {
         <div class="after-stats">Cacos de espelho: <b>${shards} de 7</b> · Sinais de pedra: <b>${tokens} de 10</b> · Finais: <b>${nEnd} de ${totalEnd}</b></div>
         <div class="after-hint">“${hint}”</div></div>
       <div class="p"><button class="btn">Voltar ao menu</button></div>`;
+    // o botão responde desde já (um toque apressado não pode se perder)
+    const done = new Promise((res) => txt.querySelector('button').onclick = () => { el.classList.add('hidden'); res(); });
     const ps = [...txt.querySelectorAll('.p')];
-    for (const p of ps) { await wait(700); p.classList.add('show'); }
-    return new Promise((res) => txt.querySelector('button').onclick = () => { el.classList.add('hidden'); res(); });
+    (async () => { for (const p of ps) { await wait(700); p.classList.add('show'); } })();
+    return done;
   }
 }
 
