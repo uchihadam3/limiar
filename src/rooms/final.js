@@ -169,7 +169,7 @@ export function visitante(game) {
   const coat = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.25, 1.0, 10, 1, true), new THREE.MeshStandardMaterial({ color: 0x15100c, roughness: 1, side: THREE.DoubleSide })); coat.position.set(-1.9, 1.15, 2.1); r.add(coat);
   const stand = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.03, 1.8, 6), M.dark); stand.position.set(-1.9, 0.9, 2.1); r.add(stand);
   r.interact(coat, { label: 'Revistar o casaco', onUse: () => game.ui.toast('O mesmo casaco. No bolso de dentro, um cartão bordado com duas iniciais: "A. B."') });
-  const sheet = new THREE.Mesh(new THREE.PlaneGeometry(0.7, 1.4), new THREE.MeshStandardMaterial({ color: 0xc8c0b0, roughness: 1 })); sheet.position.set(2.22, 1.3, 1.2); sheet.rotation.y = -Math.PI / 2; r.add(sheet);
+  const sheet = new THREE.Mesh(new THREE.PlaneGeometry(0.7, 1.4), new THREE.MeshStandardMaterial({ color: 0xc8c0b0, roughness: 1 })); sheet.position.set(2.18, 1.3, 1.2); sheet.rotation.y = -Math.PI / 2; r.add(sheet);
   r.interact(sheet, { label: 'Examinar o espelho coberto', onUse: () => game.ui.toast('Um espelho coberto por um lençol. Preso com alfinetes, um papel: "AINDA NÃO".') });
   // calendário: todas as folhas no mesmo dia
   const cal = P.painting(r, 's', 0.6, 1.7, 0.4, 0.5, (ctx, w, h) => { ctx.fillStyle = '#e8e0d0'; ctx.fillRect(0, 0, w, h); ctx.fillStyle = '#8a1a1a'; ctx.fillRect(0, 0, w, h * 0.25); ctx.fillStyle = '#e8e0d0'; ctx.font = `bold ${h * 0.14}px Georgia`; ctx.textAlign = 'center'; ctx.fillText('MARÇO', w / 2, h * 0.18); ctx.fillStyle = '#2a1a0a'; ctx.font = `bold ${h * 0.45}px Georgia`; ctx.fillText('7', w / 2, h * 0.75); }, { key: 'calendario', frame: 0.0 });
@@ -188,7 +188,7 @@ export function outro_lado(game) {
   r.spawns = { espelho: { x: -3.2, z: 2.4, yaw: -Math.PI / 2 } };
   // janelas com luz do dia
   for (const x of [-3, 3]) {
-    const win = new THREE.Mesh(new THREE.PlaneGeometry(1.1, 2.1), new THREE.MeshBasicMaterial({ color: 0xfff4d8 })); win.position.set(x, 2.15, 5.48); win.rotation.y = Math.PI; r.add(win);
+    const win = new THREE.Mesh(new THREE.PlaneGeometry(1.1, 2.1), new THREE.MeshBasicMaterial({ color: 0xfff4d8 })); win.position.set(x, 2.15, 5.44); win.rotation.y = Math.PI; r.add(win);
     const beam = new THREE.SpotLight(0xfff0c8, 30, 14, 0.5, 0.6, 1); beam.position.set(x, 3.0, 5.3); beam.target.position.set(x * 0.6, 0, 1.0); r.add(beam); r.add(beam.target);
   }
   const cream = new THREE.MeshStandardMaterial({ color: 0xf2e2c4, roughness: 0.85 });
@@ -204,7 +204,7 @@ export function outro_lado(game) {
       ctx.strokeStyle = '#3a2414'; ctx.lineWidth = 6; ctx.strokeRect(40, 70, w - 80, 180); ctx.strokeRect(40, 280, w - 80, 200);
       ctx.save(); ctx.translate(w / 2, 160); ctx.scale(-1, 1); ctx.fillStyle = '#c9a25a'; ctx.font = 'bold 70px "IM Fell English SC", Georgia'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(n, 0, 0); ctx.restore();
     }, 'pintada' + n);
-    const pd = new THREE.Mesh(new THREE.PlaneGeometry(1.1, 2.2), new THREE.MeshStandardMaterial({ map: tex, roughness: 0.8 })); pd.position.set(x, 1.1, -5.48); r.add(pd);
+    const pd = new THREE.Mesh(new THREE.PlaneGeometry(1.1, 2.2), new THREE.MeshStandardMaterial({ map: tex, roughness: 0.8 })); pd.position.set(x, 1.1, -5.44); r.add(pd);
     r.interact(pd, { label: 'Examinar a porta', onUse: () => game.ui.toast('Não é uma porta: é uma porta pintada na parede, com o número escrito ao contrário. Do lado de cá do espelho, nenhuma porta abre.') });
   }
   // mesa de aniversário: bolo com sete velas acesas

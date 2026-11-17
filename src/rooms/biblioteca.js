@@ -44,8 +44,8 @@ export function biblioteca(game) {
   });
 
   // estantes ao longo da parede oeste (a do meio esconde a passagem)
-  for (const z of [-3.45, -1.75, 1.75, 3.45]) P.bookshelf(r, -3.78, z, { w: 1.65, h: 3.0, rotY: Math.PI / 2, seed: Math.round(z * 10 + 50) });
-  const pivot = new THREE.Group(); pivot.position.set(-3.58, 0, -0.84); r.add(pivot);
+  for (const z of [-3.45, -1.75, 1.75, 3.45]) P.bookshelf(r, -3.74, z, { w: 1.65, h: 3.0, rotY: Math.PI / 2, seed: Math.round(z * 10 + 50) });
+  const pivot = new THREE.Group(); pivot.position.set(-3.54, 0, -0.84); r.add(pivot);
   const shelf = P.bookshelf(r, 0, 0, { w: 1.65, h: 3.0, rotY: Math.PI / 2, seed: 99, collide: false });
   r.group.remove(shelf); shelf.position.set(-0.2, 0, 0.84); pivot.add(shelf);
   const shelfCol = r.collider(-4, -3.55, -0.85, 0.85);

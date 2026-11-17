@@ -219,7 +219,10 @@ export function painting(room, wall, at, y, w, h, draw, { key = null, frame = 0.
   g.add(mesh(new THREE.BoxGeometry(fw, h, 0.06), fm, -w / 2 - fw / 2, 0, 0.03));
   g.add(mesh(new THREE.BoxGeometry(fw, h, 0.06), fm, w / 2 + fw / 2, 0, 0.03));
   g.position.y = y;
-  room.placeOnWall(g, wall, at * ({ n: 1, s: -1, w: -1, e: 1 })[wall], 0.005);
+  // se o quadro cruza a altura do friso do lambri (~1,05 m), afasta da parede para o friso não passar na frente
+  const rail = room.wainH;
+  const crossesRail = rail != null && y - h / 2 - fw < rail + 0.06 && y + h / 2 + fw > rail - 0.03;
+  room.placeOnWall(g, wall, at * ({ n: 1, s: -1, w: -1, e: 1 })[wall], crossesRail ? 0.04 : 0.005);
   room.add(g);
   return { group: g, canvas: c, texture: tex };
 }

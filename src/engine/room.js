@@ -366,6 +366,8 @@ export class Room {
 
   // Constrói tudo que depende das aberturas. Chamar depois de declarar portas.
   finalize(shellOpts) {
+    // altura do friso do lambri (null = sem friso)
+    this.wainH = shellOpts?.wallLow === null || shellOpts?.walls === false ? null : (shellOpts?.wainH ?? 1.05);
     this.shell(shellOpts);
     for (const d of Object.values(this.doors)) this.buildDoor(d);
     // colisores das paredes com portas: as portas são só para interação, o jogador não as atravessa andando
