@@ -16,8 +16,8 @@ export function cozinha(game) {
   r.door({ id: 'jantar', wall: 'w', at: 1.6, num: 3, symbol: 'sino', to: 'jantar', toDoor: 'cozinha' });
   r.door({ id: 'estufa', wall: 'n', at: 1.7, num: 6, symbol: 'arvore', to: 'estufa', toDoor: 'cozinha', style: 'white' });
   r.door({
-    id: 'despensa', wall: 'e', at: -1.2, symbol: 'mao', label: 'a despensa', style: 'white',
-    lock: { type: 'sealed', msg: 'Trancada por dentro. Do outro lado, algo arranha a madeira devagar…\ne para no instante em que você encosta o ouvido.' },
+    id: 'despensa', wall: 'e', at: -1.2, symbol: 'mao', label: 'a despensa', style: 'white', to: 'despensa', toDoor: 'cozinha', link: 'despensa',
+    lock: { type: 'custom', check: () => !f.despensa_aberta, msg: 'Trancada por dentro. Do outro lado, algo arranha a madeira devagar…\ne para no instante em que você encosta o ouvido.' },
     onUse: () => { if (!f.despensa_ouvida) { f.despensa_ouvida = true; setTimeout(() => audio.whisper(0.12), 900); } },
   });
   P.window_(r, 's', -1.5, { y: 1.2, w: 1.0, h: 1.4 });

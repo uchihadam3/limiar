@@ -278,6 +278,10 @@ export class UI {
       [shards < 7, `O espelho quebrado do Vestíbulo ainda espera ${7 - shards} caco${7 - shards === 1 ? '' : 's'}.`],
       [!meta.endings.setimo_lugar, 'Na sala de jantar, alguém deixou um prato limpo para você.'],
       [!f.porta_pedra, 'Lá embaixo, dez sinais esperam para abrir a pedra.'],
+      [!f.lampiao_azul, 'A chama azul da Adega não se apaga. O vento lá embaixo apaga todas as outras.'],
+      [!f.gruta_seca, 'Na Gruta das Marés, a água obedece à lua que vai embora.'],
+      [!f.eco, 'Lá embaixo, uma das notas do eco mente.'],
+      [!f.verdade_coracao, 'O Arquiteto ainda está lá embaixo, esperando você voltar. Você sempre volta.'],
       [true, 'O retrato do Visitante, no corredor, ainda não terminou de secar.'],
     ];
     const hint = hints.find(([cond]) => cond)[1];

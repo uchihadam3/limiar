@@ -73,6 +73,7 @@ export function adega(game) {
   });
   const f = game.state.flags;
   r.door({ id: 'escadaria', wall: 'n', at: -2.5, num: 8, symbol: 'escada', to: 'escadaria', toDoor: 'adega' });
+  r.spawns = { pedra: { x: 0, z: 2.9, yaw: 0 } };
   r.finalize({ floor: 'stone', floorTile: 1.8, wall: 'brick', wallLow: null, wallTile: 2, trim: false, ceiling: 'stone', ceilColor: 0x555048 });
 
   // abóbadas: vigas de pedra no teto
@@ -112,11 +113,19 @@ export function adega(game) {
   let sinkT = f.porta_pedra ? 1 : 0, sinking = false;
   r.onUpdate((dt) => { if (sinking && sinkT < 1) sinkT = Math.min(1, sinkT + dt * 0.12); slab.position.y = -2.85 * sinkT; });
   if (f.porta_pedra) { const hole = new THREE.Mesh(new THREE.PlaneGeometry(2.2, 2.6), new THREE.MeshBasicMaterial({ color: 0x010101 })); hole.position.set(0, 1.3, 4.48); hole.rotation.y = Math.PI; r.add(hole); }
+  r.hitbox(2.2, 2.6, 0.5, 0, 1.3, 4.1, {
+    label: () => f.lampiao_azul ? 'Descer para o subterrâneo' : 'Descer os degraus', enabled: () => !!f.porta_pedra,
+    onUse: () => {
+      if (f.lampiao_azul) { game.transit('camara', 'escada', { sound: 'step' }); return; }
+      audio.whisper(0.1); game.ui.toast('Você desce alguns degraus. Lá embaixo, água corrente, muita, e um vento gelado que dobra a chama do lampião até quase apagar.\nVocê sobe de volta antes que o lampião morra. Precisaria de uma chama que o vento não apaga.', 8000);
+    },
+  });
   r.interact(slab, {
-    label: () => f.porta_pedra ? 'Descer os degraus' : game.state.inventory.some((i) => i.startsWith('ficha_')) ? 'Encaixar as fichas de pedra' : 'Examinar a porta de pedra',
+    label: () => f.porta_pedra ? (f.lampiao_azul ? 'Descer para o subterrâneo' : 'Descer os degraus') : game.state.inventory.some((i) => i.startsWith('ficha_')) ? 'Encaixar as fichas de pedra' : 'Examinar a porta de pedra',
     sub: () => `${count()} de 10 sinais`,
     onUse: () => {
-      if (f.porta_pedra) { audio.whisper(0.1); game.ui.toast('Você desce alguns degraus. Lá embaixo, água corrente, muita, e um vento gelado que dobra a chama do lampião até quase apagar.\nNa escuridão total, alguma coisa grande se move devagar. Você sobe de volta antes que o lampião morra.', 8000); return; }
+      if (f.porta_pedra && f.lampiao_azul) { game.transit('camara', 'escada', { sound: 'step' }); return; }
+      if (f.porta_pedra) { audio.whisper(0.1); game.ui.toast('Você desce alguns degraus. Lá embaixo, água corrente, muita, e um vento gelado que dobra a chama do lampião até quase apagar.\nNa escuridão total, alguma coisa grande se move devagar. Você sobe de volta antes que o lampião morra.\nPrecisaria de uma chama que o vento não apaga.', 8000); return; }
       const held = game.state.inventory.filter((i) => i.startsWith('ficha_'));
       if (!held.length) { game.readNote('adega'); return; }
       held.forEach((id, k) => setTimeout(() => { audio.grind(); }, k * 700));
@@ -185,9 +194,14 @@ export function adega(game) {
   };
   if (f.gaiola) putCandle();
   r.hitbox(0.35, 0.2, 0.35, 0.8, 0.08, 1.55, {
-    label: () => f.gaiola ? 'A vela preta' : game.has('vela') ? 'Pôr a vela preta na marca de cera' : 'Examinar a marca de cera',
+    label: () => f.gaiola ? (f.lampiao_azul ? 'A vela preta' : 'Acender o lampião na chama azul') : game.has('vela') ? 'Pôr a vela preta na marca de cera' : 'Examinar a marca de cera',
     onUse: () => {
-      if (f.gaiola) { game.ui.toast('A chama é azulada e não esquenta. Não se apaga.'); return; }
+      if (f.gaiola && !f.lampiao_azul) {
+        game.flag('lampiao_azul', true); audio.whisper(0.06); game.film.uniforms.flash.value = 0.12;
+        game.ui.toast('Você abre o lampião e encosta o pavio na chama azul. Ele pega fogo na hora, e queima azul, frio, firme.<br><em>Esta chama o vento não apaga.</em> (Aqui em cima, longe do vento, ela volta a ser amarela.)', 7500);
+        return;
+      }
+      if (f.gaiola) { game.ui.toast('A chama é azulada e não esquenta. Não se apaga, nem com o vento mais forte.'); return; }
       if (!game.has('vela')) { game.ui.toast('Uma mancha de cera preta derretida, bem na borda do círculo. Do tamanho de uma vela.'); return; }
       game.take('vela'); game.flag('gaiola', true); putCandle();
       audio.whisper(0.12);

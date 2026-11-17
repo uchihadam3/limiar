@@ -37,7 +37,7 @@ export class Player {
     }
     const flame = new THREE.Mesh(new THREE.SphereGeometry(0.008, 8, 8), new THREE.MeshBasicMaterial({ color: 0xffc070 }));
     flame.scale.y = 2; flame.position.y = 0.06;
-    this.flame = flame;
+    this.flame = flame; this.glassM = glass;
     this.lantern.add(base, cage, top, ring, flame);
     this.lantern.traverse((o) => { o.castShadow = false; });
     this.lanternRest = new THREE.Vector3(0.32, -0.43, -0.52);
@@ -173,6 +173,15 @@ export class Player {
     this.glow.intensity = 3.2 * fl * this.lightLevel;
     this.spot.intensity = 26 * fl * this.lightLevel;
     this.flame.scale.set(1, 2 * fl, 1);
+  }
+
+  // chama normal (amarela) ou a chama azul que o vento não apaga
+  setFlame(kind) {
+    const blue = kind === 'azul';
+    this.glow.color.set(blue ? 0x7090ff : 0xffa860);
+    this.spot.color.set(blue ? 0xa8c0ff : 0xffc888);
+    this.flame.material.color.set(blue ? 0xb8ccff : 0xffc070);
+    this.glassM.emissive.set(blue ? 0x4a6aff : 0xff9a40);
   }
 
   forward() {

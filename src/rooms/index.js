@@ -15,9 +15,11 @@ import { jardineiro } from './jardineiro.js';
 import { galeria, quarto_casal, sotao, observatorio } from './cima.js';
 import { capela } from './capela.js';
 import { musica } from './musica.js';
+import { camara, gruta, rio, banho, despensa, ecos, coracao } from './subterraneo.js';
 
 export const ROOMS = {
   vestibulo, biblioteca, jantar, corredor, cozinha, estufa, quarto, escadaria, adega, gabinete,
   jardim, labirinto, jardineiro,
   galeria, quarto_casal, sotao, observatorio, capela, musica,
+  camara, gruta, rio, banho, despensa, ecos, coracao,
 };

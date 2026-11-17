@@ -157,6 +157,7 @@ export class Game {
     else if (door) { const sp = door.spawn ?? door; this.player.place(sp.x, sp.z, sp.yaw); }
     else { const s = room.cfg.spawn ?? { x: 0, z: 0, yaw: 0 }; this.player.place(s.x, s.z, s.yaw); }
     this.player.lightLevel = room.cfg.lantern ?? 1;
+    this.player.setFlame(room.cfg.deep && this.state.flags.lampiao_azul ? 'azul' : 'normal');
     audio.setTheme(room.music);
     const first = !this.state.visited[id];
     this.state.visited[id] = true;
@@ -221,7 +222,7 @@ export class Game {
   doorLabel(door) {
     const n = door.num != null ? `porta ${door.num}` : (door.label ?? 'porta');
     const tried = this.state.flags['tried:' + this.doorLink(door)];
-    if (tried && this.isDoorLocked(door)) return `${cap(n)} · trancada`;
+    if (tried && this.isDoorLocked(door)) return door.verb && door.lockedWord ? door.verb : `${cap(n)} · ${door.lockedWord ?? 'trancada'}`;
     return door.verb ? door.verb : `Abrir ${n}`;
   }
   doorSub(door) { return door.symbol ? `símbolo: ${SYMBOL_NAMES[door.symbol] ?? door.symbol}` : ''; }

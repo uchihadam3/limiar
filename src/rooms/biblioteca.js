@@ -60,10 +60,10 @@ export function biblioteca(game) {
   if (f.estante_aberta) setOpen();
   r.onUpdate((dt) => { swing += (swingTarget - swing) * (1 - Math.exp(-1.6 * dt)); pivot.rotation.y = swing; });
   r.interact(redBook, {
-    label: () => f.estante_aberta ? 'O livro vermelho' : 'Puxar o livro vermelho',
+    label: () => f.estante_aberta ? 'Ler o Atlas das Marés' : 'Puxar o livro vermelho',
     sub: 'Atlas das Marés',
     onUse: () => {
-      if (f.estante_aberta) { game.ui.toast('O livro está preso a uma alavanca. A estante já está aberta.'); return; }
+      if (f.estante_aberta) { game.readNote('atlas'); return; }
       game.flag('estante_aberta', true);
       audio.click(0.3, 1200);
       setTimeout(() => { audio.grind(); swingTarget = 1.3; setOpen(); }, 500);

@@ -139,9 +139,11 @@ export class Room {
   // opts: floor, wall, wallLow (lambri), ceiling, wainH, tiles
   shell(opts = {}) {
     const { w, d, h } = this;
-    const floorM = surf(opts.floor ?? 'wood', { roughness: opts.floorRough ?? 0.7 });
-    const f = new THREE.Mesh(planeWU(w, d, opts.floorTile ?? 2.4), floorM);
-    f.rotation.x = -Math.PI / 2; f.receiveShadow = true; this.add(f);
+    if (opts.floor !== false) {
+      const floorM = surf(opts.floor ?? 'wood', { roughness: opts.floorRough ?? 0.7 });
+      const f = new THREE.Mesh(planeWU(w, d, opts.floorTile ?? 2.4), floorM);
+      f.rotation.x = -Math.PI / 2; f.receiveShadow = true; this.add(f);
+    }
     if (opts.ceiling !== false) {
       const cm = surf(opts.ceiling ?? 'plaster', { color: opts.ceilColor ?? 0x8a8070 });
       const c = new THREE.Mesh(planeWU(w, d, 3), cm);

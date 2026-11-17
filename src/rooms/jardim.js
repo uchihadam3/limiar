@@ -28,7 +28,7 @@ export function jardim(game) {
   };
   r.surfaceAt = (x, z) => (Math.abs(x) < 1.3 || Math.abs(z - 3) < 1.1) ? 'stone' : 'soil';
 
-  r.spawns = { sacada: { x: 6, z: 13.2, yaw: 0 } };
+  r.spawns = { sacada: { x: 6, z: 13.2, yaw: 0 }, poco: { x: -8.0, z: 6.0, yaw: Math.PI * 0.8 } };
   r.door({ id: 'estufa', wall: 's', at: -6, num: 6, symbol: 'passaro', to: 'estufa', toDoor: 'portao', style: 'iron', link: 'portao' });
   r.door({ id: 'labirinto', wall: 'n', at: -6, num: 16, symbol: 'espiral', to: 'labirinto', toDoor: 'jardim', style: 'iron' });
   r.door({
@@ -282,7 +282,7 @@ export function jardim(game) {
         return;
       }
       audio.drip(); setTimeout(() => audio.drip(), 1400);
-      game.ui.toast(f.poco_corda ? 'A corda nova desce até sumir na escuridão. Lá embaixo, água corrente, como um rio debaixo da terra. A corda parece forte o bastante para aguentar uma pessoa.' : 'A corda do balde apodreceu e caiu lá dentro. O poço é muito fundo. Lá embaixo, bem longe, algo prateado brilha.\nE você escuta água correndo, como um rio debaixo da terra.', 7000);
+      game.ui.toast(f.poco_corda ? 'A corda nova desce até sumir na escuridão. Lá embaixo, água corrente, como um rio debaixo da terra. Quem estivesse lá no fundo conseguiria subir por ela.' : 'A corda do balde apodreceu e caiu lá dentro. O poço é muito fundo. Lá embaixo, bem longe, algo prateado brilha.\nE você escuta água correndo, como um rio debaixo da terra.', 7000);
     },
   });
 

@@ -220,6 +220,43 @@ export class Audio {
         drone(33, 0.035, 'triangle', 400);
         timers.push(setInterval(() => { if (Math.random() < 0.4) this.tone(GIRL_SONG[(Math.random() * GIRL_SONG.length) | 0] - 12, 0.03, 'piano', gain); }, 3800));
         break;
+      case 'camara':
+        drone(26, 0.07, 'sawtooth', 120, 7); drone(38, 0.025, 'sine', 400, 2);
+        noiseBed('bandpass', 300, 0.04, true, 2);
+        timers.push(setInterval(() => { if (Math.random() < 0.6) this.drip(gain); }, 1500));
+        sparse([50, 53, 57, 58], 6, 0.03, 0, 'bell');
+        break;
+      case 'gruta': {
+        drone(24, 0.06, 'sawtooth', 110, 10);
+        const surf = noiseBed('lowpass', 500, 0.06, true);
+        const lfo = ctx.createOscillator(); lfo.frequency.value = 0.12; const lg = ctx.createGain(); lg.gain.value = 0.05;
+        lfo.connect(lg).connect(surf.g.gain); lfo.start(); nodes.push(lfo);
+        timers.push(setInterval(() => { if (Math.random() < 0.7) this.drip(gain); }, 1100));
+        break;
+      }
+      case 'rio':
+        noiseBed('bandpass', 700, 0.09, false, 0.6); noiseBed('lowpass', 250, 0.08, true);
+        drone(29, 0.04, 'triangle', 300, 5);
+        sparse([55, 58, 62, 65], 7, 0.025, 12, 'bell');
+        break;
+      case 'ecos':
+        drone(31, 0.04, 'sine', 600, 3); drone(43, 0.02, 'sine', 900, 7);
+        timers.push(setInterval(() => { if (Math.random() < 0.35) { const n = GIRL_SONG[(Math.random() * 7) | 0]; this.tone(n, 0.02, 'bell', gain); setTimeout(() => this.tone(n, 0.012, 'bell', gain), 900); setTimeout(() => this.tone(n, 0.006, 'bell', gain), 1800); } }, 5000));
+        break;
+      case 'coracao':
+        drone(24, 0.08, 'sawtooth', 100, 15); drone(36, 0.03, 'sawtooth', 160, 2);
+        noiseBed('lowpass', 140, 0.06, true);
+        timers.push(setInterval(() => this.heartbeat(0.22, gain), 1300));
+        timers.push(setInterval(() => { if (Math.random() < 0.3) this.whisper(0.05, gain); }, 6000));
+        break;
+      case 'banho':
+        drone(40, 0.025, 'sine', 800, 4); noiseBed('bandpass', 1800, 0.012);
+        timers.push(setInterval(() => { this.drip(gain); }, 1700));
+        break;
+      case 'despensa':
+        drone(30, 0.04, 'sawtooth', 150, 9);
+        timers.push(setInterval(() => { if (Math.random() < 0.5) this.creak(0.025, 0.8, 300 + Math.random() * 200); }, 3000));
+        break;
       case 'corredor':
         drone(32, 0.055, 'sawtooth', 140, 18); drone(33, 0.03, 'sawtooth', 200, 3); // dissonância
         noiseBed('lowpass', 180, 0.04, true);

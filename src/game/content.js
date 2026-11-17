@@ -24,6 +24,8 @@ export const ITEMS = {
   ficha_sino: { name: 'Ficha de pedra: Sino', icon: '🔔', desc: 'Um disco de pedra com um sino entalhado. Caiu de dentro do sino da capela, na sétima badalada.' },
   ficha_peixe: { name: 'Ficha de pedra: Peixe', icon: '🐟', desc: 'Um disco de pedra com um peixe entalhado, fria e molhada. Veio no balde, do fundo do poço.' },
   ficha_ampulheta: { name: 'Ficha de pedra: Ampulheta', icon: '⏳', desc: 'Um disco de pedra com uma ampulheta entalhada. Estava dentro do piano, presa entre as cordas.' },
+  espelho6: { name: 'Fragmento de espelho (VI)', icon: '🪞', desc: 'Um caco largo, coberto de sal. Atrás, um "VI". Estava no fundo da Gruta das Marés, onde a água só some quando a lua manda.' },
+  espelho7: { name: 'Fragmento de espelho (VII)', icon: '🪞', desc: 'O último caco, quente como uma mão. Atrás, um "VII". O Arquiteto o segurou por tanto tempo que as raízes cresceram em volta dos dedos dele.' },
   ficha_sol: { name: 'Ficha de pedra: Sol', icon: '☀️', desc: 'Um disco de pedra lisa com um sol entalhado. Era o gnômon do relógio de sol.' },
   ficha_lua: { name: 'Ficha de pedra: Lua', icon: '🌙', desc: 'Um disco de pedra com uma lua crescente. Estava no fundo do lago, exatamente onde a lua se refletia.' },
   ficha_arvore: { name: 'Ficha de pedra: Árvore', icon: '🌳', desc: 'Um disco de pedra com uma árvore sem folhas entalhada. Estava guardado entre sementes que nunca brotaram.' },
@@ -94,6 +96,22 @@ export const NOTES = {
     title: 'Tampa do baú de brinquedos',
     text: 'ESCREVA O QUE A CASA PEDE\nE EU ABRO.\n\n(Cinco rodinhas de letras de madeira, pintadas em cores diferentes.)',
   },
+  atlas: {
+    title: 'Atlas das Marés (o livro vermelho)',
+    text: 'Páginas e mais páginas de tabelas de marés, com anotações do Arquiteto nas margens:\n\n"A água debaixo da casa não obedece ao mar. Obedece à lua que vai embora."\n\n"Para secar a gruta: o que está cheio, míngua; o que míngua, some. Nessa ordem, e nunca a lua que cresce — a que cresce traz a água de volta."\n\n(Na última página, um desenho de quatro alavancas, cada uma com uma fase da lua.)',
+  },
+  camara: {
+    title: 'Inscrição sobre o túnel do olho (Câmara dos Dez Sinais)',
+    text: 'AQUI DORME O CORAÇÃO DA CASA.\nELE SÓ ACORDA PARA A NOTA QUE MENTE.\n\n(Em volta do olho de pedra fechado, um anel giratório com sete sinais.)',
+  },
+  helena_coroa: {
+    title: 'Bilhete preso à coroa de flores (túnel da coroa)',
+    text: 'Desci atrás dela. Ouvi a caixinha tocando aqui embaixo, juro que ouvi.\nO túnel está desabando. Deixo este bilhete aqui fora, para alguém achar, e sigo em frente. Não tenho medo. Ela cantava tão perto.\n\nAurélio, se ler isto: não procure a gente. Procure o espelho.\n\n— H.',
+  },
+  coracao: {
+    title: 'O que o Arquiteto disse (O Coração da Casa)',
+    text: '"Você voltou. Você sempre volta.\n\nNa noite do aniversário dela, eu pedi à casa que nunca a deixasse sair. A casa entendeu do jeito dela: escondeu Clara do outro lado do espelho, onde nada sai.\n\nQuebrei o espelho para que ninguém a levasse embora. Espalhei os cacos. Então a casa precisou de outra pessoa à mesa. Alguém de fora, que viesse e ficasse. Você.\n\nQuarenta vezes você entrou nesta casa. Quarenta vezes você saiu pela porta da frente, ou sentou à mesa, ou se afogou, ou ficou com a minha pena. E a cada vez a casa ganhou mais portas. Esta é a quadragésima primeira.\n\nSe quer mesmo sair, junte o espelho. Traga-a de volta. Mas saiba: do outro lado, quem fica preso é quem olha."',
+  },
   relogio_sol: {
     title: 'Inscrição no relógio de sol (labirinto)',
     text: 'AQUI O SOL NUNCA SE PÕE.\nMOSTRE-ME A HORA EM QUE ELA PARTIU\nE EU TE DAREI O MEU SOL.\n\n(O mostrador tem as doze horas em algarismos romanos. É noite: não há sol para fazer sombra.)',
@@ -124,10 +142,36 @@ export const ENDINGS = {
       'A mesa está completa.',
     ],
   },
-  afogado: { title: 'Maré Baixa', kind: 'Final ruim', hint: '???', locked: true },
-  arquiteto: { title: 'A Planta da Casa', kind: 'Final bom', hint: '???', locked: true },
+  afogado: {
+    title: 'Maré Baixa', kind: 'Final ruim', hint: 'Mergulhe atrás do brilho.',
+    text: [
+      'Você respira fundo e mergulha. A água é tão fria que parece quente.',
+      'Lá embaixo, o brilho do caco fica sempre um braço mais longe. Quando você se vira para subir, a superfície não está mais lá: só o teto de pedra, liso, sem fim.',
+      'Do outro lado da pedra, alguém bate três vezes.\nVocê conhece aquelas batidas. São as suas. De outra vez.',
+      'Na Gruta das Marés, a água sobe e desce duas vezes por dia. E, a cada maré baixa, aparece na areia mais um lampião apagado.',
+    ],
+  },
+  arquiteto: {
+    title: 'A Planta da Casa', kind: 'Final bom', hint: 'Queime o desenho que manda na casa.',
+    text: [
+      'Você aproxima a chama azul do papel. A planta não queima: ela se apaga, linha por linha, como tinta na chuva.',
+      'Lá em cima, as portas começam a sumir. Primeiro a 13, depois a 12, a 11... Você ouve a casa inteira desaprendendo os próprios cômodos.',
+      'O Arquiteto abre os olhos pela última vez.\n"Obrigado", ele diz. "Agora ela não tem mais onde se esconder."',
+      'Você sai por um corredor que encurta a cada passo, até sobrar uma porta só, sem número. Do outro lado: grama molhada. Manhã.',
+      'Atrás de você, a casa é só uma casa. Pequena, abandonada.\nUma janela do térreo ainda está acesa.\nVocê não volta para ver quem está nela.',
+    ],
+  },
   clara: { title: 'Mãos Dadas', kind: 'Final bom', hint: '???', locked: true },
-  hospede: { title: 'O Novo Dono', kind: 'Final mediano', hint: '???', locked: true },
+  hospede: {
+    title: 'O Novo Dono', kind: 'Final mediano', hint: 'Aceite a pena.',
+    text: [
+      'Você pega a pena. Ela é quente, como uma mão.',
+      'As raízes soltam o Arquiteto devagar, como quem devolve um casaco. Ele sorri e vira pó, e o pó continua sorrindo.',
+      'Você se senta à prancheta e desenha uma porta. Lá em cima, num corredor qualquer, uma porta nova aparece.',
+      'Você desenha mais uma. E mais uma.\nRevisão quarenta e dois.',
+      'Daqui a muitos anos, alguém vai acordar no Vestíbulo, molhado de chuva, sem memória.\nVocê já escreveu o bilhete.',
+    ],
+  },
   espelho: { title: 'O Outro Lado do Espelho', kind: 'Final secreto', hint: '???', locked: true },
   limiar: { title: 'Limiar', kind: 'Final verdadeiro', hint: '???', locked: true },
 };

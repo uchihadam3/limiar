@@ -67,7 +67,7 @@ Atalhos que reconectam o mapa:
 - **Escadaria principal** (Galeria ↔ Vestíbulo): liberada por cima, empurrando o entulho. É a volta ao começo.
 - **Porta 11** (Banho inundado ↔ Corredor): aberta por dentro, vindo do Rio Subterrâneo.
 - **Despensa** (Cozinha ↔ Rio): o alçapão é destrancado por baixo. O "arranhar" na despensa era a água batendo.
-- **Poço** (Jardim → Rio): descida só de ida. Mais tarde, vista de baixo.
+- **Poço** (Rio → Jardim): do fundo do poço, sobe-se pela corda que o jogador amarrou lá em cima.
 
 ---
 
@@ -108,14 +108,20 @@ Legenda: ✅ construído · 🔨 em construção · ⏳ planejado
 | 24 | Observatório | **planisfério**: girar os discos até a data **7/3** e a hora **9h40**; a luneta mostra estrelas desenhando **264**, que abre o armário: **ficha da Estrela** |
 | 10 | Sala de Música ✅ (térreo, porta 10) | tábuas: arrancar com o pé de cabra (Sótão). Piano: as teclas têm adesivos coloridos da Clara; o desenho "minha música" (Quarto) traz a canção em bolinhas coloridas → **ficha da Ampulheta**. Na parede, texto espelhado (lido com um caco): pista do planisfério |
 
-### 4.4 Subterrâneo ⏳ (abre com as 10 fichas na porta de pedra)
+### 4.4 Subterrâneo ✅ (abre com as 10 fichas na porta de pedra)
+**Como descer:** o vento lá embaixo apaga o lampião. A vela preta da Adega, depois de acesa no círculo, queima com uma chama azul "que não se apaga". Acender o lampião nela faz a chama dele ficar azul nas áreas de baixo.
+
 | Nº | Sala | Conteúdo-chave |
 |---|---|---|
-| 26 | Câmara dos Dez Sinais | 10 túneis com os 10 símbolos; só os que seguem a ordem das portas do corredor levam adiante |
-| 27 | Gruta das Marés | três comportas; a ordem certa vem do "Atlas das Marés" (o livro vermelho da Biblioteca). Esvaziar revela o **caco VI**. Mergulhar com a maré alta = **final Maré Baixa** |
-| 28 | Rio Subterrâneo | barco; bifurcações marcadas com símbolos; leva ao fundo do poço, ao alçapão da despensa e ao Banho (porta 11) |
-| 29 | Câmara dos Ecos | tocar a caixinha: o eco devolve a canção com **uma nota errada**; o símbolo que se acende nessa nota indica o túnel certo |
-| 30 | O Coração da Casa | Aurélio, fundido às raízes. Revela a verdade. **Caco VII**. Escolhas: **O Novo Dono** / **A Planta da Casa** |
+| 26 | Câmara dos Dez Sinais | centro com 10 túneis, um por símbolo. Abertos: escada (Adega), peixe (Gruta), lua (Rio), sino (Ecos), olho (Coração, fechado: um anel de símbolos). Bloqueados, mas com histórias: coroa (a coroa de flores e o bilhete da Helena), sol (raízes que pulsam), estrela, árvore (a corda do balanço), ampulheta (areia parada no ar). Inscrição: "ele só acorda para a nota que mente" |
+| 27 | Gruta das Marés | quatro alavancas com as fases da lua. O Atlas das Marés (o livro vermelho da Biblioteca) diz "o que está cheio, míngua; o que míngua, some": **cheia → minguante → nova**. A crescente (ou a ordem errada) traz a água de volta. Seca, aparece uma escada até o fundo: **caco VI**. Mergulhar com a maré alta (2×) = **final Maré Baixa** |
+| 28 | Rio Subterrâneo | passarelas dos dois lados, ponte, barco preso. Atalhos: corda do poço (sobe ao Jardim), escadinha para a Despensa (abre para a Cozinha), escada de ferro até o Banho (porta 11, abre para o Corredor) |
+| 29 | Câmara dos Ecos | 7 pilares com símbolos. A caixinha no pedestal toca a canção, e o eco a devolve nota por nota, acendendo um pilar por nota. A 5ª nota volta desafinada e o pilar da **coroa** brilha vermelho. **Coroa** é o sinal que acorda o olho do Coração |
+| 30 | O Coração da Casa | o Arquiteto, feito de raízes, conta a verdade (o Visitante já entrou 41 vezes; cada fracasso deu mais portas à casa). Ele abre a mão: **caco VII**. Escolhas: **pegar a pena** (final O Novo Dono) ou **queimar a planta mestra com a chama azul** (final A Planta da Casa) |
+| 11 | Banho | inundado; por dentro dá para raspar a cera e abrir a porta 11 |
+| — | Despensa | a raiz que arranhava a porta; ferrolho por dentro |
+
+Depois do Coração, o retrato do corredor passa a se chamar **"O VISITANTE · 41ª VEZ"**.
 
 ### 4.5 O fim: de volta ao começo ⏳
 - **12, Sala que se Repete** (sino × 12): todas as portas voltam para a mesma sala, a menos que se siga a sequência certa. Algumas portas **mentem** (números de cabeça para baixo). Saída: a porta 13 vista por dentro.
@@ -130,9 +136,9 @@ Legenda: ✅ construído · 🔨 em construção · ⏳ planejado
 |---|---|---|
 | **A Porta da Frente** | mediano | relógio 9h40 → chave de ferro → sair (possível desde o começo) |
 | **O Sétimo Lugar** | ruim | erguer a cadeira caída e sentar (2×) |
-| **Maré Baixa** | ruim | mergulhar na Gruta das Marés com a maré alta |
-| **O Novo Dono** | mediano | aceitar a pena do Arquiteto no Coração da Casa |
-| **A Planta da Casa** | bom | queimar a planta com a vela preta no Coração da Casa |
+| **Maré Baixa** | ruim | mergulhar na Gruta das Marés com a maré alta ✅ |
+| **O Novo Dono** | mediano | aceitar a pena do Arquiteto no Coração da Casa ✅ |
+| **A Planta da Casa** | bom | queimar a planta mestra com a chama azul no Coração da Casa ✅ |
 | **Mãos Dadas** | bom | trazer Clara do Outro Lado e sair pela porta da frente |
 | **O Outro Lado do Espelho** | secreto | ficar no lugar de Clara |
 | **Limiar** | **verdadeiro** | 7 cacos + as 3 verdades (diário do Arquiteto, giz da Adega, o retrato "O Visitante" depois do Coração) + sair com Clara pela **porta 13** |
@@ -166,8 +172,8 @@ A tela final mostra **o que ficou para trás** (cacos, sinais, finais) e **uma p
 2. ✅ Jardim: Jardim, Labirinto, Casa do Jardineiro; gaiola da Adega; armário da Estufa; encaixes da porta de pedra
 3. ✅ Andar de cima + escadaria principal no Vestíbulo + Capela + Poço
 4. ✅ Sala de Música, Sótão, Observatório → as 10 fichas já podem ser encontradas e a porta de pedra se abre
-5. 🔨 Subterrâneo inteiro + atalhos
-6. ⏳ Sala que se Repete, O Outro Lado, finais restantes
+5. ✅ Subterrâneo inteiro + atalhos (5 dos 8 finais)
+6. 🔨 Sala que se Repete, O Outro Lado, Quarto do Visitante, finais restantes (Mãos Dadas, O Outro Lado do Espelho, Limiar)
 
 ---
 

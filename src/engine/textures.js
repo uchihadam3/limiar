@@ -378,7 +378,7 @@ const builders = {
     for (let y = 0; y < 512; y++) for (let x = 0; x < 512; x++) {
       const g = fbm(n, x / 60, y / 60, 6);
       const ridge = Math.abs(Math.sin(g * 12));
-      const v = 20 + g * 40 + ridge * 10;
+      const v = 55 + g * 70 + ridge * 22;
       const i = (y * 512 + x) * 4;
       img.data[i] = v * 0.95; img.data[i + 1] = v; img.data[i + 2] = v * 1.05; img.data[i + 3] = 255;
     }

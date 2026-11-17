@@ -29,7 +29,7 @@ export function corredor(game) {
     game.ui.toast('Você arranca as tábuas uma a uma com o pé de cabra. Os pregos gritam ao sair da madeira.<br>Atrás delas, a porta 10 não tem fechadura.', 6000);
     return false;
   };
-  r.door({ id: 'p11', wall: 'e', at: -0.6, num: 11, symbol: 'peixe', lock: { type: 'sealed', msg: 'A fechadura está cheia de cera de vela endurecida. Por baixo da porta escorre um fio de água fria.\nPor este lado não há como abrir.' } });
+  r.door({ id: 'p11', wall: 'e', at: -0.6, num: 11, symbol: 'peixe', to: 'banho', toDoor: 'corredor', link: 'p11', lock: { type: 'custom', check: () => !f.porta11, msg: 'A fechadura está cheia de cera de vela endurecida. Por baixo da porta escorre um fio de água fria.\nPor este lado não há como abrir.' } });
   r.door({ id: 'p12', wall: 'e', at: -4.4, num: 12, symbol: 'mascara', lock: { type: 'sealed', msg: 'A maçaneta gira, mas a porta não se move. É como se do outro lado houvesse uma parede.\nNa madeira, alguém riscou: "ELA SÓ EXISTE QUANDO CHAMAM".' } });
   r.door({
     id: 'p13', wall: 'n', at: 0, num: 13, symbol: 'mao', style: 'iron',
@@ -59,10 +59,10 @@ export function corredor(game) {
     ['w', -6.2, { bg: '#2a1c22', skin: '#b39a86', hair: '#3a2416', long: true, cloth: '#2a1020', plate: 'HELENA', seed: 23, smile: true, redEyes: true }],
     ['e', 5.6, { bg: '#28202a', skin: '#c4a890', hair: '#4a2a14', long: true, child: true, cloth: '#5a2a30', collar: '#e0d8c8', plate: 'CLARA, 7 ANOS', seed: 24, smile: true, holds: 'caixinha' }],
     ['e', 1.3, { bg: '#1c1c1c', skin: '#a09080', hair: '#1a1410', cloth: '#101010', scratched: true, plate: '', seed: 25 }],
-    ['e', -2.6, { bg: '#20201a', skin: '#a89a88', hair: '#2a2a2a', cloth: '#22201a', plate: 'O VISITANTE', seed: 26 }],
+    ['e', -2.6, { bg: '#20201a', skin: '#a89a88', hair: '#2a2a2a', cloth: '#22201a', plate: f.verdade_coracao ? 'O VISITANTE · 41ª VEZ' : 'O VISITANTE', seed: 26 }],
   ];
   for (const [wall, at, p] of fam) {
-    const pt = P.portrait(r, wall, at, 1.75, 0.62, 0.85, { ...p, follow: true }, 'por:' + p.seed);
+    const pt = P.portrait(r, wall, at, 1.75, 0.62, 0.85, { ...p, follow: true }, 'por:' + p.seed + p.plate);
     r.interact(pt.group, {
       label: 'Examinar o retrato', sub: p.plate ? `"${p.plate}"` : 'a plaqueta está em branco',
       onUse: () => game.ui.examine({
@@ -73,7 +73,7 @@ export function corredor(game) {
           23: 'Helena, a esposa. Sorri, mas os olhos estão vermelhos, como se tivesse chorado antes de posar.',
           24: 'Clara. Nas mãos, uma caixinha de música pintada de azul com estrelas.',
           25: 'O rosto foi arranhado até sumir. Os arranhões são finos, de unha.',
-          26: '"O Visitante". A tinta ainda está fresca. O rosto parece familiar, mas você não consegue dizer de onde.',
+          26: f.verdade_coracao ? 'A plaqueta mudou: "O VISITANTE · 41ª VEZ". A tinta continua fresca.\nAgora você sabe de onde conhece esse rosto. Você o vê todo dia no espelho.' : '"O Visitante". A tinta ainda está fresca. O rosto parece familiar, mas você não consegue dizer de onde.',
         }[p.seed],
       }),
     });
