@@ -35,9 +35,9 @@ export function capela(game) {
   const beam = new THREE.SpotLight(0x9aa8ff, 14, 14, 0.45, 0.8, 1.2); beam.position.set(0, 4.4, -5.3); beam.target.position.set(0, 0, -2.6); r.add(beam); r.add(beam.target);
   r.interact(rose, { label: 'Olhar o vitral', dist: 6, onUse: () => game.ui.toast('Um vitral redondo. No centro, em vez de um santo, um olho aberto.\nO mesmo olho da porta 8 do Vestíbulo.') });
 
-  // bancos (6 fileiras)
-  for (let i = 0; i < 6; i++) for (const sx of [-1, 1]) {
-    const z = -1.6 + i * 1.05, x = sx * 1.55;
+  // bancos (5 fileiras), com espaço na frente para contornar o túmulo e chegar ao altar
+  for (let i = 0; i < 5; i++) for (const sx of [-1, 1]) {
+    const z = -0.7 + i * 1.05, x = sx * 1.55;
     const pew = new THREE.Group();
     { const _o = new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.06, 0.4), M.dark); pew.add(_o); _o.position.y = 0.45; }
     { const _o = new THREE.Mesh(new THREE.BoxGeometry(2.1, 0.5, 0.05), M.dark); pew.add(_o); _o.position.set(0, 0.75, 0.2); }

@@ -16,7 +16,8 @@ export function escadaria(game) {
   });
   r.walk = [
     { minX: -2, maxX: 2, minZ: -5.5, maxZ: -2.45 },
-    { minX: -1.0, maxX: 1.0, minZ: -2.6, maxZ: 2.6 },
+    // os degraus avançam bem sobre os patamares: sem isso o jogador não conseguia passar de um para o outro
+    { minX: -1.0, maxX: 1.0, minZ: -3.3, maxZ: 3.3 },
     { minX: -2, maxX: 2, minZ: 2.45, maxZ: 5.5 },
   ];
   r.heightAt = (x, z) => z < -2.5 ? TOP : z > 2.5 ? 0 : TOP * (2.5 - z) / 5;

@@ -370,13 +370,13 @@ export class Game {
     this.focus = null;
     if (!this.player.enabled || this.busy || !this.room) { this.ui.setPrompt(null); return; }
     this.raycaster.setFromCamera({ x: 0, y: 0 }, this.camera);
-    this.raycaster.far = 3;
+    this.raycaster.far = 22; // cada objeto tem a sua distância (it.dist); alguns são para olhar de longe (a casa, o vitral)
     const hits = this.raycaster.intersectObject(this.room.group, true);
     for (const h of hits) {
       if (!h.object.visible && !h.object.userData.interact) continue;
       const it = h.object.userData.interact;
       if (it && it.enabled() && h.distance <= it.dist) { this.focus = it; break; }
-      if (h.object.material && h.object.material.visible !== false && !h.object.isSprite && !h.object.isPoints) break; // bloqueado por algo sólido
+      if (h.object.material && h.object.material.visible !== false && !h.object.isSprite && !h.object.isPoints && !h.object.isLine) break; // bloqueado por algo sólido (chuva e poeira não bloqueiam)
     }
     if (this.focus) {
       const f = this.focus;
