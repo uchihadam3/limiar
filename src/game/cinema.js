@@ -680,6 +680,7 @@ const SCENES = {
   async limiar(c) {
     const L = lines('limiar');
     let r = c.stage('treze'); audio.setTheme('treze');
+    const ex = c.g.renderer.toneMappingExposure; c.g.renderer.toneMappingExposure = ex * 0.55; c.fill(0xffe8d0, 1.2);
     const v = c.person({}), k = c.clara();
     c.cam(V(0.7, 1.7, -2.6), V(0, 1.3, -11));
     await c.fade(0, 1400);
@@ -689,7 +690,7 @@ const SCENES = {
     r.doors.limiar.target = 1.65; audio.doorOpen();
     const fill = c.add(new THREE.Mesh(new THREE.PlaneGeometry(1.4, 2.6), new THREE.MeshBasicMaterial({ color: 0xffffff }))); fill.position.set(0, 1.25, -11.6);
     const light = c.light(0xfff2dc, 0, 14, V(0, 1.6, -10.6));
-    await c.tween(2400, (t) => { light.intensity = t * 9; });
+    await c.tween(2400, (t) => { light.intensity = t * 4; });
     await s0; await c.say(L[1]);
     // no espelho, quem segura a mão da menina
     const mir = r.cine.mir;
@@ -708,7 +709,7 @@ const SCENES = {
     rx.fillStyle = '#3a1a0a'; rx.beginPath(); rx.arc(40, 448, 23, Math.PI, 0); rx.fill();
     rx.strokeStyle = '#2a2622'; rx.lineWidth = 9; rx.beginPath(); rx.moveTo(92, 330); rx.lineTo(62, 520); rx.stroke();
     const rtex = new THREE.CanvasTexture(rc);
-    const refl = c.add(new THREE.Mesh(new THREE.PlaneGeometry(0.7, 1.9), new THREE.MeshBasicMaterial({ map: rtex, transparent: true, opacity: 0 })));
+    const refl = c.add(new THREE.Mesh(new THREE.PlaneGeometry(0.7, 1.9), new THREE.MeshBasicMaterial({ map: rtex, transparent: true, opacity: 0, toneMapped: false })));
     refl.position.set(mir.position.x, mir.position.y, mir.position.z + 0.01);
     c.cam(V(-0.55, 1.5, -9.3), V(-0.95, 1.3, -11));
     c.move(9000, V(-0.55, 1.5, -9.3), V(-0.85, 1.45, -10.3), V(-0.95, 1.3, -11), V(-0.95, 1.4, -11));
@@ -723,7 +724,8 @@ const SCENES = {
     // atravessam juntos
     c.cam(V(0.5, 1.7, -6), V(0, 1.3, -11));
     await Promise.all([c.walk(v, V(0.35, 0, -9.3), V(0.1, 0, -11.8), 3600), c.walk(k, V(-0.3, 0, -9.6), V(-0.2, 0, -11.8), 3600)]);
-    await c.tween(1500, (t) => { light.intensity = 9 + t * 30; });
+    await c.tween(1500, (t) => { light.intensity = 4 + t * 26; });
+    c.g.renderer.toneMappingExposure = ex;
     // a casa se fecha, porta por porta
     await c.fade(1, 900);
     r = c.stage('corredor'); audio.setTheme('corredor');
@@ -747,11 +749,12 @@ const SCENES = {
     await c.fade(0, 900);
     const s9 = c.say(L[8]);
     // uma porta pequena, sem número, aberta, se desenha sozinha
-    const x0 = W / 2 - 40, y0 = H / 2 - 70;
-    await c.tween(4000, (t) => {
-      ctx.strokeStyle = '#ffe8a0'; ctx.lineWidth = 5;
-      ctx.beginPath(); ctx.moveTo(x0, y0 + 140); ctx.lineTo(x0, y0 + 140 - 140 * Math.min(1, t * 2)); if (t > 0.5) ctx.lineTo(x0 + 80 * Math.min(1, (t - 0.5) * 4), y0); ctx.stroke();
-      if (t > 0.75) { ctx.beginPath(); ctx.arc(x0, y0 + 140, 80, -Math.PI / 2, -Math.PI / 2 + (t - 0.75) * 4 * (Math.PI / 2)); ctx.stroke(); }
+    const x0 = W / 2 - 60, y0 = H / 2 - 120;
+    ctx.fillStyle = '#18304a'; ctx.fillRect(x0 - 70, y0 - 40, 300, 330); r.cine.plan.needsUpdate = true;
+    await c.tween(4500, (t) => {
+      ctx.strokeStyle = '#ffe2a0'; ctx.lineWidth = 8;
+      ctx.beginPath(); ctx.moveTo(x0, y0 + 230); ctx.lineTo(x0, y0 + 230 - 230 * Math.min(1, t * 2)); if (t > 0.5) ctx.lineTo(x0 + 120 * Math.min(1, (t - 0.5) * 4), y0); if (t > 0.75) ctx.lineTo(x0 + 120, y0 + 230 * Math.min(1, (t - 0.75) * 4)); ctx.stroke();
+      if (t > 0.8) { ctx.setLineDash([10, 8]); ctx.beginPath(); ctx.arc(x0, y0 + 230, 120, -Math.PI / 2, -Math.PI / 2 + (t - 0.8) * 5 * (Math.PI / 2)); ctx.stroke(); ctx.setLineDash([]); }
       r.cine.plan.needsUpdate = true;
     }, (t) => t);
     await s9; await c.say(L[9], 4200);
