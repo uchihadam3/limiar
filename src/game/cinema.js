@@ -170,6 +170,11 @@ function lyingPerson(c, x, z, kind = 'visitante') {
   const p = c.person({ kind });
   p.rotation.set(0, -Math.PI / 2, 0); p.position.set(x, 0.26, z);
   p.body.rotation.x = Math.PI / 2;
+  // sombra de contato no chão
+  const sc = document.createElement('canvas'); sc.width = sc.height = 64; const sx = sc.getContext('2d'); const gr = sx.createRadialGradient(32, 32, 2, 32, 32, 32); gr.addColorStop(0, 'rgba(0,0,0,0.75)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); sx.fillStyle = gr; sx.fillRect(0, 0, 64, 64);
+  const sh = c.add(new THREE.Mesh(new THREE.PlaneGeometry(2.1, 0.8), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(sc), transparent: true, depthWrite: false })));
+  sh.rotation.x = -Math.PI / 2; sh.position.set(x - 0.8, 0.012, z);
+  p.position.y = 0.2;
   return p;
 }
 // esconde as raízes que ficam entre a câmera e o que ela olha
@@ -690,14 +695,14 @@ const SCENES = {
     c.cam(V(2.0, 1.9, 2.4), V(MX, 1.95, MZ));
     const txt = 'BEM-VINDA DE VOLTA', tctx = tc.getContext('2d');
     r.cine.mirrorM.emissiveIntensity = 0.1; r.cine.mirrorM.roughness = 0.6; c.fill(0xffd8b0, 1.0); c.setOpacity(me3, 0.45);
-    tctx.fillStyle = 'rgba(20,26,32,0.88)'; tctx.font = 'bold 74px Georgia, serif'; tctx.textAlign = 'center';
+    tctx.fillStyle = 'rgba(20,26,32,0.88)'; tctx.font = 'bold 64px Georgia, serif'; tctx.textAlign = 'center';
     const parts = ['BEM-', 'VINDA', 'DE', 'VOLTA'];
     const s7 = c.say(L[5]);
     for (let i = 0; i < txt.length; i++) {
       await c.wait(170);
       let shown = i + 1;
       tctx.clearRect(0, 0, 512, 1024);
-      parts.forEach((p, j) => { const n = Math.max(0, Math.min(p.length, shown)); shown -= p.length; tctx.fillText(p.slice(0, n), 256, 300 + j * 130); });
+      parts.forEach((p, j) => { const n = Math.max(0, Math.min(p.length, shown)); shown -= p.length; tctx.fillText(p.slice(0, n), 256, 150 + j * 100); });
       tx.needsUpdate = true;
     }
     await s7; await c.say(L[6], 4200);
