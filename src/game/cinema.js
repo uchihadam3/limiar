@@ -188,7 +188,8 @@ function crumble(c, obj, color = 0x6a4a30) {
   const pts = c.add(new THREE.Points(geo, new THREE.PointsMaterial({ color, size: 0.04, transparent: true, opacity: 0.9 })));
   c.every((dt) => { const a = geo.attributes.position.array; for (let i = 0; i < N; i++) { a[i * 3] += vel[i * 3] * dt; a[i * 3 + 1] = Math.max(0.02, a[i * 3 + 1] + vel[i * 3 + 1] * dt); a[i * 3 + 2] += vel[i * 3 + 2] * dt; } geo.attributes.position.needsUpdate = true; });
   const s0 = obj.scale.clone();
-  return c.tween(4200, (k) => { obj.scale.set(s0.x * (1 - k * 0.3), s0.y * (1 - k), s0.z * (1 - k * 0.3)); pts.material.opacity = 0.9 * (1 - k * 0.6); });
+  // nunca escala zero (geraria números inválidos na luz, e o brilho da tela espalharia tudo em preto)
+  return c.tween(4200, (k) => { obj.scale.set(s0.x * (1 - k * 0.3), s0.y * Math.max(0.02, 1 - k), s0.z * (1 - k * 0.3)); pts.material.opacity = 0.9 * (1 - k * 0.6); }).then(() => { obj.visible = false; });
 }
 function hummedBirthday() {
   // "parabéns a você", cantarolado de longe por vozes que não estão lá
@@ -576,12 +577,12 @@ const SCENES = {
     const roots = [];
     for (let i = 0; i < 10; i++) {
       const a = (i / 10) * Math.PI * 2, s = V(Math.cos(a) * 2.5, 0, -1.25 + Math.sin(a) * 2.5), e = V(Math.cos(a) * 0.18, 0.6 + Math.random() * 0.8, -1.25 + Math.sin(a) * 0.18);
-      const t = c.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.QuadraticBezierCurve3(s, s.clone().lerp(e, 0.5).add(V(0, 0.8, 0)), e), 16, 0.05, 6), rootM)); t.scale.setScalar(0.001); roots.push(t);
+      const t = c.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.QuadraticBezierCurve3(s, s.clone().lerp(e, 0.5).add(V(0, 0.8, 0)), e), 16, 0.05, 6), rootM)); t.scale.setScalar(0.02); roots.push(t);
     }
     c.cam(V(1.9, 1.5, -0.3), V(0, 0.9, -1.3)); clearView(c, r.cine.roots, V(1.9, 1.5, -0.3), V(0, 0.9, -1.3));
     c.light(0xffb890, 2.6, 4, V(1.0, 2.0, -0.6));
     const s2 = c.say(L[2]);
-    await c.tween(5000, (k) => roots.forEach((t) => t.scale.setScalar(Math.max(0.001, k))));
+    await c.tween(5000, (k) => roots.forEach((t) => t.scale.setScalar(Math.max(0.02, k))));
     await s2;
     // uma porta nova aparece no corredor
     await c.fade(1, 800);
