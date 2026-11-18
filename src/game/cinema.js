@@ -766,7 +766,7 @@ const SCENES = {
       const gl = rx.createLinearGradient(0, 0, 512, 1390); gl.addColorStop(0, 'rgba(255,255,255,0.18)'); gl.addColorStop(0.5, 'rgba(255,255,255,0)'); gl.addColorStop(1, 'rgba(255,255,255,0.1)'); rx.fillStyle = gl; rx.fillRect(0, 0, 512, 1390);
     }
     const rtex = new THREE.CanvasTexture(rc);
-    const refl = c.add(new THREE.Mesh(new THREE.PlaneGeometry(0.7, 1.9), new THREE.MeshBasicMaterial({ map: rtex, transparent: true, opacity: 0, toneMapped: false })));
+    const refl = c.add(new THREE.Mesh(new THREE.PlaneGeometry(0.7, 1.9), new THREE.MeshBasicMaterial({ map: rtex, transparent: true, opacity: 0, toneMapped: false, fog: false })));
     refl.position.set(mir.position.x, mir.position.y, mir.position.z + 0.01);
     c.cam(V(-0.55, 1.3, -8.6), V(-0.95, 1.2, -11));
     c.move(12000, V(-0.55, 1.3, -8.6), V(-0.8, 1.25, -9.3), V(-0.95, 1.2, -11), V(-0.95, 1.22, -11));
