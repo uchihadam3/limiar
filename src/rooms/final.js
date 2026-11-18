@@ -113,6 +113,7 @@ export function treze(game) {
   // o espelho no fim do corredor, ao lado da porta sem número
   const mir = new THREE.Mesh(new THREE.PlaneGeometry(0.7, 1.9), new THREE.MeshStandardMaterial({ color: 0xc8d0d8, metalness: 1, roughness: 0.06 }));
   mir.position.set(-0.95, 1.2, -10.97); r.add(mir);
+  r.cine = { mir };
   const mf = new THREE.Mesh(new THREE.BoxGeometry(0.8, 2.0, 0.04), M.dark); mf.position.set(-0.95, 1.2, -10.99); r.add(mf);
   r.interact(mir, { label: 'Olhar o espelho', onUse: () => game.ui.toast(f.clara_junto ? 'No espelho, a menina segura a mão de um homem alto. Você não consegue ver o rosto dele direito: a luz está atrás.' : 'Um espelho estreito e alto. O reflexo está embaçado, como se alguém tivesse respirado nele por dentro.') });
   // a chave do 22, pendurada num gancho

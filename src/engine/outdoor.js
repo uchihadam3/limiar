@@ -55,6 +55,7 @@ export function outdoor(r, game, opts = {}) {
     const a = Math.random() * Math.PI * 2, d = rMin + Math.random() * (rMax - rMin);
     tree(r, Math.cos(a) * d, Math.sin(a) * d, treeM, 5 + Math.random() * 5, false, 2, false);
   }
+  r.outdoor = { moon, moonSprite, moonDisc, rain };
   return { moon };
 }
 

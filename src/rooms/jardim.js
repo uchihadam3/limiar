@@ -79,6 +79,7 @@ export function jardim(game) {
   win(1, 2.0, true); win(9, 2.0, false);
   const childWin = win(-8, 6.2, true, true); win(-3, 6.2, false); win(1, 6.2, true); win(9, 6.2, false);
   facade.position.set(0, 0, 15.6); r.add(facade);
+  r.cine = { facade, childWin };
   for (const [x, y] of [[1, 2.0], [-8, 6.2], [1, 6.2]]) r.light(0xffa050, 1.6, 7, x, y, 14.6, { flicker: 0.1 });
   // a criança na janela some quando você chega perto
   const childParts = childWin.children.filter((c) => c.material && c.material.color && c.material.color.getHex() === 0x1a0d05);

@@ -154,6 +154,7 @@ export function vestibulo(game) {
   const mirror = P.painting(r, 'e', 2.4, 1.9, 1.0, 2.0, null, {});
   const mirrorM = new THREE.MeshStandardMaterial({ map: mirrorTex, roughness: 0.15, metalness: 0.6, emissive: 0xffd8a0, emissiveMap: mirrorTex, emissiveIntensity: placedCount() === 7 ? 0.6 : 0 });
   mirror.canvas.material = mirrorM;
+  r.cine = { mirror, mirrorM };
   const mirrorLight = r.light(0xffe0b0, placedCount() === 7 ? 2.2 : 0, 6, 3.6, 1.9, 2.4, { flicker: 0.1 });
   r.spawns = { espelho: { x: 3.3, z: 2.4, yaw: Math.PI / 2 } };
   r.interact(mirror.group, {

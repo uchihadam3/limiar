@@ -139,11 +139,10 @@ export const NOTES = {
   },
 };
 
-// Finais. Os marcados com locked ainda não podem ser alcançados nesta versão do jogo.
+// Finais: o nome e a história contada pela cena (src/game/cinema.js).
 export const ENDINGS = {
   porta_frente: {
-    title: 'A Porta da Frente', kind: 'Final mediano',
-    hint: 'Saia pelo caminho mais óbvio.',
+    title: 'A Porta da Frente',
     text: [
       'A chave de ferro gira com um estalo seco. As correntes caem.',
       'Lá fora chove. Você corre pela estrada de terra até a casa virar uma mancha escura atrás da chuva.\nQuando olha para trás, todas as janelas estão acesas. Em cada uma, uma silhueta pequena encosta a mão no vidro.',
@@ -153,8 +152,7 @@ export const ENDINGS = {
     ],
   },
   setimo_lugar: {
-    title: 'O Sétimo Lugar', kind: 'Final ruim',
-    hint: 'Aceite o convite à mesa.',
+    title: 'O Sétimo Lugar',
     text: [
       'Você ergue a cadeira e se senta. O prato à sua frente está limpo, esperando.',
       'As velas se acendem sozinhas, uma a uma. Nas outras seis cadeiras não há ninguém. E, mesmo assim, alguém puxa o ar para cantar parabéns.',
@@ -164,7 +162,7 @@ export const ENDINGS = {
     ],
   },
   afogado: {
-    title: 'Maré Baixa', kind: 'Final ruim', hint: 'Mergulhe atrás do brilho.',
+    title: 'Maré Baixa',
     text: [
       'Você respira fundo e mergulha. A água é tão fria que parece quente.',
       'Lá embaixo, o brilho do caco fica sempre um braço mais longe. Quando você se vira para subir, a superfície não está mais lá: só o teto de pedra, liso, sem fim.',
@@ -173,7 +171,7 @@ export const ENDINGS = {
     ],
   },
   arquiteto: {
-    title: 'A Planta da Casa', kind: 'Final bom', hint: 'Queime o desenho que manda na casa.',
+    title: 'A Planta da Casa',
     text: [
       'Você aproxima a chama azul do papel. A planta não queima: ela se apaga, linha por linha, como tinta na chuva.',
       'Lá em cima, as portas começam a sumir. Primeiro a 13, depois a 12, a 11... Você ouve a casa inteira desaprendendo os próprios cômodos.',
@@ -183,7 +181,7 @@ export const ENDINGS = {
     ],
   },
   clara: {
-    title: 'Mãos Dadas', kind: 'Final bom', hint: 'Saia pela frente, mas não sozinho.',
+    title: 'Mãos Dadas',
     text: [
       'A porta da frente se abre. Clara aperta a sua mão com força e não olha para trás.',
       'Lá fora, o dia está nascendo. Pela primeira vez em muito tempo, não chove.',
@@ -193,7 +191,7 @@ export const ENDINGS = {
     ],
   },
   hospede: {
-    title: 'O Novo Dono', kind: 'Final mediano', hint: 'Aceite a pena.',
+    title: 'O Novo Dono',
     text: [
       'Você pega a pena. Ela é quente, como uma mão.',
       'As raízes soltam o Arquiteto devagar, como quem devolve um casaco. Ele sorri e vira pó, e o pó continua sorrindo.',
@@ -203,7 +201,7 @@ export const ENDINGS = {
     ],
   },
   espelho: {
-    title: 'O Outro Lado do Espelho', kind: 'Final secreto', hint: 'Olhe para trás.',
+    title: 'O Outro Lado do Espelho',
     text: [
       'Você segura a mão dela e atravessa o espelho de olhos abertos.',
       'Clara pisa no chão frio do Vestíbulo de verdade e se vira para você, sorrindo.\nO sorriso desaparece. Você ainda está do lado de dentro do vidro.',
@@ -213,7 +211,7 @@ export const ENDINGS = {
     ],
   },
   limiar: {
-    title: 'Limiar', kind: 'Final verdadeiro', hint: 'A porta sem número.',
+    title: 'Limiar',
     text: [
       'No fim do corredor branco, a porta sem número se abre sozinha quando Clara encosta a mão nela.',
       'Do outro lado não há sala. Só um batente de pedra e, depois dele, a estrada, a chuva fina, a manhã. Um limiar.',

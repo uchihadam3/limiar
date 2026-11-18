@@ -10,6 +10,7 @@ import { newState, loadSave, writeSave, clearSave, loadMeta, writeMeta, START_RO
 import { ROOMS } from '../rooms/index.js';
 import { TouchControls, isTouchDevice } from '../engine/touch.js';
 import { makeClara } from '../rooms/statue.js';
+import { playCinematic } from './cinema.js';
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -196,7 +197,7 @@ export class Game {
   }
 
   save() {
-    if (!this.playing || !this.room) return;
+    if (!this.playing || !this.room || this.noSave) return;
     const p = this.player.pos;
     this.state.pos = { x: +p.x.toFixed(2), z: +p.z.toFixed(2), yaw: +this.player.yaw.toFixed(3) };
     writeSave(this.state);
@@ -335,9 +336,12 @@ export class Game {
     document.exitPointerLock?.();
     const first = !this.meta.endings[id];
     this.meta.endings[id] = Date.now(); writeMeta(this.meta);
+    // a cena do final: o que aconteceu com você, mostrado de fora
+    let filmed = false;
+    try { filmed = await playCinematic(this, id); } catch (err) { console.error(err); }
     audio.setTheme('menu');
     this.playing = false;
-    await this.ui.playEnding(id);
+    await this.ui.playEnding(id, { cinema: filmed });
     this.busy = false;
     if (door) { door.target = 0; door.angle = 0; }
     this.toMenu();
@@ -398,10 +402,10 @@ export class Game {
       this.saveTimer += dt;
       if (this.saveTimer > 15) { this.saveTimer = 0; this.save(); }
     }
-    this.player.update(dt, this.time);
-    this.updateClara(dt);
+    if (this.cine) { if (this.cineTick) this.cineTick(dt, this.time); if (this.claraModel) this.claraModel.visible = false; }
+    else { this.player.update(dt, this.time); this.updateClara(dt); }
     if (this.room) this.room.update(dt, this.time);
-    if (this.playing) this.updateFocus();
+    if (this.playing && !this.cine) this.updateFocus();
     if (this.touch) this.touch.update();
     this.film.uniforms.time.value = this.time;
     this.film.uniforms.flash.value *= Math.exp(-dt * 6);

@@ -350,16 +350,14 @@ export class UI {
   }
 
   endingsList(meta) {
-    const rows = Object.entries(ENDINGS).map(([id, e]) => {
-      const got = meta.endings[id];
-      return `<div class="ending-row ${got ? '' : 'locked'}"><span class="t">${got ? e.title : '???'}</span><span class="k">${e.kind}</span></div>`;
-    }).join('');
     const n = Object.keys(meta.endings).length, total = Object.keys(ENDINGS).length;
-    this.modal('Finais', `<div style="margin-bottom:10px">Descobertos: <b style="color:var(--ink)">${n} de ${total}</b></div>${rows}<div class="save-note">Os finais descobertos ficam guardados mesmo se você começar um novo jogo.</div>`);
+    this.modal('Finais', `<div class="seals in-menu"></div><div class="seal-count">${n} / ${total}</div>`, (body) => {
+      fillSeals(body.querySelector('.seals'), meta, null, true);
+    });
   }
 
   // Sequência de final
-  async playEnding(id) {
+  async playEnding(id, { cinema = false } = {}) {
     const e = ENDINGS[id];
     const el = $('#ending'), txt = el.querySelector('.ending-text');
     el.classList.remove('hidden');
@@ -369,39 +367,14 @@ export class UI {
       await wait(ms); p.classList.remove('show'); await wait(2300);
     };
     // um parágrafo por vez, no centro da tela
-    for (const t of e.text) await show(t, 3200 + t.length * 25);
-    const st = this.game.state, f = st.flags, meta = this.game.meta;
-    const shards = [1, 2, 3, 4, 5, 6, 7].filter((n) => st.inventory.includes('espelho' + n) || f['took:espelho' + n] || f['caco:' + n]).length;
-    const tokens = 1 + ['sol', 'lua', 'estrela', 'sino', 'arvore', 'coroa', 'escada', 'peixe', 'ampulheta'].filter((k) => f['ficha:' + k] || st.inventory.includes('ficha_' + k) || f['took:ficha_' + k]).length;
+    // com a cena filmada, a história já foi contada: aqui fica só o fechamento
+    if (!cinema) for (const t of e.text) await show(t, 3200 + t.length * 25);
+    const meta = this.game.meta;
     const nEnd = Object.keys(meta.endings).length, totalEnd = Object.keys(ENDINGS).length;
-    // a primeira pergunta ainda sem resposta vira a pista para a próxima vez
-    const hints = [
-      [!f.estante_aberta, 'Na biblioteca, há um livro que não é um livro.'],
-      [!f.olho_aberto, 'Uma das portas não tem fechadura. Ela só acorda com uma canção.'],
-      [!st.visited.jardim, 'Uma chave em forma de pássaro espera numa gaiola, lá embaixo. Ela só cai quando a casa recebe uma vela.'],
-      [!f['took:ficha_sol'], 'No centro do labirinto, o sol nunca se põe. Basta você trazer a sua própria luz.'],
-      [!f.alcapao, 'Há um alçapão no teto do andar de cima. Algo comprido alcançaria o cordão.'],
-      [!f.porta12, 'O sino da capela sabe chamar uma porta que não existe.'],
-      [shards < 7, `O espelho quebrado do Vestíbulo ainda espera ${7 - shards} caco${7 - shards === 1 ? '' : 's'}.`],
-      [!meta.endings.setimo_lugar, 'Na sala de jantar, alguém deixou um prato limpo para você.'],
-      [!f.porta_pedra, 'Lá embaixo, dez sinais esperam para abrir a pedra.'],
-      [!f.lampiao_azul, 'A chama azul da Adega não se apaga. O vento lá embaixo apaga todas as outras.'],
-      [!f.gruta_seca, 'Na Gruta das Marés, a água obedece à lua que vai embora.'],
-      [!f.eco, 'Lá embaixo, uma das notas do eco mente.'],
-      [!f.verdade_coracao, 'O Arquiteto ainda está lá embaixo, esperando você voltar. Você sempre volta.'],
-      [!f.leu_visitante, 'No quarto reservado para o Visitante, há um caderno com a sua letra.'],
-      [!f.clara_mao, 'Do outro lado do espelho, alguém espera desde 1904.'],
-      [!meta.endings.espelho, 'Do outro lado, quem fica preso é quem olha.'],
-      [!meta.endings.limiar, 'A porta sem número não abre para uma pessoa sozinha.'],
-      [true, 'O retrato do Visitante, no corredor, ainda não terminou de secar.'],
-    ];
-    let hint = hints.find(([cond]) => cond)[1];
-    if (id === 'limiar') hint = nEnd < totalEnd ? `Ainda há ${totalEnd - nEnd} ${totalEnd - nEnd === 1 ? 'final' : 'finais'} que você não viu. A casa tem paciência.` : 'Você viu todos os finais. A casa, enfim, está em silêncio. Obrigado por jogar.';
-    txt.innerHTML = `<div class="p title">${e.title}</div><div class="p kind">${e.kind}</div>
-      <div class="p after"><div class="after-h">O que ficou para trás</div>
-        <div class="after-stats">Cacos de espelho: <b>${shards} de 7</b> · Sinais de pedra: <b>${tokens} de 10</b> · Finais: <b>${nEnd} de ${totalEnd}</b></div>
-        <div class="after-hint">“${hint}”</div></div>
+    txt.innerHTML = `<div class="p title">${e.title}</div>
+      <div class="p"><div class="seals"></div><div class="seal-count">${nEnd} / ${totalEnd}</div></div>
       <div class="p"><button class="btn">Voltar ao menu</button></div>`;
+    fillSeals(txt.querySelector('.seals'), meta, id, false);
     // o botão responde desde já (um toque apressado não pode se perder)
     const done = new Promise((res) => txt.querySelector('button').onclick = () => { el.classList.add('hidden'); res(); });
     const ps = [...txt.querySelectorAll('.p')];
@@ -411,3 +384,35 @@ export class UI {
 }
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+
+// Os oito selos dos finais: os que você viu têm desenho; os outros continuam apagados.
+function fillSeals(box, meta, current, names) {
+  const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+  for (const id of Object.keys(ENDINGS)) {
+    const got = !!meta.endings[id];
+    const d = document.createElement('div'); d.className = 'seal' + (got ? ' got' : '') + (id === current ? ' now' : '');
+    const c = document.createElement('canvas'); c.width = c.height = 120 * dpr;
+    const ctx = c.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); drawSeal(ctx, id, got);
+    d.appendChild(c);
+    if (names) { const t = document.createElement('div'); t.className = 'seal-name'; t.textContent = got ? ENDINGS[id].title : ''; d.appendChild(t); }
+    box.appendChild(d);
+  }
+}
+function drawSeal(x, id, got) {
+  const C = 60;
+  const g = x.createRadialGradient(C, C - 10, 8, C, C, 58); g.addColorStop(0, got ? '#2a2016' : '#121010'); g.addColorStop(1, got ? '#0e0a06' : '#070606');
+  x.fillStyle = g; x.beginPath(); x.arc(C, C, 56, 0, 7); x.fill();
+  x.strokeStyle = got ? '#8a6a32' : '#2a2420'; x.lineWidth = 2.5; x.beginPath(); x.arc(C, C, 55, 0, 7); x.stroke();
+  x.lineWidth = 1; x.beginPath(); x.arc(C, C, 49, 0, 7); x.stroke();
+  if (!got) { x.strokeStyle = '#1e1a16'; x.lineWidth = 1.5; x.beginPath(); x.moveTo(C - 18, C - 30); x.lineTo(C - 4, C - 6); x.lineTo(C - 12, C + 8); x.lineTo(C + 6, C + 30); x.stroke(); return; }
+  x.strokeStyle = '#d8b46a'; x.fillStyle = '#d8b46a'; x.lineWidth = 2.6; x.lineCap = 'round'; x.lineJoin = 'round';
+  const L = (pts) => { x.beginPath(); pts.forEach(([a, b], i) => (i ? x.lineTo(a, b) : x.moveTo(a, b))); x.stroke(); };
+  if (id === 'porta_frente') { x.strokeRect(C - 16, C - 28, 32, 54); x.beginPath(); x.arc(C + 9, C, 2, 0, 7); x.fill(); L([[C - 22, C - 16], [C + 22, C + 12]]); L([[C + 22, C - 16], [C - 22, C + 12]]); x.beginPath(); x.arc(C, C - 2, 5, 0, 7); x.stroke(); }
+  if (id === 'setimo_lugar') { L([[C - 18, C - 30], [C - 18, C + 26]]); L([[C - 18, C + 2], [C + 4, C + 2], [C + 4, C + 26]]); x.beginPath(); x.ellipse(C + 16, C - 6, 12, 4, 0, 0, 7); x.stroke(); L([[C + 16, C - 22], [C + 16, C - 14]]); }
+  if (id === 'afogado') { x.strokeRect(C - 8, C - 26, 16, 22); L([[C - 11, C - 4], [C + 11, C - 4]]); L([[C - 6, C - 30], [C + 6, C - 30]]); for (const y of [C + 8, C + 18, C + 28]) { x.beginPath(); for (let i = -26; i <= 26; i += 2) x[i === -26 ? 'moveTo' : 'lineTo'](C + i, y + Math.sin(i / 4) * 2.5); x.stroke(); } }
+  if (id === 'arquiteto') { x.strokeRect(C - 24, C - 14, 48, 34); L([[C - 16, C - 6], [C - 2, C - 6], [C - 2, C + 10]]); L([[C + 6, C + 2], [C + 16, C + 2]]); x.beginPath(); x.moveTo(C + 12, C - 16); x.quadraticCurveTo(C + 2, C - 30, C + 12, C - 40); x.quadraticCurveTo(C + 24, C - 28, C + 12, C - 16); x.stroke(); }
+  if (id === 'clara') { x.beginPath(); x.arc(C - 12, C - 22, 6, 0, 7); x.stroke(); L([[C - 12, C - 16], [C - 12, C + 12], [C - 18, C + 30]]); L([[C - 12, C + 12], [C - 6, C + 30]]); x.beginPath(); x.arc(C + 14, C - 4, 5, 0, 7); x.stroke(); L([[C + 14, C + 1], [C + 14, C + 18], [C + 10, C + 30]]); L([[C + 14, C + 18], [C + 18, C + 30]]); L([[C - 12, C - 4], [C + 1, C + 6], [C + 14, C + 6]]); }
+  if (id === 'hospede') { x.beginPath(); x.moveTo(C - 20, C + 26); x.quadraticCurveTo(C - 4, C - 6, C + 22, C - 30); x.quadraticCurveTo(C + 10, C - 2, C - 20, C + 26); x.stroke(); L([[C - 20, C + 26], [C - 26, C + 32]]); }
+  if (id === 'espelho') { x.beginPath(); x.ellipse(C, C - 2, 18, 28, 0, 0, 7); x.stroke(); x.beginPath(); x.arc(C, C + 6, 6, 0, 7); x.stroke(); for (const [dx, dy] of [[-6, -6], [-2, -9], [2, -9], [6, -6]]) L([[C + dx * 0.6, C + 2], [C + dx, C + dy]]); }
+  if (id === 'limiar') { L([[C - 14, C + 28], [C - 14, C - 24], [C + 14, C - 24], [C + 14, C + 28]]); x.fillStyle = 'rgba(255,236,190,0.85)'; x.fillRect(C - 12, C - 22, 24, 50); x.strokeStyle = 'rgba(216,180,106,0.6)'; for (const a of [-2.6, -2.2, -1.57, -0.94, -0.54]) L([[C + Math.cos(a) * 20, C - 4 + Math.sin(a) * 26], [C + Math.cos(a) * 30, C - 4 + Math.sin(a) * 38]]); }
+}

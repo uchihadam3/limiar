@@ -201,6 +201,7 @@ export function gruta(game) {
   });
   // o caco VI no fundo
   const shardSpot = new THREE.Vector3(-2.2, LOW, -5.2);
+  r.cine = { water, setLevel: (v) => { level = target = v; }, HIGH, LOW };
   const glint = sparkle(r, shardSpot.x, shardSpot.y + 0.1, shardSpot.z, 'rgba(200,230,255,1)');
   glint.scale.setScalar(0.4);
   if (f['took:espelho6']) glint.visible = false;
@@ -536,6 +537,7 @@ export function coracao(game) {
   for (const sx of [-0.9, 0.9]) { const _o = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.95, 0.06), M.dark); desk.add(_o); _o.position.set(sx, 0.47, 0); }
   const quill = new THREE.Mesh(new THREE.ConeGeometry(0.015, 0.35, 5), new THREE.MeshStandardMaterial({ color: 0xe8e0d0 })); quill.position.set(0.7, 1.08, 0.3); quill.rotation.z = 1.2; desk.add(quill);
   desk.position.set(0, 0, -2.4); r.add(desk); r.collider(-1.05, 1.05, -3.1, -1.7);
+  r.cine = { fig, roots, sheet, plan, desk, quill };
   r.light(0xff5a3a, 4.0, 14, 0, 3, -4, { flicker: 0.25 });
   r.light(0xff7a5a, 1.6, 12, 0, 5, 2);
   r.light(0x6688cc, 1.0, 5, 0, 2.2, -2.0);

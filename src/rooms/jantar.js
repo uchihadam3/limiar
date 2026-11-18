@@ -102,6 +102,7 @@ export function jantar(game) {
     ctx.strokeStyle = '#4a3020'; ctx.lineWidth = 4; ctx.strokeRect(w * 0.54, h * 0.4, w * 0.07, h * 0.22);
     ctx.fillStyle = 'rgba(255,190,100,0.25)'; ctx.beginPath(); ctx.arc(w * 0.5, h * 0.3, w * 0.25, 0, 7); ctx.fill();
   }, { key: 'ceia' });
+  r.cine = { ceia, seats };
   r.interact(ceia.group, { label: 'Examinar o quadro', onUse: () => game.ui.examine({ canvas: ceia.texture.userData.canvas, text: '"A Ceia". Cinco pessoas à mesa e uma cadeira vazia no meio delas.\nA menor das figuras olha para a cadeira vazia, não para quem a pintou.' }) });
 
   P.portrait(r, 'e', 1.2, 2.0, 0.6, 0.8, { bg: '#2a1c22', skin: '#b39a86', hair: '#3a2416', long: true, cloth: '#2a1020', plate: 'HELENA', seed: 11, smile: true }, 'helena');
