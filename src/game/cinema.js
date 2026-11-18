@@ -702,7 +702,7 @@ const SCENES = {
       await c.wait(170);
       let shown = i + 1;
       tctx.clearRect(0, 0, 512, 1024);
-      parts.forEach((p, j) => { const n = Math.max(0, Math.min(p.length, shown)); shown -= p.length; tctx.fillText(p.slice(0, n), 256, 150 + j * 100); });
+      parts.forEach((p, j) => { const n = Math.max(0, Math.min(p.length, shown)); shown -= p.length; tctx.fillText(p.slice(0, n), 256, 185 + j * 98); });
       tx.needsUpdate = true;
     }
     await s7; await c.say(L[6], 4200);
