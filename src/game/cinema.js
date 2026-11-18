@@ -63,6 +63,7 @@ class Cine {
     const g = this.g;
     this.ups = [];
     this.resetSky();
+    if (id === 'corredor') g.state.flags.vulto = true; // o vulto do corredor não aparece nas cenas
     g.loadRoom(id, door);
     document.querySelector('#roomTitle').classList.remove('show');
     this.fill(); g.player.spot.intensity = 0;
@@ -435,7 +436,9 @@ const SCENES = {
     await c.tween(6000, (k) => { ctx.fillStyle = 'rgba(24,48,74,0.18)'; ctx.fillRect(0, 0, cv.width * k, cv.height); r.cine.plan.needsUpdate = true; blue.intensity = 2.5 + Math.sin(k * 30) * 0.6; });
     await s0;
     // o Arquiteto agradece e vira pó
-    c.cam(V(1.2, 2.3, -2.0), V(0, 2.2, -4.5));
+    c.cam(V(1.35, 2.05, -3.05), V(0, 2.3, -4.5));
+    c.light(0xffc8a0, 2.2, 3, V(0.8, 2.4, -3.4));
+    r.cine.fig.traverse((o) => { if (o.material && o.material.type === 'MeshBasicMaterial') o.scale.setScalar(1.6); });
     await c.say(L[2]); await c.say(L[3]);
     audio.grind();
     const dust = crumble(c, r.cine.fig);
@@ -469,6 +472,7 @@ const SCENES = {
     await c.fade(1, 900);
     r = c.stage('jardim'); c.dawn(); audio.setTheme('outro');
     // só uma janela do térreo continua acesa
+    r.cine.facade.traverse((o) => { if (o.isSprite && o.getWorldPosition(new THREE.Vector3()).y > 4) o.visible = false; });
     for (const [x, y] of [[-8, 6.2], [1, 6.2]]) { const d = c.add(new THREE.Mesh(new THREE.PlaneGeometry(1.15, 1.75), new THREE.MeshBasicMaterial({ color: 0x0a0c10 }))); d.position.set(x, y, 15.48); d.rotation.y = Math.PI; }
     const out = c.person({ lantern: false });
     c.cam(V(1.2, 1.5, -7.5), V(0.2, 2.8, 12));
@@ -524,7 +528,8 @@ const SCENES = {
     r.cine.quill.visible = false;
     const q = new THREE.Mesh(new THREE.ConeGeometry(0.015, 0.35, 5), new THREE.MeshStandardMaterial({ color: 0xe8e0d0 })); q.position.set(0, -0.68, 0.08); q.rotation.x = 1.2; v.arms[0].add(q);
     await s0;
-    c.cam(V(1.4, 2.2, -2.2), V(0, 2.0, -4.5));
+    c.cam(V(1.35, 2.05, -3.05), V(0, 2.3, -4.5));
+    c.light(0xffc8a0, 2.2, 3, V(0.8, 2.4, -3.4));
     const s1 = c.say(L[1]); await c.wait(1500);
     await crumble(c, r.cine.fig);
     await s1;
