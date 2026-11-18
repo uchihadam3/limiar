@@ -694,25 +694,49 @@ const SCENES = {
     await s0; await c.say(L[1]);
     // no espelho, quem segura a mão da menina
     const mir = r.cine.mir;
-    const rc = document.createElement('canvas'); rc.width = 256; rc.height = 700;
+    const rc = document.createElement('canvas'); rc.width = 512; rc.height = 1390;
     const rx = rc.getContext('2d');
-    const gr = rx.createLinearGradient(0, 0, 0, 700); gr.addColorStop(0, '#eae8e2'); gr.addColorStop(1, '#c8c6c0'); rx.fillStyle = gr; rx.fillRect(0, 0, 256, 700);
-    // o homem: mais velho, cansado, cabelo grisalho
-    rx.fillStyle = '#2a2622'; rx.beginPath(); rx.moveTo(70, 660); rx.lineTo(90, 300); rx.lineTo(170, 300); rx.lineTo(190, 660); rx.fill();
-    rx.fillStyle = '#c8a88a'; rx.beginPath(); rx.ellipse(130, 245, 34, 42, 0, 0, 7); rx.fill();
-    rx.fillStyle = '#b8b4ac'; rx.beginPath(); rx.ellipse(130, 222, 37, 24, 0, Math.PI, 0); rx.fill();
-    rx.fillStyle = '#6a5a48'; rx.fillRect(115, 248, 10, 3); rx.fillRect(137, 248, 10, 3);
-    rx.strokeStyle = '#8a7060'; rx.lineWidth = 2; rx.beginPath(); rx.moveTo(112, 270); rx.lineTo(148, 270); rx.stroke();
-    // a menina, de vinho, de mãos dadas
-    rx.fillStyle = '#6a1e2a'; rx.beginPath(); rx.moveTo(10, 660); rx.lineTo(40, 480); rx.lineTo(70, 660); rx.fill();
-    rx.fillStyle = '#d8bca0'; rx.beginPath(); rx.arc(40, 455, 22, 0, 7); rx.fill();
-    rx.fillStyle = '#3a1a0a'; rx.beginPath(); rx.arc(40, 448, 23, Math.PI, 0); rx.fill();
-    rx.strokeStyle = '#2a2622'; rx.lineWidth = 9; rx.beginPath(); rx.moveTo(92, 330); rx.lineTo(62, 520); rx.stroke();
+    {
+      // o corredor branco refletido, com profundidade
+      const gr = rx.createLinearGradient(0, 0, 0, 1390); gr.addColorStop(0, '#e4e2dc'); gr.addColorStop(1, '#bdbab2'); rx.fillStyle = gr; rx.fillRect(0, 0, 512, 1390);
+      rx.strokeStyle = 'rgba(120,116,108,0.35)'; rx.lineWidth = 2;
+      for (const [a, b] of [[0, 1180], [512, 1180], [0, 120], [512, 120]]) { rx.beginPath(); rx.moveTo(a, b); rx.lineTo(256, 520); rx.stroke(); }
+      rx.fillStyle = 'rgba(255,248,230,0.7)'; rx.fillRect(226, 470, 60, 110);
+      const sh = (x, y, w, h, c) => { rx.fillStyle = c; rx.fillRect(x, y, w, h); };
+      // ELE: alto, casaco comprido, ombros caídos
+      rx.fillStyle = '#26221e'; rx.beginPath(); rx.moveTo(230, 520); rx.quadraticCurveTo(190, 540, 180, 640); rx.lineTo(160, 1250); rx.lineTo(400, 1250); rx.lineTo(372, 640); rx.quadraticCurveTo(362, 540, 322, 520); rx.closePath(); rx.fill();
+      rx.fillStyle = '#34302a'; rx.beginPath(); rx.moveTo(276, 540); rx.lineTo(262, 1250); rx.lineTo(290, 1250); rx.closePath(); rx.fill();
+      for (let i = 0; i < 5; i++) { rx.fillStyle = '#6a5a40'; rx.beginPath(); rx.arc(290, 640 + i * 90, 5, 0, 7); rx.fill(); }
+      sh(200, 1250, 70, 40, '#141210'); sh(290, 1250, 70, 40, '#141210');
+      // braço direito dele descendo até a mão da menina
+      rx.strokeStyle = '#26221e'; rx.lineWidth = 34; rx.lineCap = 'round'; rx.beginPath(); rx.moveTo(196, 600); rx.quadraticCurveTo(160, 760, 150, 900); rx.stroke();
+      rx.fillStyle = '#a8826a'; rx.beginPath(); rx.arc(148, 912, 17, 0, 7); rx.fill();
+      // cabeça: grisalho, barba, olheiras
+      rx.fillStyle = '#b08a70'; rx.fillRect(258, 470, 36, 60);
+      rx.beginPath(); rx.ellipse(276, 400, 58, 74, 0, 0, 7); rx.fill();
+      rx.fillStyle = '#c8c4bc'; rx.beginPath(); rx.ellipse(276, 352, 62, 40, 0, Math.PI, 0); rx.fill(); rx.fillRect(214, 348, 14, 54); rx.fillRect(324, 348, 14, 54);
+      rx.fillStyle = '#b4b0a8'; rx.beginPath(); rx.moveTo(222, 420); rx.quadraticCurveTo(276, 520, 330, 420); rx.quadraticCurveTo(300, 470, 276, 470); rx.quadraticCurveTo(252, 470, 222, 420); rx.fill();
+      rx.fillStyle = '#2a1e16'; rx.beginPath(); rx.ellipse(254, 396, 8, 5, 0, 0, 7); rx.ellipse(298, 396, 8, 5, 0, 0, 7); rx.fill();
+      rx.strokeStyle = 'rgba(90,60,50,0.55)'; rx.lineWidth = 3; rx.beginPath(); rx.arc(254, 404, 10, 0.3, Math.PI - 0.3); rx.stroke(); rx.beginPath(); rx.arc(298, 404, 10, 0.3, Math.PI - 0.3); rx.stroke();
+      rx.strokeStyle = '#8a8478'; rx.lineWidth = 4; rx.beginPath(); rx.moveTo(240, 380); rx.lineTo(266, 384); rx.moveTo(286, 384); rx.lineTo(312, 380); rx.stroke();
+      rx.strokeStyle = '#8a6a58'; rx.lineWidth = 3; rx.beginPath(); rx.moveTo(276, 400); rx.lineTo(270, 430); rx.lineTo(280, 432); rx.stroke();
+      // ELA: vestido vinho, gola branca, trança, de mãos dadas
+      rx.fillStyle = '#6a1e2a'; rx.beginPath(); rx.moveTo(78, 900); rx.quadraticCurveTo(66, 1000, 40, 1230); rx.lineTo(170, 1230); rx.quadraticCurveTo(144, 1000, 132, 900); rx.closePath(); rx.fill();
+      rx.fillStyle = '#e8e0d0'; rx.beginPath(); rx.moveTo(84, 900); rx.lineTo(105, 935); rx.lineTo(126, 900); rx.fill();
+      sh(70, 1230, 26, 50, '#e8e0d0'); sh(114, 1230, 26, 50, '#e8e0d0');
+      rx.strokeStyle = '#d0b498'; rx.lineWidth = 14; rx.beginPath(); rx.moveTo(128, 920); rx.lineTo(146, 912); rx.stroke();
+      rx.fillStyle = '#d8bca0'; rx.beginPath(); rx.ellipse(105, 846, 34, 40, 0, 0, 7); rx.fill();
+      rx.fillStyle = '#3a1a0a'; rx.beginPath(); rx.ellipse(105, 826, 37, 28, 0, Math.PI, 0); rx.fill(); rx.fillRect(70, 822, 10, 40); rx.fillRect(130, 822, 10, 40);
+      rx.fillStyle = '#1a0e08'; rx.beginPath(); rx.arc(93, 848, 4, 0, 7); rx.arc(117, 848, 4, 0, 7); rx.fill();
+      rx.strokeStyle = '#8a3a34'; rx.lineWidth = 2.5; rx.beginPath(); rx.arc(105, 862, 8, 0.4, Math.PI - 0.4); rx.stroke();
+      // o vidro: leve reflexo
+      const gl = rx.createLinearGradient(0, 0, 512, 1390); gl.addColorStop(0, 'rgba(255,255,255,0.18)'); gl.addColorStop(0.5, 'rgba(255,255,255,0)'); gl.addColorStop(1, 'rgba(255,255,255,0.1)'); rx.fillStyle = gl; rx.fillRect(0, 0, 512, 1390);
+    }
     const rtex = new THREE.CanvasTexture(rc);
     const refl = c.add(new THREE.Mesh(new THREE.PlaneGeometry(0.7, 1.9), new THREE.MeshBasicMaterial({ map: rtex, transparent: true, opacity: 0, toneMapped: false })));
     refl.position.set(mir.position.x, mir.position.y, mir.position.z + 0.01);
-    c.cam(V(-0.55, 1.5, -9.3), V(-0.95, 1.3, -11));
-    c.move(9000, V(-0.55, 1.5, -9.3), V(-0.85, 1.45, -10.3), V(-0.95, 1.3, -11), V(-0.95, 1.4, -11));
+    c.cam(V(-0.55, 1.3, -8.6), V(-0.95, 1.2, -11));
+    c.move(12000, V(-0.55, 1.3, -8.6), V(-0.8, 1.25, -9.3), V(-0.95, 1.2, -11), V(-0.95, 1.22, -11));
     const s2 = c.say(L[2]);
     await c.tween(3000, (t) => { refl.material.opacity = t; });
     await s2; await c.say(L[3]);
