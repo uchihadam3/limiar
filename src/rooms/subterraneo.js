@@ -520,7 +520,7 @@ export function coracao(game) {
   for (const sx of [-1, 1]) {
     const socket = new THREE.Mesh(new THREE.SphereGeometry(0.055, 10, 8), new THREE.MeshBasicMaterial({ color: 0x120804 })); socket.scale.z = 0.5; socket.position.set(sx * 0.085, 2.4, 0.2); fig.add(socket);
     const eye = new THREE.Mesh(new THREE.SphereGeometry(0.026, 8, 6), new THREE.MeshBasicMaterial({ color: 0xff7a3a })); eye.position.set(sx * 0.085, 2.4, 0.225); fig.add(eye);
-    const brow = new THREE.Mesh(new THREE.BoxGeometry(0.11, 0.025, 0.05), rootM); brow.position.set(sx * 0.085, 2.47, 0.2); brow.rotation.z = sx * -0.25; fig.add(brow);
+    const brow = new THREE.Mesh(new THREE.BoxGeometry(0.11, 0.025, 0.05), rootM); brow.position.set(sx * 0.085, 2.47, 0.2); brow.rotation.z = sx * 0.22; fig.add(brow);
   }
   { const mouth = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.012, 0.03), new THREE.MeshBasicMaterial({ color: 0x120804 })); mouth.position.set(0, 2.24, 0.215); fig.add(mouth); }
   // raízes finas subindo pelos ombros e envolvendo a cabeça
