@@ -261,11 +261,14 @@ const SCENES = {
     for (const dx of [0.17, 0.2]) { const t = new THREE.Mesh(new THREE.BoxGeometry(0.015, 0.035, 0.01), brass); t.position.set(dx, -0.02, 0); key.add(t); }
     const rib = new THREE.Mesh(new THREE.PlaneGeometry(0.03, 0.2), new THREE.MeshStandardMaterial({ color: 0xa01418, side: THREE.DoubleSide })); rib.position.set(-0.04, -0.12, 0); rib.rotation.z = 0.3; key.add(rib);
     key.position.set(0, 1.2, -4.5); c.add(key);
+    w.visible = false;
+    const backdrop = c.add(new THREE.Mesh(new THREE.PlaneGeometry(3, 2), new THREE.MeshBasicMaterial({ color: 0x030303 }))); backdrop.position.set(0, 1.2, -5.1);
     c.light(0xffd0a0, 2.5, 3, V(0.4, 1.6, -4.0));
     c.every((dt, t) => { key.rotation.y = t * 0.6; key.rotation.z = Math.sin(t) * 0.1; });
     c.cam(V(0, 1.3, -3.85), V(0.08, 1.18, -4.5));
     await c.say(L[6], 6000);
     // a casa, de longe, no fim
+    w.visible = true; backdrop.visible = false; key.visible = false;
     c.cam(V(0.3, 1.6, -9), V(0, 4, 15));
     await c.say(L[7], 2600); await c.say(L[8], 3600);
     await c.fade(1, 1600);
