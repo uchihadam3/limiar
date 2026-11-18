@@ -156,11 +156,17 @@ function lantern(color = 0x2a2016) {
   const cap = new THREE.Mesh(new THREE.ConeGeometry(0.06, 0.05, 10), brass); cap.position.y = 0.17; g.add(cap);
   return g;
 }
-function lyingPerson(c, x, z, ry) {
-  const p = c.person({ kind: 'visitante' });
-  p.rotation.set(0, ry, 0); p.position.set(x, 0.14, z);
-  p.body.rotation.x = -Math.PI / 2;
+function lyingPerson(c, x, z, kind = 'visitante') {
+  // deitada de lado para a câmera (a cabeça para a esquerda de quem olha do lado do espelho)
+  const p = c.person({ kind });
+  p.rotation.set(0, -Math.PI / 2, 0); p.position.set(x, 0.26, z);
+  p.body.rotation.x = Math.PI / 2;
   return p;
+}
+// esconde as raízes que ficam entre a câmera e o que ela olha
+function clearView(c, roots, from, to) {
+  const ray = new THREE.Ray(from, to.clone().sub(from).normalize()), d = from.distanceTo(to), hit = new THREE.Vector3(), box = new THREE.Box3();
+  for (const t of roots) { box.setFromObject(t).expandByScalar(0.15); if (ray.intersectBox(box, hit) && hit.distanceTo(from) < d) t.visible = false; }
 }
 function crumble(c, obj, color = 0x6a4a30) {
   // pó caindo
@@ -325,12 +331,12 @@ const SCENES = {
     // um dia, alguém vai acordar no Vestíbulo
     await c.fade(1, 1000);
     r = c.stage('vestibulo'); audio.setTheme('casa');
-    const n = lyingPerson(c, 0.3, 3.0, 0.4);
-    c.cam(V(-0.9, 0.5, 1.6), V(0.3, 0.3, 3.0));
+    const n = lyingPerson(c, 0.6, 3.0);
+    c.cam(V(0.3, 0.75, 0.9), V(-0.1, 0.25, 3.0));
     await c.fade(0, 1400);
     audio.thunder();
     const s4 = c.say(L[4]); await c.wait(2400);
-    await c.tween(1600, (k) => { n.body.rotation.x = -Math.PI / 2 + k * 0.5; });
+    await c.tween(1600, (k) => { n.body.rotation.x = Math.PI / 2 - k * 0.5; });
     await s4;
     await c.say(L[5], 4200);
     // a mesa completa
@@ -436,7 +442,7 @@ const SCENES = {
     await c.tween(6000, (k) => { ctx.fillStyle = 'rgba(24,48,74,0.18)'; ctx.fillRect(0, 0, cv.width * k, cv.height); r.cine.plan.needsUpdate = true; blue.intensity = 2.5 + Math.sin(k * 30) * 0.6; });
     await s0;
     // o Arquiteto agradece e vira pó
-    c.cam(V(1.35, 2.05, -3.05), V(0, 2.3, -4.5));
+    c.cam(V(1.6, 2.0, -2.6), V(0, 2.3, -4.5)); clearView(c, r.cine.roots, V(1.6, 2.0, -2.6), V(0, 2.3, -4.5));
     c.light(0xffc8a0, 2.2, 3, V(0.8, 2.4, -3.4));
     r.cine.fig.traverse((o) => { if (o.material && o.material.type === 'MeshBasicMaterial') o.scale.setScalar(1.6); });
     await c.say(L[2]); await c.say(L[3]);
@@ -536,7 +542,7 @@ const SCENES = {
     r.cine.quill.visible = false;
     const q = new THREE.Mesh(new THREE.ConeGeometry(0.015, 0.35, 5), new THREE.MeshStandardMaterial({ color: 0xe8e0d0 })); q.position.set(0, -0.68, 0.08); q.rotation.x = 1.2; v.arms[0].add(q);
     await s0;
-    c.cam(V(1.35, 2.05, -3.05), V(0, 2.3, -4.5));
+    c.cam(V(1.6, 2.0, -2.6), V(0, 2.3, -4.5)); clearView(c, r.cine.roots, V(1.6, 2.0, -2.6), V(0, 2.3, -4.5));
     c.light(0xffc8a0, 2.2, 3, V(0.8, 2.4, -3.4));
     const s1 = c.say(L[1]); await c.wait(1500);
     await crumble(c, r.cine.fig);
@@ -549,7 +555,8 @@ const SCENES = {
       const a = (i / 10) * Math.PI * 2, s = V(Math.cos(a) * 2.5, 0, -1.25 + Math.sin(a) * 2.5), e = V(Math.cos(a) * 0.18, 0.6 + Math.random() * 0.8, -1.25 + Math.sin(a) * 0.18);
       const t = c.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.QuadraticBezierCurve3(s, s.clone().lerp(e, 0.5).add(V(0, 0.8, 0)), e), 16, 0.05, 6), rootM)); t.scale.setScalar(0.001); roots.push(t);
     }
-    c.cam(V(2.0, 1.6, 0.4), V(0, 0.9, -1.4));
+    c.cam(V(1.9, 1.5, -0.3), V(0, 0.9, -1.3)); clearView(c, r.cine.roots, V(1.9, 1.5, -0.3), V(0, 0.9, -1.3));
+    c.light(0xffb890, 2.6, 4, V(1.0, 2.0, -0.6));
     const s2 = c.say(L[2]);
     await c.tween(5000, (k) => roots.forEach((t) => t.scale.setScalar(Math.max(0.001, k))));
     await s2;
@@ -583,12 +590,12 @@ const SCENES = {
     // alguém acorda no Vestíbulo
     await c.fade(1, 900);
     r = c.stage('vestibulo'); audio.setTheme('casa');
-    const nv = lyingPerson(c, -0.2, 3.1, -0.3);
-    c.cam(V(1.0, 0.5, 1.6), V(-0.2, 0.3, 3.1));
+    const nv = lyingPerson(c, 0.6, 3.0);
+    c.cam(V(0.3, 0.75, 0.9), V(-0.1, 0.25, 3.0));
     await c.fade(0, 1400);
     audio.thunder();
     const s4 = c.say(L[5]); await c.wait(2400);
-    await c.tween(1600, (k) => { nv.body.rotation.x = -Math.PI / 2 + k * 0.5; });
+    await c.tween(1600, (k) => { nv.body.rotation.x = Math.PI / 2 - k * 0.5; });
     await s4; await c.say(L[6], 3800);
     await c.fade(1, 1800);
   },
@@ -643,8 +650,8 @@ const SCENES = {
     r = c.stage('vestibulo'); audio.setTheme('jardim');
     const me3 = c.person({}); me3.scale.setScalar(0.55); me3.position.set(MX - 0.02, 0.95, MZ); me3.rotation.y = -Math.PI / 2;
     const g3 = c.add(glass.clone()); g3.position.copy(glass.position); g3.rotation.copy(glass.rotation);
-    const back = c.person({ kind: 'mulher' }); back.position.set(0.3, 0.14, 3.0); back.rotation.y = 0.3; back.body.rotation.x = -Math.PI / 2;
-    c.cam(V(-1.0, 0.6, 1.6), V(0.3, 0.3, 3.0));
+    lyingPerson(c, 0.6, 3.0, 'mulher');
+    c.cam(V(0.3, 0.75, 0.9), V(-0.1, 0.25, 3.0));
     await c.fade(0, 1600); audio.thunder();
     await c.say(yearsB);
     // do lado de dentro, você escreve no vidro
