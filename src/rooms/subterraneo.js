@@ -233,9 +233,13 @@ export function gruta(game) {
       ctx.fillStyle = '#c8b890'; ctx.font = '22px "IM Fell English SC", Georgia'; ctx.textAlign = 'center';
       ctx.fillText(k.toUpperCase(), cx, 170);
     });
-  }, 'luas');
+    // gravado embaixo, à mão: para onde olhar
+    ctx.fillStyle = '#b8a880'; ctx.font = 'italic 19px Georgia, serif'; ctx.textAlign = 'center';
+    ctx.fillText('"as comportas obedecem ao Atlas das Marés" — A. B.', w / 2, 226);
+  }, 'luas2');
   const pnl = new THREE.Mesh(new THREE.PlaneGeometry(3.2, 1.6), new THREE.MeshStandardMaterial({ map: panel, roughness: 0.8 }));
   pnl.position.set(6.96, 2.2, 6.0); pnl.rotation.y = -Math.PI / 2; r.add(pnl);
+  r.interact(pnl, { label: 'Ler o painel das comportas', dist: 4, onUse: () => game.ui.examine({ canvas: panel.userData.canvas, text: 'Quatro luas pintadas sobre quatro alavancas. Embaixo, gravado à mão: <em>"as comportas obedecem ao Atlas das Marés"</em>.' }) });
   const seq = [];
   let refill = null;
   const levers = PHASES.map(([k, name], i) => {

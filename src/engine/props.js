@@ -49,7 +49,8 @@ export function chair(room, x, z, rotY = 0, { fallen = false, collide = true } =
 }
 
 // ---------- estante com livros (instanciados) ----------
-export function bookshelf(room, x, z, { w = 1.6, h = 2.6, d = 0.4, rotY = 0, seed = 1, gaps = 0.08, collide = true } = {}) {
+// palette: cores dos livros; decorate(books, rnd): pode mudar cor/título de cada livro (a biblioteca usa isso)
+export function bookshelf(room, x, z, { w = 1.6, h = 2.6, d = 0.4, rotY = 0, seed = 1, gaps = 0.08, collide = true, palette = null, decorate = null } = {}) {
   const g = new THREE.Group();
   const m = M.dark;
   g.add(mesh(new THREE.BoxGeometry(w, h, 0.03), m, 0, h / 2, -d / 2 + 0.015));
@@ -67,24 +68,27 @@ export function bookshelf(room, x, z, { w = 1.6, h = 2.6, d = 0.4, rotY = 0, see
       const bw = 0.025 + r() * 0.05, bh = 0.22 + r() * 0.13, bd = 0.2 + r() * 0.1;
       if (bx + bw > w / 2 - 0.06) break;
       const lean = r() < 0.06 ? (r() - 0.5) * 0.5 : 0;
-      books.push({ x: bx + bw / 2, y: y + 0.02 + bh / 2, z: d / 2 - bd / 2 - 0.02 - r() * 0.03, w: bw, h: bh, d: bd, lean, hue: r() });
+      books.push({ x: bx + bw / 2, y: y + 0.02 + bh / 2, z: d / 2 - bd / 2 - 0.02 - r() * 0.03, w: bw, h: bh, d: bd, lean, hue: r(), shelf: i, y0: y + 0.02 });
       bx += bw + 0.002;
     }
   }
   const geo = new THREE.BoxGeometry(1, 1, 1);
-  const bm = new THREE.MeshStandardMaterial({ roughness: 0.75, map: surface('panel').map });
+  const bm = new THREE.MeshStandardMaterial({ roughness: 0.75, map: palette ? null : surface('panel').map });
   const inst = new THREE.InstancedMesh(geo, bm, books.length);
   const mtx = new THREE.Matrix4(), q = new THREE.Quaternion(), col = new THREE.Color();
-  const palette = [0x4a1410, 0x1f2a1a, 0x2a2016, 0x3a2a12, 0x15202c, 0x40301c, 0x2a1626, 0x5a4a30];
+  const pal = palette ?? [0x4a1410, 0x1f2a1a, 0x2a2016, 0x3a2a12, 0x15202c, 0x40301c, 0x2a1626, 0x5a4a30];
+  for (const b of books) b.color = pal[Math.floor(b.hue * pal.length)];
+  if (decorate) decorate(books, r);
   books.forEach((b, i) => {
     q.setFromEuler(new THREE.Euler(0, 0, b.lean));
     mtx.compose(V(b.x, b.y, b.z), q, V(b.w, b.h, b.d));
     inst.setMatrixAt(i, mtx);
-    col.setHex(palette[Math.floor(b.hue * palette.length)]).multiplyScalar(0.8 + b.hue * 0.5);
+    col.setHex(b.color).multiplyScalar(palette ? 0.62 + ((b.hue * 7) % 1) * 0.2 : 0.8 + b.hue * 0.5);
     inst.setColorAt(i, col);
   });
   inst.castShadow = true; inst.receiveShadow = true;
   g.add(inst);
+  g.userData.books = books; g.userData.dims = { w, h, d, shelves };
   place(room, g, x, z, rotY);
   if (collide) rotCollider(room, x, z, w, d, rotY);
   return g;

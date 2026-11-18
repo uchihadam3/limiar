@@ -46,6 +46,32 @@ const DRAWINGS = {
     ctx.fillStyle = '#c84a6a'; ctx.font = 'bold 34px "Comic Sans MS", cursive'; ctx.textAlign = 'center';
     ctx.fillText('MEU ANIVERSÁRIO!', w / 2, h * 0.18); ctx.fillText('7', w / 2, h * 0.92);
   },
+  // o pai entrando na estante (só a lápis preto: a cor do livro não aparece)
+  estante: (ctx, w, h) => {
+    kid(ctx, w, h);
+    const T = 0.1, H = 0.6, rh = H / 4;
+    crayon(ctx, '#2a2620', 5);
+    ctx.strokeRect(w * 0.16, h * T, w * 0.42, h * H);
+    for (let i = 1; i < 4; i++) { ctx.beginPath(); ctx.moveTo(w * 0.16, h * (T + i * rh)); ctx.lineTo(w * 0.58, h * (T + i * rh)); ctx.stroke(); }
+    crayon(ctx, '#2a2620', 3);
+    for (let row = 0; row < 4; row++) for (let k = 0; k < 7; k++) {
+      const x = w * 0.18 + k * w * 0.055, y0 = h * (T + row * rh) + 6, y1 = h * (T + (row + 1) * rh) - 4;
+      ctx.strokeRect(x, y0, w * 0.04, y1 - y0);
+      // rabiscos = letras na lombada; um livro fica sem nada
+      if (!(row === 1 && k === 4)) { ctx.beginPath(); ctx.moveTo(x + w * 0.02, y0 + 6); ctx.lineTo(x + w * 0.02, y1 - 6); ctx.stroke(); }
+    }
+    // seta para o livro sem nada
+    const ax = w * 0.18 + 4 * w * 0.055 + w * 0.02, ay = h * (T + rh) + 10;
+    crayon(ctx, '#2a2620', 4); ctx.beginPath(); ctx.moveTo(ax + 30, h * 0.02); ctx.lineTo(ax, ay); ctx.lineTo(ax - 4, ay - 18); ctx.moveTo(ax, ay); ctx.lineTo(ax + 15, ay - 12); ctx.stroke();
+    // o homem alto entrando pela lateral da estante
+    crayon(ctx, '#2a2620', 5);
+    ctx.beginPath(); ctx.arc(w * 0.72, h * 0.22, 15, 0, 7); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(w * 0.72, h * 0.27); ctx.lineTo(w * 0.7, h * 0.52); ctx.lineTo(w * 0.66, h * 0.7); ctx.moveTo(w * 0.7, h * 0.52); ctx.lineTo(w * 0.76, h * 0.7);
+    ctx.moveTo(w * 0.71, h * 0.34); ctx.lineTo(w * 0.59, h * 0.4); ctx.stroke();
+    ctx.fillStyle = '#2a2620'; ctx.font = 'bold 24px "Comic Sans MS", cursive'; ctx.textAlign = 'center';
+    ctx.fillText('O PAPAI ENTRA', w / 2, h * 0.82);
+    ctx.fillText('NO LIVRO SEM NOME', w / 2, h * 0.93);
+  },
   musica: (ctx, w, h) => {
     kid(ctx, w, h);
     ctx.fillStyle = '#3a2a6a'; ctx.font = 'bold 30px "Comic Sans MS", cursive'; ctx.textAlign = 'center';
@@ -117,7 +143,7 @@ export function quarto(game) {
     d.group.rotation.z = 0.05;
     r.interact(d.group, { label: 'Olhar o desenho', onUse: () => game.ui.examine({ canvas: d.texture.userData.canvas, text: '"Minha música". Sete bolinhas coloridas numa pauta torta, e uma seta dizendo para ler da esquerda para a direita.' }) });
   }
-  const pins = [['dormir', 1.6], ['bolo', 0.3], ['olho', -1.0]];
+  const pins = [['dormir', 1.6], ['bolo', 0.3], ['olho', -1.0], ['estante', -2.1]];
   for (const [k, at] of pins) {
     const d = P.painting(r, 's', at, 1.55, 0.6, 0.45, DRAWINGS[k], { key: 'draw:' + k, frame: 0.0 });
     d.group.rotation.z = (Math.random() - 0.5) * 0.12;
@@ -125,6 +151,11 @@ export function quarto(game) {
     r.interact(d.group, {
       label: 'Olhar o desenho',
       onUse: () => {
+        if (k === 'estante') {
+          if (!game.state.notes.includes('livro_sem_nome')) game.state.notes.push('livro_sem_nome');
+          game.ui.examine({ canvas: d.texture.userData.canvas, text: 'Uma estante cheia de livros riscados a lápis, cada um com o seu rabisco na lombada. Só um ficou sem nada, e uma seta aponta para ele.<br>Ao lado, um homem alto entra pela lateral da estante: <em>"O PAPAI ENTRA NO LIVRO SEM NOME"</em>.' });
+          game.save(); return;
+        }
         if (k === 'olho') {
           if (!game.state.notes.includes('desenho')) game.state.notes.push('desenho');
           game.ui.examine({ canvas: d.texture.userData.canvas, text: 'Uma menina e um homem alto de mãos dadas diante de uma porta com um olho pintado.<br>Em letras tortas: <em>"QUANDO EU CANTO O OLHO ACORDA"</em>.' });

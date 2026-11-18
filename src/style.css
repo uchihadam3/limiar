@@ -130,6 +130,17 @@ body.touch .paper-note .pn-text { font-size: 19px; }
 .dial-sheet { width: min(560px, 100%); text-align: center; }
 .dial-body { display: grid; place-items: center; gap: 14px; }
 .dial-body canvas { width: min(320px, 70vw); height: auto; cursor: pointer; }
+/* estante vista de perto: o painel fica largo para os títulos das lombadas serem legíveis */
+.dial-sheet.wide { width: min(940px, 100%); }
+.dial-body canvas.shelf-canvas { width: min(900px, 92vw, 100vh); border-radius: 4px; touch-action: none; }
+@media (max-height: 520px) {
+  .dial-sheet.wide { padding-top: 10px; padding-bottom: 10px; }
+  .dial-sheet.wide h2 { display: none; }
+  .dial-body canvas.shelf-canvas { width: min(92vw, 108vh); }
+  .dial-sheet.wide .dial-body { gap: 6px; }
+  .dial-sheet.wide .dial-help { font-size: 15px; margin: 0; }
+  .dial-sheet.wide .dial-actions { margin-top: 4px; }
+}
 .dial-help { color: var(--ink-dim); font-style: italic; font-size: 17px; }
 .dial-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
 .dial-wheel { display: grid; gap: 4px; justify-items: center; }

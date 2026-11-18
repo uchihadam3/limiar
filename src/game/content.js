@@ -57,6 +57,10 @@ export const NOTES = {
     title: 'Desenho preso na parede do quarto',
     text: 'Uma menina e um homem alto de mãos dadas diante de uma porta com um olho pintado.\n\nEm letras tortas: "QUANDO EU CANTO O OLHO ACORDA".',
   },
+  livro_sem_nome: {
+    title: 'Outro desenho da Clara (quarto)',
+    text: 'Uma estante desenhada a lápis preto, cheia de livros. Cada livro tem o seu rabisco na lombada; só um ficou sem nada, e uma seta aponta para ele. Um homem alto entra pela lateral da estante.\n\nEm letras tortas: "O PAPAI ENTRA NO LIVRO SEM NOME".',
+  },
   diario_arquiteto: {
     title: 'Diário do Arquiteto (gabinete secreto)',
     text: 'Dia 1 — A casa respondeu. Desenhei uma porta na planta e, de manhã, ela estava lá.\n\nDia 9 — Os números não batem. Contei treze portas no corredor dos retratos. Ontem eram quatro.\n\nDia 22 — Quebrei o espelho do salão. Ele mostrava a Clara do outro lado, mas ela não me via. Espalhei os cacos pela casa para que ninguém o remonte.\n\nDia 23 — Se alguém remontar o espelho, verá o que eu vi. E saberá quem está realmente preso aqui.',
@@ -98,7 +102,7 @@ export const NOTES = {
     text: 'ESCREVA O QUE A CASA PEDE\nE EU ABRO.\n\n(Cinco rodinhas de letras de madeira, pintadas em cores diferentes.)',
   },
   atlas: {
-    title: 'Atlas das Marés (o livro vermelho)',
+    title: 'Atlas das Marés (um livro da biblioteca)',
     text: 'Páginas e mais páginas de tabelas de marés, com anotações do Arquiteto nas margens:\n\n"A água debaixo da casa não obedece ao mar. Obedece à lua que vai embora."\n\n"Para secar a gruta: o que está cheio, míngua; o que míngua, some. Nessa ordem, e nunca a lua que cresce — a que cresce traz a água de volta."\n\n(Na última página, um desenho de quatro alavancas, cada uma com uma fase da lua.)',
   },
   camara: {

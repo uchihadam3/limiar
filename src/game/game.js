@@ -380,7 +380,8 @@ export class Game {
       if (it && it.enabled() && h.distance <= it.dist) { this.focus = it; break; }
       if (h.object.material && h.object.material.visible !== false && !h.object.isSprite && !h.object.isPoints && !h.object.isLine) break; // bloqueado por algo sólido (chuva e poeira não bloqueiam)
     }
-    if (this.focus) {
+    // coisas secretas não mostram aviso nem anel: só respondem a quem clica (ou toca) nelas
+    if (this.focus && !this.focus.secret) {
       const f = this.focus;
       this.ui.setPrompt(typeof f.label === 'function' ? f.label() : f.label, typeof f.sub === 'function' ? f.sub() : f.sub);
     } else this.ui.setPrompt(null);

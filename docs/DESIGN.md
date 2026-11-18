@@ -12,6 +12,7 @@
 4. **Pistas falsas honestas.** Há respostas "quase certas" (ex.: 8h00 = "hora de dormir"), mas a pista completa sempre desfaz a dúvida.
 5. **Regras que se repetem e se aprofundam.** O jogo ensina poucas ideias e depois as usa de formas cada vez mais espertas (abaixo).
 6. **Medo sem morte.** Ninguém mata o jogador. Os finais ruins são escolhas.
+7. **Segredo é segredo.** O que é secreto não mostra aviso nem anel de interação: só responde a quem clica (ou toca) nele. Só as pistas levam até lá.
 
 ### As regras da casa (o jogador aprende aos poucos)
 | Regra | Onde é ensinada | Onde é aprofundada |
@@ -79,13 +80,13 @@ Legenda: ✅ construído · 🔨 em construção · ⏳ planejado
 | Nº | Sala | Conteúdo-chave |
 |---|---|---|
 | 1 | Vestíbulo | relógio de pé (9h40 → chave de ferro), espelho quebrado (destino dos 7 cacos), porta do Olho, porta da frente |
-| 2 | Biblioteca | metade esquerda da placa, carta, estante giratória (livro vermelho) |
+| 2 | Biblioteca | metade esquerda da placa, carta, estantes com ~800 livros coloridos e com título na lombada. **Segredo:** as estantes não mostram aviso; quem clica nos livros vê de perto. A alavanca é o único livro **vermelho sem título** (pistas: "O vermelho abre", sob a cadeira da Sala de Jantar, + "o livro sem nome", desenho da Clara no Quarto). O **Atlas das Marés** é um livro de verdade escondido entre os outros |
 | ? | Gabinete do Arquiteto | diário, planta da casa (mapa), **caco I** |
 | 3 | Sala de Jantar | prato virado (chave de latão), sétimo lugar (final ruim) |
 | 4 | Corredor dos Retratos | portas 7, 10, 11, 12, 13; retratos que olham |
 | 5 | Cozinha | forno (manivela), despensa (atalho tardio) |
 | 6 | Estufa | metade direita da placa, **caco II**, armário de vasos trancado (**ficha da Árvore**, com a chave do jardineiro), portão do pássaro |
-| 7 | Quarto da Menina | despertador 9h40, desenhos, caixinha de música |
+| 7 | Quarto da Menina | despertador 9h40, desenhos (um deles: "O PAPAI ENTRA NO LIVRO SEM NOME"), caixinha de música |
 | 8 | Escadaria | descida |
 | 9 | Adega | porta de pedra com 10 encaixes; círculo de giz + gaiola (vela preta → **chave-pássaro**) |
 
@@ -114,7 +115,7 @@ Legenda: ✅ construído · 🔨 em construção · ⏳ planejado
 | Nº | Sala | Conteúdo-chave |
 |---|---|---|
 | 26 | Câmara dos Dez Sinais | centro com 10 túneis, um por símbolo. Abertos: escada (Adega), peixe (Gruta), lua (Rio), sino (Ecos), olho (Coração, fechado: um anel de símbolos). Bloqueados, mas com histórias: coroa (a coroa de flores e o bilhete da Helena), sol (raízes que pulsam), estrela, árvore (a corda do balanço), ampulheta (areia parada no ar). Inscrição: "ele só acorda para a nota que mente" |
-| 27 | Gruta das Marés | quatro alavancas com as fases da lua. O Atlas das Marés (o livro vermelho da Biblioteca) diz "o que está cheio, míngua; o que míngua, some": **cheia → minguante → nova**. A crescente (ou a ordem errada) traz a água de volta. Seca, aparece uma escada até o fundo: **caco VI**. Mergulhar com a maré alta (2×) = **final Maré Baixa** |
+| 27 | Gruta das Marés | quatro alavancas com as fases da lua. O painel das comportas manda procurar o Atlas das Marés (um livro entre ~800 na Biblioteca), que diz "o que está cheio, míngua; o que míngua, some": **cheia → minguante → nova**. A crescente (ou a ordem errada) traz a água de volta. Seca, aparece uma escada até o fundo: **caco VI**. Mergulhar com a maré alta (2×) = **final Maré Baixa** |
 | 28 | Rio Subterrâneo | passarelas dos dois lados, ponte, barco preso. Atalhos: corda do poço (sobe ao Jardim), escadinha para a Despensa (abre para a Cozinha), escada de ferro até o Banho (porta 11, abre para o Corredor) |
 | 29 | Câmara dos Ecos | 7 pilares com símbolos. A caixinha no pedestal toca a canção, e o eco a devolve nota por nota, acendendo um pilar por nota. A 5ª nota volta desafinada e o pilar da **coroa** brilha vermelho. **Coroa** é o sinal que acorda o olho do Coração |
 | 30 | O Coração da Casa | o Arquiteto, feito de raízes, conta a verdade (o Visitante já entrou 41 vezes; cada fracasso deu mais portas à casa). Ele abre a mão: **caco VII**. Escolhas: **pegar a pena** (final O Novo Dono) ou **queimar a planta mestra com a chama azul** (final A Planta da Casa) |

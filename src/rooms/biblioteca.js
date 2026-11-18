@@ -45,15 +45,59 @@ export function biblioteca(game) {
     },
   });
 
-  // estantes ao longo da parede oeste (a do meio esconde a passagem)
-  for (const z of [-3.45, -1.75, 1.75, 3.45]) P.bookshelf(r, -3.74, z, { w: 1.65, h: 3.0, rotY: Math.PI / 2, seed: Math.round(z * 10 + 50) });
+  // ---------- estantes ao longo da parede oeste (a do meio esconde a passagem) ----------
+  // Livros de muitas cores e com títulos na lombada. A alavanca é um livro falso: o único VERMELHO SEM TÍTULO.
+  // Pistas: "O vermelho abre." (entalhe sob a cadeira, Sala de Jantar) + "o livro sem nome" (desenho da Clara, Quarto).
+  // As estantes não mostram aviso nenhum: só quem clica (ou toca) nos livros descobre que dá para olhá-los de perto.
+  const RED = 0x8a1c16;
+  const PALETTE = [RED, RED, 0x1f4a2a, 0x1c3460, 0x8a6a28, 0x4a2e18, 0x18140f, 0x1c4a4a, 0x40244e, 0xa89a7a, 0x5a1a2a, 0x2a3a1a];
+  const TITLES = ['Tratado de Arquitetura', 'Geometria Descritiva', 'Os Lusíadas', 'Bíblia Sagrada', 'Atlas do Céu', 'Atlas dos Rios',
+    'Tábuas do Porto', 'Navegação Costeira', 'Hidráulica Prática', 'Escadas e Escadarias', 'Arte de Construir', 'Tratado das Pontes',
+    'Flora Brasiliensis', 'Herbário', 'História Natural', 'Óptica', 'Anatomia', 'Manual do Relojoeiro', 'Música e Harmonia',
+    'Almanaque 1894', 'Almanaque 1895', 'Almanaque 1896', 'Almanaque 1897', 'Iracema', 'O Guarani', 'A Moreninha', 'Poesias',
+    'Contos para Crianças', 'Fábulas', 'O Livro dos Espelhos', 'Plantas de Casas', 'Fundações', 'Cartas de Viagem', 'Diário de Bordo',
+    'Tábuas Astronômicas', 'Relógios de Sol', 'Mineralogia', 'Química', 'Gramática', 'Dicionário I', 'Dicionário II', 'Sermões',
+    'Vidas de Santos', 'O Peregrino', 'Mil e Uma Noites', 'Jardins', 'Rosas', 'Ventos e Chuvas', 'As Estrelas', 'Física',
+    'Cálculo', 'Perspectiva', 'Ornamentos', 'Vitrais', 'Sinos e Campanários', 'Labirintos', 'Contabilidade', 'Medicina Doméstica'];
+  const BLANK = ['Um caderno de contas da casa, sem nada escrito na lombada. Farinha, querosene, velas, mais velas.',
+    'Um álbum sem título. As fotografias foram todas arrancadas; ficaram só os cantinhos de papel.',
+    'Um livro sem nome na lombada. Por dentro, páginas em branco. Só na última há o desenho de uma porta.',
+    'Sem título. Sermões antigos, com o nome de Helena na folha de rosto.',
+    'Um caderno gasto, sem nada na lombada: medidas de portas, centenas delas, todas riscadas.'];
+  const FLAVOR = {
+    'O Livro dos Espelhos': 'Um livro sobre espelhos. Na margem, a lápis: "o que o espelho guarda, ele devolve ao contrário".',
+    'Bíblia Sagrada': 'Uma Bíblia de família. Na primeira página, os nomes: Aurélio, Helena. A terceira linha foi coberta de tinta.',
+    'Atlas dos Rios': 'Mapas de rios do mundo inteiro. Nada sobre o que corre debaixo desta casa.',
+    'Tábuas do Porto': 'Horários das marés do porto, ano após ano. São do mar. A água debaixo da casa não é do mar.',
+    'Contos para Crianças': 'Um livro de contos muito manuseado. Uma página tem a ponta dobrada: "A menina que entrou no espelho".',
+    'Plantas de Casas': 'Plantas de casas. Uma delas é esta, mas com menos portas.',
+    'Labirintos': 'Desenhos de labirintos de jardim. Um deles está circulado, com um X no centro.',
+  };
+  const books = [];
+  const decorateFor = (special) => (bs, rnd) => {
+    let ti = Math.floor(rnd() * TITLES.length);
+    for (const b of bs) {
+      b.title = rnd() < 0.13 && b.color !== RED ? null : TITLES[ti++ % TITLES.length];
+      b.blank = BLANK[Math.floor(rnd() * BLANK.length)];
+    }
+    if (special) special(bs);
+    books.push(bs);
+  };
+  const pickBook = (bs, shelfIdx, xWant) => bs.filter((b) => b.shelf === shelfIdx && Math.abs(b.lean) < 0.01).sort((a, b) => Math.abs(a.x - xWant) - Math.abs(b.x - xWant))[0];
+  const cases = [];
+  for (const z of [-3.45, -1.75, 1.75, 3.45]) {
+    const g = P.bookshelf(r, -3.74, z, { w: 1.65, h: 3.0, rotY: Math.PI / 2, seed: Math.round(z * 10 + 50), palette: PALETTE,
+      decorate: decorateFor(z === 3.45 ? (bs) => { const a = pickBook(bs, 2, -0.35); a.color = 0x1c3460; a.title = 'Atlas das Marés'; a.atlas = true; } : null) });
+    cases.push(g);
+  }
   const pivot = new THREE.Group(); pivot.position.set(-3.54, 0, -0.84); r.add(pivot);
-  const shelf = P.bookshelf(r, 0, 0, { w: 1.65, h: 3.0, rotY: Math.PI / 2, seed: 99, collide: false });
+  const shelf = P.bookshelf(r, 0, 0, { w: 1.65, h: 3.0, rotY: Math.PI / 2, seed: 99, collide: false, palette: PALETTE,
+    decorate: decorateFor((bs) => { const lv = pickBook(bs, 4, 0.22); lv.color = RED; lv.title = null; lv.lever = true; }) });
   r.group.remove(shelf); shelf.position.set(-0.2, 0, 0.84); pivot.add(shelf);
+  cases.push(shelf);
+  // nenhum outro livro pode ser vermelho sem título, nem se chamar "Atlas das Marés"
+  for (const bs of books) for (const b of bs) { if (!b.lever && !b.title && b.color === RED) b.title = 'Poesias'; if (!b.atlas && b.title === 'Atlas das Marés') b.title = 'Atlas do Céu'; }
   const shelfCol = r.collider(-4, -3.55, -0.85, 0.85);
-  const redBook = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.3, 0.24), new THREE.MeshStandardMaterial({ color: 0x9a1810, roughness: 0.5, emissive: 0x220000 }));
-  redBook.position.set(0.17, 1.62, 0.25); redBook.rotation.z = -0.12; shelf.add(redBook);
-  const gilt = new THREE.Mesh(new THREE.BoxGeometry(0.052, 0.02, 0.2), M.brass); gilt.position.set(0.17, 1.7, 0.25); gilt.rotation.z = -0.12; shelf.add(gilt);
   let swing = f.estante_aberta ? 1.3 : 0, swingTarget = swing;
   const setOpen = () => {
     shelfCol.disabled = true;
@@ -61,16 +105,27 @@ export function biblioteca(game) {
   };
   if (f.estante_aberta) setOpen();
   r.onUpdate((dt) => { swing += (swingTarget - swing) * (1 - Math.exp(-1.6 * dt)); pivot.rotation.y = swing; });
-  r.interact(redBook, {
-    label: () => f.estante_aberta ? 'Ler o Atlas das Marés' : 'Puxar o livro vermelho',
-    sub: 'Atlas das Marés',
-    onUse: () => {
-      if (f.estante_aberta) { game.readNote('atlas'); return; }
-      game.flag('estante_aberta', true);
-      audio.click(0.3, 1200);
-      setTimeout(() => { audio.grind(); swingTarget = 1.3; setOpen(); }, 500);
-      game.ui.toast(f['read:cadeira'] || game.state.notes.includes('cadeira') ? '<em>O vermelho abre.</em> A estante gira sobre dobradiças escondidas.' : 'O livro não sai: ele é uma alavanca. A estante inteira gira para dentro da sala.', 5000);
-    },
+  const openShelf = () => {
+    game.flag('estante_aberta', true);
+    audio.click(0.3, 1200);
+    setTimeout(() => { audio.grind(); swingTarget = 1.3; setOpen(); }, 500);
+    game.ui.toast((game.state.notes.includes('cadeira') ? '<em>O vermelho abre.</em> ' : '') + 'O livro não sai: não tem páginas, é madeira pintada de vermelho. Uma alavanca.<br>Com um estalo, a estante inteira gira sobre dobradiças escondidas.', 6000);
+  };
+  const pick = (b) => {
+    if (b.lever) {
+      if (f.estante_aberta) return 'O livro falso, de madeira, continua puxado.';
+      game.ui.close(); openShelf(); return null;
+    }
+    if (b.atlas) { game.ui.close(); game.readNote('atlas'); return null; }
+    if (!b.title) return b.blank;
+    return FLAVOR[b.title] ?? `<em>${b.title}</em>. Você folheia, não encontra nada de especial, e devolve ao lugar.`;
+  };
+  // a frente de cada estante responde ao clique (sem aviso nenhum)
+  cases.forEach((g, i) => {
+    const { w, h, d, shelves } = g.userData.dims;
+    const hb = new THREE.Mesh(new THREE.BoxGeometry(w, h - 0.1, 0.06), new THREE.MeshBasicMaterial({ visible: false }));
+    hb.position.set(0, h / 2, d / 2 - 0.02); g.add(hb);
+    r.interact(hb, { label: 'Examinar os livros', secret: true, onUse: () => game.ui.bookcaseView({ title: 'A estante', w: w - 0.1, shelves: Array.from({ length: shelves }), books: g.userData.books, pick }) });
   });
 
   // escada de biblioteca encostada

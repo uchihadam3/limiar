@@ -246,6 +246,95 @@ export class UI {
     this.openPanel('dial');
   }
 
+  // Estante vista de perto. Primeiro a estante inteira; tocando numa prateleira, metade dela por vez,
+  // com os títulos nas lombadas. Tocar num livro: puxa. pick(book) devolve o texto (ou null se fechou o painel).
+  bookcaseView({ title, w, shelves, books, pick }) {
+    $('#dial .dial-title').textContent = title;
+    const body = $('#dial .dial-body');
+    body.innerHTML = '';
+    const LW = 900, LH = 560, dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+    const c = document.createElement('canvas'); c.width = LW * dpr; c.height = LH * dpr; c.className = 'shelf-canvas';
+    const help = document.createElement('div'); help.className = 'dial-help';
+    body.append(c, help);
+    const ctx = c.getContext('2d');
+    let level = 'case', shelf = 0, half = 0, pulled = null;
+    const nShelves = shelves.length;
+    const rows = () => shelves.map((sh, i) => ({ i, top: 20 + (nShelves - 1 - i) * ((LH - 40) / nShelves), h: (LH - 40) / nShelves }));
+    const wood = () => { ctx.fillStyle = '#1a110a'; ctx.fillRect(0, 0, LW, LH); };
+    const spine = (b, x, y, bw, bh, big) => {
+      ctx.fillStyle = '#' + b.color.toString(16).padStart(6, '0'); ctx.fillRect(x, y, bw, bh);
+      ctx.fillStyle = 'rgba(0,0,0,0.25)'; ctx.fillRect(x + bw - Math.max(1, bw * 0.12), y, Math.max(1, bw * 0.12), bh);
+      ctx.fillStyle = 'rgba(255,255,255,0.06)'; ctx.fillRect(x, y, Math.max(1, bw * 0.15), bh);
+      // frisos dourados (todos os livros têm, com ou sem título)
+      ctx.fillStyle = 'rgba(200,170,90,0.55)';
+      for (const fy of [0.08, 0.9]) ctx.fillRect(x + 1, y + bh * fy, bw - 2, Math.max(1, bh * 0.012));
+      if (big && b.title) {
+        ctx.save(); ctx.translate(x + bw / 2, y + bh * 0.5); ctx.rotate(-Math.PI / 2);
+        let fs = Math.min(25, bw * 0.7);
+        ctx.font = `${fs}px "IM Fell English SC", Georgia, serif`;
+        while (ctx.measureText(b.title).width > bh * 0.74 && fs > 9) { fs -= 1; ctx.font = `${fs}px "IM Fell English SC", Georgia, serif`; }
+        ctx.fillStyle = '#e2c878'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(b.title, 0, 0);
+        ctx.restore();
+      }
+    };
+    const draw = () => {
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); wood();
+      if (level === 'case') {
+        const sx = (LW - 40) / w;
+        for (const row of rows()) {
+          ctx.fillStyle = '#2a1c10'; ctx.fillRect(20, row.top, LW - 40, row.h);
+          ctx.fillStyle = '#4a3220'; ctx.fillRect(14, row.top + row.h - 6, LW - 28, 8);
+          const sy = (row.h - 12) / 0.36;
+          for (const b of books.filter((b) => b.shelf === row.i)) spine(b, 20 + (b.x - b.w / 2 + w / 2) * sx, row.top + row.h - 6 - b.h * sy, Math.max(2, b.w * sx - 1), b.h * sy, false);
+        }
+        help.innerHTML = 'Toque numa prateleira para ver os livros de perto.';
+      } else {
+        const x0 = -w / 2 + half * (w / 2), sx = (LW - 120) / (w / 2), base = LH - 50, sy = (base - 60) / 0.36;
+        ctx.fillStyle = '#2a1c10'; ctx.fillRect(60, 30, LW - 120, base - 30);
+        ctx.fillStyle = '#4a3220'; ctx.fillRect(50, base, LW - 100, 14);
+        for (const b of books.filter((b) => b.shelf === shelf && b.x >= x0 && b.x < x0 + w / 2)) {
+          const lift = pulled === b ? 46 : 0;
+          spine(b, 60 + (b.x - b.w / 2 - x0) * sx, base - b.h * sy - lift, Math.max(6, b.w * sx - 2), b.h * sy, true);
+        }
+        // navegação
+        ctx.fillStyle = '#c8b890'; ctx.font = '26px Georgia, serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText('‹', 28, LH / 2); ctx.fillText('›', LW - 28, LH / 2);
+        ctx.font = '17px "Cormorant Garamond", Georgia, serif'; ctx.textAlign = 'left'; ctx.fillText('◂ a estante inteira', 64, 16);
+        ctx.textAlign = 'right'; ctx.fillText(`prateleira ${nShelves - shelf} de ${nShelves} · ${half ? 'direita' : 'esquerda'}`, LW - 64, 16);
+      }
+    };
+    c.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      const rc = c.getBoundingClientRect(), px = (e.clientX - rc.left) / rc.width * LW, py = (e.clientY - rc.top) / rc.height * LH;
+      if (level === 'case') {
+        const row = rows().find((r) => py >= r.top && py < r.top + r.h);
+        if (!row) return;
+        level = 'shelf'; shelf = row.i; half = px < LW / 2 ? 0 : 1; pulled = null; help.innerHTML = 'Toque num livro para puxá-lo. As setas mudam de lado.'; this.game.audio.click(0.1, 1800); draw(); return;
+      }
+      if (py < 34 && px < LW / 2) { level = 'case'; pulled = null; draw(); return; }
+      if (px < 56 || px > LW - 56) {
+        // ordem de leitura: de cima para baixo, da esquerda para a direita
+        const dir = px < 56 ? -1 : 1, n = nShelves * 2;
+        const k = (((nShelves - 1 - shelf) * 2 + half + dir) % n + n) % n;
+        shelf = nShelves - 1 - Math.floor(k / 2); half = k % 2; pulled = null; this.game.audio.click(0.1, 1800); draw(); return;
+      }
+      const x0 = -w / 2 + half * (w / 2), sx = (LW - 120) / (w / 2), base = LH - 50, sy = (base - 60) / 0.36;
+      const b = books.find((b) => b.shelf === shelf && b.x >= x0 && b.x < x0 + w / 2 && px >= 60 + (b.x - b.w / 2 - x0) * sx && px <= 60 + (b.x + b.w / 2 - x0) * sx && py >= base - b.h * sy - 46 && py <= base);
+      if (!b) return;
+      pulled = b; draw();
+      this.game.audio.paper();
+      const t = pick(b);
+      if (t != null) help.innerHTML = t;
+    });
+    const acts = $('#dial .dial-actions');
+    acts.querySelector('[data-act=confirm]').style.display = 'none';
+    acts.querySelector('[data-act=cancel]').onclick = () => this.close();
+    const sheet = $('#dial .dial-sheet'); sheet.classList.add('wide');
+    this.onClose = () => { acts.querySelector('[data-act=confirm]').style.display = ''; sheet.classList.remove('wide'); };
+    draw();
+    this.openPanel('dial');
+  }
+
   dialActions(cb) {
     const acts = $('#dial .dial-actions');
     acts.querySelector('[data-act=confirm]').onclick = () => { this.close(); cb(true); };

@@ -138,7 +138,7 @@ export class TouchControls {
   }
 
   update() {
-    const show = !!this.game.focus && this.game.player.enabled;
+    const show = !!this.game.focus && !this.game.focus.secret && this.game.player.enabled;
     this.act.classList.toggle('show', show);
   }
 }
