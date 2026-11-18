@@ -208,7 +208,9 @@ function drawPoster(ctx, w, h) {
   const pw = 400, ph = 520, x0 = (w - pw) / 2, y0 = (h - ph) / 2;
   const g = ctx.createLinearGradient(0, y0, 0, y0 + ph); g.addColorStop(0, '#d8c9a0'); g.addColorStop(1, '#b8a578');
   ctx.fillStyle = g; ctx.fillRect(x0, y0, pw, ph);
-  ctx.fillStyle = 'rgba(90,60,20,0.18)'; for (let i = 0; i < 9; i++) { ctx.beginPath(); ctx.arc(x0 + Math.random() * pw, y0 + Math.random() * ph, 20 + Math.random() * 50, 0, 7); ctx.fill(); }
+  ctx.save(); ctx.beginPath(); ctx.rect(x0, y0, pw, ph); ctx.clip();
+  ctx.fillStyle = 'rgba(90,60,20,0.16)'; for (let i = 0; i < 9; i++) { ctx.beginPath(); ctx.arc(x0 + Math.random() * pw, y0 + Math.random() * ph, 20 + Math.random() * 50, 0, 7); ctx.fill(); }
+  ctx.restore();
   ctx.fillStyle = '#2a1a0a'; ctx.textAlign = 'center';
   ctx.font = 'bold 44px Georgia, serif'; ctx.fillText('DESAPARECIDO', w / 2, y0 + 70);
   // o retrato: você, numa fotografia sépia
