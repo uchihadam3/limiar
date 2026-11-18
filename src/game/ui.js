@@ -352,7 +352,7 @@ export class UI {
   endingsList(meta) {
     const n = Object.keys(meta.endings).length, total = Object.keys(ENDINGS).length;
     this.modal('Finais', `<div class="seals in-menu"></div><div class="seal-count">${n} / ${total}</div>`, (body) => {
-      fillSeals(body.querySelector('.seals'), meta, null, true);
+      fillSeals(body.querySelector('.seals'), meta, null, true, (id) => this.game.replayEnding(id));
     });
   }
 
@@ -386,7 +386,7 @@ export class UI {
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // Os oito selos dos finais: os que você viu têm desenho; os outros continuam apagados.
-function fillSeals(box, meta, current, names) {
+function fillSeals(box, meta, current, names, onPick) {
   const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
   for (const id of Object.keys(ENDINGS)) {
     const got = !!meta.endings[id];
@@ -395,6 +395,7 @@ function fillSeals(box, meta, current, names) {
     const ctx = c.getContext('2d'); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); drawSeal(ctx, id, got);
     d.appendChild(c);
     if (names) { const t = document.createElement('div'); t.className = 'seal-name'; t.textContent = got ? ENDINGS[id].title : ''; d.appendChild(t); }
+    if (got && onPick) { d.classList.add('replay'); d.tabIndex = 0; d.setAttribute('role', 'button'); d.setAttribute('aria-label', ENDINGS[id].title); d.addEventListener('click', () => onPick(id)); d.addEventListener('keydown', (e) => { if (e.key === 'Enter') onPick(id); }); }
     box.appendChild(d);
   }
 }

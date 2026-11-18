@@ -179,6 +179,8 @@ body.touch .paper-note .pn-text { font-size: 19px; }
 .save-note { margin-top: 10px; font-size: 15px; color: var(--ink-faint); font-style: italic; }
 
 /* menu principal */
+/* os painéis abertos pelo menu (Finais, Opções, Código) ficam por cima dele */
+#modal { z-index: 36; }
 #menu { position: fixed; inset: 0; z-index: 30; display: grid; place-items: center; overflow: hidden; }
 .menu-bg {
   position: absolute; inset: -10%;
@@ -314,3 +316,7 @@ body.cine #hud { visibility: hidden; }
 .seal-name { font-family: "Cormorant Garamond", Georgia, serif; font-size: 13px; text-align: center; color: #c8b890; line-height: 1.15; min-height: 2.3em; }
 .seal-count { margin-top: 14px; text-align: center; font-family: "IM Fell English SC", Georgia, serif; letter-spacing: 0.2em; color: #a89068; font-size: 17px; }
 .seals.in-menu { margin: 6px 0 4px; }
+.seal.replay { cursor: pointer; }
+.seal.replay canvas { transition: transform 0.25s ease, filter 0.25s ease; }
+.seal.replay:hover canvas, .seal.replay:focus canvas { transform: scale(1.08); filter: drop-shadow(0 0 10px rgba(230, 190, 110, 0.45)); }
+.seal.replay:active canvas { transform: scale(0.97); }

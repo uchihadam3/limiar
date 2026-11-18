@@ -348,6 +348,25 @@ export class Game {
     if (first) setTimeout(() => this.ui.toast(''), 10);
   }
 
+  // rever um final já visto (pelos selos, no menu). Não toca no jogo salvo.
+  async replayEnding(id) {
+    if (this.busy || this.cine || !this.meta.endings[id]) return;
+    audio.init();
+    const prev = this.state;
+    this.state = JSON.parse(JSON.stringify(loadSave() || newState()));
+    this.busy = true;
+    document.querySelector('#modal').classList.add('hidden');
+    await this.ui.fade(1, 500);
+    document.querySelector('#menu').classList.add('hidden');
+    try { await playCinematic(this, id); } catch (err) { console.error(err); }
+    this.state = prev;
+    this.busy = false;
+    await this.ui.fade(1, 300);
+    document.querySelector('#menu').classList.remove('hidden');
+    audio.setTheme('menu');
+    window.dispatchEvent(new Event('limiar:menu'));
+  }
+
   // ---------- Clara, de mãos dadas ----------
   updateClara(dt) {
     const on = this.playing && this.state.flags.clara_junto && this.room && !this.room.cfg.noClara;
