@@ -350,46 +350,72 @@ const SCENES = {
   async afogado(c) {
     const L = lines('afogado');
     let r = c.stage('gruta'); audio.setTheme('camara');
+    const g = c.g, ex = g.renderer.toneMappingExposure;
+    g.renderer.toneMappingExposure = ex * 1.5;
+    c.fill(0xc8d8e8, 3.2);
+    c.light(0x6a90b0, 2.6, 12, V(2, 3, 4));
     const v = c.person({ lantern: true });
-    c.cam(V(1.6, 1.8, 7.2), V(-0.5, 0.2, -2));
+    // na beira, de lado
+    c.cam(V(3.2, 1.5, 4.6), V(-0.2, 0.9, 3.0));
     await c.fade(0, 1400);
     const s0 = c.say(L[0]);
-    await c.walk(v, V(0.3, 0, 5.6), V(0, 0, 3.3), 2600);
-    // o mergulho
+    await c.walk(v, V(0.4, 0, 6.0), V(0, 0, 3.35), 3000);
+    await c.wait(700);
     audio.thud(0.4); setTimeout(() => audio.drip(), 300); setTimeout(() => audio.drip(), 700);
-    await c.tween(1300, (k) => { v.position.set(0, -k * 1.4, 3.3 - k * 1.2); v.rotation.x = -k * 1.2; });
+    await c.tween(1300, (k) => { v.position.set(0, -k * 1.4, 3.35 - k * 1.2); v.rotation.x = -k * 1.2; });
     await s0;
-    // debaixo d'água
-    const g = c.g; g.scene.fog.color.set(0x05202a); g.scene.fog.density = 0.22; g.scene.background.set(0x03141a);
-    r.cine.water.material.side = THREE.DoubleSide;
-    const glow = c.glow('rgba(200,235,255,1)', 1.6, V(-1.6, -2.4, -2.5));
-    c.fill(0x6ab0d0, 1.6);
+    // debaixo d'água: o brilho sempre um braço mais longe
+    g.scene.fog.color.set(0x05202a); g.scene.fog.density = 0.16; g.scene.background.set(0x03141a);
+    const glow = c.glow('rgba(200,235,255,1)', 1.8, V(-1.6, -2.4, -2.5));
+    c.fill(0x7ab8d8, 2.2);
+    const lamp = c.light(0x9ad8ff, 3.0, 7, V(-1.6, -2.4, -2.5));
     v.position.set(0.2, -1.6, 0.6); v.rotation.set(-0.55, Math.PI, 0);
-    const lamp = c.light(0x9ad8ff, 2.2, 6, V(-1.6, -2.4, -2.5));
-    c.cam(V(1.4, -1.2, 2.2), V(-1.0, -2.2, -2.0));
+    const swim = c.every((dt, t) => { v.arms[0].rotation.x = -2.5 + Math.sin(t * 2.4) * 0.35; v.arms[1].rotation.x = -2.2 - Math.sin(t * 2.4) * 0.3; v.legs[0].rotation.x = Math.sin(t * 3) * 0.35; v.legs[1].rotation.x = -Math.sin(t * 3) * 0.35; });
     const s1 = c.say(L[1]);
-    c.every((dt, t) => { v.arms[0].rotation.x = -2.5 + Math.sin(t * 2.4) * 0.35; v.arms[1].rotation.x = -2.2 - Math.sin(t * 2.4) * 0.3; v.legs[0].rotation.x = Math.sin(t * 3) * 0.35; v.legs[1].rotation.x = -Math.sin(t * 3) * 0.35; });
-    await c.tween(8000, (k) => { v.position.set(0.2 - k * 1.5, -1.6 - k * 0.8, 0.6 - k * 4.2); glow.position.set(-1.6 - k * 1.2, -2.4 - k * 0.6, -2.5 - k * 4.5); lamp.position.copy(glow.position); c.cam(V(1.4 - k * 1.2, -1.2 - k * 0.5, 2.2 - k * 3.6), V(-1.0 - k * 1.2, -2.2 - k * 0.4, -2.0 - k * 4.4)); });
+    // a câmera vem pela frente dele, com o brilho atrás
+    await c.tween(8000, (k) => {
+      v.position.set(0.2 - k * 1.5, -1.6 - k * 0.8, 0.6 - k * 4.2);
+      glow.position.set(-1.6 - k * 1.2, -2.6 - k * 0.6, -2.5 - k * 4.5); lamp.position.copy(glow.position);
+      c.cam(V(-2.6 - k * 1.0, -1.6 - k * 0.6, -1.4 - k * 4.0), V(v.position.x, v.position.y + 0.5, v.position.z));
+    });
     await s1;
-    // a superfície não está mais lá: só pedra
-    const ceil = c.add(new THREE.Mesh(new THREE.PlaneGeometry(14, 12), new THREE.MeshStandardMaterial({ color: 0x1a1612, roughness: 1, side: THREE.DoubleSide }))); ceil.rotation.x = Math.PI / 2; ceil.position.set(0, -0.35, -3);
+    // vira para subir: em vez da superfície, pedra
+    swim();
+    const ceil = c.add(new THREE.Mesh(new THREE.PlaneGeometry(14, 12), new THREE.MeshStandardMaterial({ color: 0x3a3430, roughness: 1, side: THREE.DoubleSide }))); ceil.rotation.x = Math.PI / 2; ceil.position.set(0, -0.35, -3);
     const p0 = v.position.clone();
-    await c.tween(2400, (k) => { v.rotation.x = -0.55 + k * 0.55; v.position.y = p0.y + k * 1.8; c.cam(V(p0.x + 1.6, p0.y - 0.4, p0.z + 1.4), V(p0.x, p0.y + 1.2 + k * 0.6, p0.z)); });
-    const s2 = c.say(L[2], 3600); await c.wait(1200); knock(3); await s2;
-    await c.say(L[3], 4200);
+    c.light(0xffc890, 2.4, 4, V(p0.x, -0.9, p0.z));
+    await c.tween(2600, (k) => {
+      v.rotation.x = -0.55 * (1 - k); v.position.y = p0.y + k * (-1.85 - p0.y + 0.4);
+      v.arms[0].rotation.x = v.arms[1].rotation.x = -2.9 * k;
+      c.cam(V(p0.x + 1.8, p0.y + 0.2, p0.z + 1.6), V(p0.x, -0.8, p0.z));
+    });
+    // três batidas do outro lado da pedra; a poeira cai a cada uma
+    const s2 = c.say(L[2], 3800);
+    for (let i = 0; i < 3; i++) {
+      await c.wait(i ? 700 : 1100); audio.thud(0.5); g.film.uniforms.flash.value = 0.06;
+      const dust = c.add(new THREE.Points(new THREE.BufferGeometry().setFromPoints(Array.from({ length: 40 }, () => V(p0.x + (Math.random() - 0.5) * 0.8, -0.4 - Math.random() * 0.4, p0.z + (Math.random() - 0.5) * 0.8))), new THREE.PointsMaterial({ color: 0xa89a88, size: 0.03 })));
+      c.tween(1800, (k) => { dust.position.y = -k * 0.6; dust.material.opacity = 1 - k; dust.material.transparent = true; });
+    }
+    await s2; await c.say(L[3], 4200);
     // maré baixa: a fileira de lampiões apagados na areia
     await c.fade(1, 1200);
     r = c.stage('gruta');
+    g.renderer.toneMappingExposure = ex * 1.5;
     r.cine.setLevel(r.cine.LOW - 0.1);
+    const Y = r.cine.LOW;
     for (let i = 0; i < 41; i++) {
-      const t = i / 40, x = -5.5 + t * 9.5, z = -1.5 - Math.sin(t * 3) * 1.2 - t * 4;
-      const l = lantern(i === 40 ? 0x4a5a6a : 0x2a2016); l.position.set(x, r.cine.LOW + 0.02, z); l.rotation.set(0, Math.random() * 6, (Math.random() - 0.5) * 1.2); c.add(l);
+      const t = i / 40, x = -5.5 + t * 10, z = -2.2 - Math.sin(t * 3.2) * 1.0 - t * 3.6;
+      const l = lantern(i === 40 ? 0x4a5a6a : 0x2a2016); l.scale.setScalar(2.4); l.position.set(x, Y + 0.02, z);
+      l.rotation.set(0, Math.random() * 6, i === 40 ? 0 : (Math.random() - 0.5) * 1.4); c.add(l);
     }
-    c.light(0x8aa0c0, 2.0, 16, V(0, 2, -4));
-    c.cam(V(-6, r.cine.LOW + 1.3, 0.5), V(-3, r.cine.LOW, -3));
+    c.light(0xaab8c8, 3.0, 18, V(0, Y + 3, -4));
+    c.light(0xffd0a0, 1.6, 5, V(4.6, Y + 1, -5.8));
+    c.cam(V(-6.2, Y + 0.9, -1.0), V(-3.5, Y + 0.2, -3.2));
     await c.fade(0, 1400);
-    c.move(11000, V(-6, r.cine.LOW + 1.3, 0.5), V(3.6, r.cine.LOW + 0.9, -3.4), V(-3, r.cine.LOW, -3), V(4, r.cine.LOW, -6));
-    await c.say(L[4], 7000);
+    c.move(12000, V(-6.2, Y + 0.9, -1.0), V(3.4, Y + 0.7, -4.4), V(-3.5, Y + 0.2, -3.2), V(4.6, Y + 0.15, -5.9));
+    await c.say(L[4], 8000);
+    await c.wait(2500);
+    g.renderer.toneMappingExposure = ex;
     await c.fade(1, 1600);
   },
 
