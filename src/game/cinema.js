@@ -154,11 +154,14 @@ class Cine {
 
 // ---------- pedaços reaproveitados ----------
 function lantern(color = 0x2a2016) {
+  // um lampião igual ao seu: base, quatro grades, vidro, tampa e argola
   const g = new THREE.Group();
-  const brass = new THREE.MeshStandardMaterial({ color: 0x3a2a14, metalness: 0.7, roughness: 0.6 });
-  const base = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.07, 0.03, 10), brass); g.add(base);
-  const glass = new THREE.Mesh(new THREE.CylinderGeometry(0.045, 0.045, 0.12, 10), new THREE.MeshStandardMaterial({ color, roughness: 0.3, transparent: true, opacity: 0.7 })); glass.position.y = 0.08; g.add(glass);
-  const cap = new THREE.Mesh(new THREE.ConeGeometry(0.06, 0.05, 10), brass); cap.position.y = 0.17; g.add(cap);
+  const brass = new THREE.MeshStandardMaterial({ color: 0x5a4220, metalness: 0.75, roughness: 0.5 });
+  const base = new THREE.Mesh(new THREE.CylinderGeometry(0.055, 0.065, 0.025, 14), brass); base.position.y = 0.012; g.add(base);
+  const glass = new THREE.Mesh(new THREE.CylinderGeometry(0.042, 0.042, 0.11, 12), new THREE.MeshStandardMaterial({ color, roughness: 0.15, metalness: 0.2, transparent: true, opacity: 0.55 })); glass.position.y = 0.08; g.add(glass);
+  for (let i = 0; i < 4; i++) { const a = (i / 4) * Math.PI * 2 + 0.4; const b = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.004, 0.12, 4), brass); b.position.set(Math.cos(a) * 0.047, 0.08, Math.sin(a) * 0.047); g.add(b); }
+  const cap = new THREE.Mesh(new THREE.ConeGeometry(0.058, 0.05, 14), brass); cap.position.y = 0.16; g.add(cap);
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(0.024, 0.004, 6, 14), brass); ring.position.y = 0.205; g.add(ring);
   return g;
 }
 function lyingPerson(c, x, z, kind = 'visitante') {
@@ -418,10 +421,13 @@ const SCENES = {
     const Y = r.cine.LOW;
     for (let i = 0; i < 41; i++) {
       const t = i / 40, x = -5.5 + t * 10, z = -2.2 - Math.sin(t * 3.2) * 1.0 - t * 3.6;
-      const l = lantern(i === 40 ? 0x4a5a6a : 0x2a2016); l.scale.setScalar(2.4); l.position.set(x, Y + 0.02, z);
-      l.rotation.set(0, Math.random() * 6, i === 40 ? 0 : (Math.random() - 0.5) * 1.4); c.add(l);
+      const l = lantern(i === 40 ? 0x6a7a8a : 0x2a2016); l.scale.setScalar(2.2);
+      const fallen = i % 6 === 3;
+      l.position.set(x, Y + (fallen ? 0.13 : 0.01), z); l.rotation.set(0, Math.random() * 6, fallen ? Math.PI / 2 : (Math.random() - 0.5) * 0.12); c.add(l);
     }
-    c.light(0xaab8c8, 3.0, 18, V(0, Y + 3, -4));
+    // o último ainda pinga: é o seu
+    c.glow('rgba(170,200,230,1)', 0.25, V(4.6, Y + 0.55, -5.86));
+    c.light(0xaab8c8, 4.0, 20, V(0, Y + 3.5, -4));
     c.light(0xffd0a0, 1.6, 5, V(4.6, Y + 1, -5.8));
     c.cam(V(-6.2, Y + 0.9, -1.0), V(-3.5, Y + 0.2, -3.2));
     await c.fade(0, 1400);
