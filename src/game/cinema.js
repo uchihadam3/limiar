@@ -463,7 +463,7 @@ const SCENES = {
     // o Arquiteto agradece e vira pó
     c.cam(V(1.6, 2.0, -2.6), V(0, 2.3, -4.5)); clearView(c, r.cine.roots, V(1.6, 2.0, -2.6), V(0, 2.3, -4.5));
     c.light(0xffc8a0, 2.2, 3, V(0.8, 2.4, -3.4));
-    r.cine.fig.traverse((o) => { if (o.material && o.material.type === 'MeshBasicMaterial') o.scale.setScalar(1.6); });
+    r.cine.fig.traverse((o) => { if (o.material && o.material.color && o.material.color.getHex() === 0xff7a3a) o.scale.setScalar(1.5); });
     await c.say(L[2]); await c.say(L[3]);
     audio.grind();
     const dust = crumble(c, r.cine.fig);

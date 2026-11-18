@@ -515,8 +515,21 @@ export function coracao(game) {
   // o Arquiteto, feito de raízes, sentado
   const fig = new THREE.Group();
   const body = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.5, 1.4, 10), rootM); body.position.y = 1.4; fig.add(body);
-  const head = new THREE.Mesh(new THREE.SphereGeometry(0.24, 14, 12), new THREE.MeshStandardMaterial({ color: 0x8a7462, roughness: 0.8 })); head.position.y = 2.35; fig.add(head);
-  for (const sx of [-1, 1]) { const eye = new THREE.Mesh(new THREE.SphereGeometry(0.03, 8, 6), new THREE.MeshBasicMaterial({ color: 0xff6a3a })); eye.position.set(sx * 0.08, 2.38, 0.21); fig.add(eye); }
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.24, 18, 14), new THREE.MeshStandardMaterial({ color: 0x5a4232, roughness: 0.95 })); head.scale.set(0.92, 1.1, 1); head.position.y = 2.35; fig.add(head);
+  // rosto de madeira: olhos fundos acesos por dentro, sobrancelha, a fenda da boca
+  for (const sx of [-1, 1]) {
+    const socket = new THREE.Mesh(new THREE.SphereGeometry(0.055, 10, 8), new THREE.MeshBasicMaterial({ color: 0x120804 })); socket.scale.z = 0.5; socket.position.set(sx * 0.085, 2.4, 0.2); fig.add(socket);
+    const eye = new THREE.Mesh(new THREE.SphereGeometry(0.026, 8, 6), new THREE.MeshBasicMaterial({ color: 0xff7a3a })); eye.position.set(sx * 0.085, 2.4, 0.225); fig.add(eye);
+    const brow = new THREE.Mesh(new THREE.BoxGeometry(0.11, 0.025, 0.05), rootM); brow.position.set(sx * 0.085, 2.47, 0.2); brow.rotation.z = sx * -0.25; fig.add(brow);
+  }
+  { const mouth = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.012, 0.03), new THREE.MeshBasicMaterial({ color: 0x120804 })); mouth.position.set(0, 2.24, 0.215); fig.add(mouth); }
+  // raízes finas subindo pelos ombros e envolvendo a cabeça
+  for (let i = 0; i < 12; i++) {
+    const a = (i / 12) * Math.PI * 2, side = Math.cos(a);
+    const pts = [new THREE.Vector3(side * 0.42, 1.9, Math.sin(a) * 0.3), new THREE.Vector3(side * 0.32, 2.25, Math.sin(a) * 0.26 - 0.05), new THREE.Vector3(side * 0.2, 2.6, Math.sin(a) * 0.18 - 0.08), new THREE.Vector3(side * 0.05 + (Math.random() - 0.5) * 0.2, 2.75 + Math.random() * 0.2, -0.1)];
+    if (Math.sin(a) > 0.6) continue; // deixa o rosto à mostra
+    const t = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 12, 0.018 + Math.random() * 0.02, 5), rootM); fig.add(t);
+  }
   const armL = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.09, 0.9, 8), rootM); armL.position.set(-0.45, 1.5, 0.3); armL.rotation.x = -1.1; fig.add(armL);
   const armR = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.09, 0.9, 8), rootM); armR.position.set(0.45, 1.5, 0.3); armR.rotation.x = -1.1; fig.add(armR);
   const seat = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.8, 1.0), rootM); seat.position.y = 0.4; fig.add(seat);
