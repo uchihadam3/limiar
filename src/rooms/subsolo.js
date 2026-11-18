@@ -118,7 +118,7 @@ export function adega(game) {
     label: () => f.lampiao_azul ? 'Descer para o subterrâneo' : 'Descer os degraus', enabled: () => !!f.porta_pedra,
     onUse: () => {
       if (f.lampiao_azul) { game.transit('camara', 'escada', { sound: 'step' }); return; }
-      audio.whisper(0.1); game.ui.toast('Você desce alguns degraus. Lá embaixo, água corrente, muita, e um vento gelado que dobra a chama do lampião até quase apagar.\nVocê sobe de volta antes que o lampião morra. Precisaria de uma chama que o vento não apaga.', 8000);
+      audio.whisper(0.1); game.ui.toast('Você desce alguns degraus. Lá embaixo, água corrente, muita, e um vento gelado que dobra a chama do lampião até quase apagar.\nVocê sobe de volta antes que o lampião morra. Lá embaixo, nenhuma chama comum dura.', 8000);
     },
   });
   r.interact(slab, {

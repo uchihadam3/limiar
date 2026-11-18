@@ -19,7 +19,7 @@ export function corredor(game) {
   });
   const p10 = r.door({
     id: 'p10', wall: 'e', at: 3.2, num: 10, symbol: 'ampulheta', boards: !f.tabuas, to: 'musica', toDoor: 'corredor', link: 'p10',
-    lock: { type: 'custom', check: () => !f.tabuas, msg: 'Tábuas grossas pregadas no batente, com pregos enormes. Seria preciso alguma ferramenta para arrancá-las.\nDo outro lado, bem baixinho, uma nota de piano. Só uma.' },
+    lock: { type: 'custom', check: () => !f.tabuas, msg: 'Tábuas grossas pregadas no batente, com pregos enormes.\nDo outro lado, bem baixinho, uma nota de piano. Só uma.' },
   });
   p10.onUse = () => {
     if (f.tabuas || !game.has('pe_de_cabra')) return;

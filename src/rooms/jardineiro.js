@@ -92,7 +92,7 @@ export function jardineiro(game) {
     label: () => f.escada_sacada ? '' : f.escada_solta ? 'A escada comprida (solta)' : 'Abrir o cadeado da escada',
     enabled: () => !f.escada_sacada,
     onUse: () => {
-      if (f.escada_solta) { game.ui.toast('A escada está solta. É comprida o bastante para alcançar um andar de cima. Daria para arrastar até lá fora.'); return; }
+      if (f.escada_solta) { game.ui.toast('A escada está solta. Comprida, pesada, feita para janelas altas.'); return; }
       const icon = (k) => `<img src="${lockIcon(k)}" width="40" height="40" style="display:block;margin:0 auto 4px">`;
       game.ui.comboDial({
         title: 'O cadeado da escada',
@@ -101,7 +101,7 @@ export function jardineiro(game) {
         onConfirm: (vals) => {
           if (vals.join('') === '435') {
             game.flag('escada_solta', true); sync(); audio.unlock(); setTimeout(() => audio.thud(0.3), 300);
-            game.ui.toast('O cadeado abre. A corrente escorrega e cai.<br>A escada é comprida e pesada, mas dá para arrastar.', 5500);
+            game.ui.toast('O cadeado abre. A corrente escorrega e cai.<br>A escada é comprida e pesada.', 5500);
           } else { audio.doorLocked(); game.ui.toast('O cadeado não abre.'); }
         },
       });

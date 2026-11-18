@@ -187,7 +187,6 @@ export class UI {
       else Mi = (Math.round((a / (Math.PI * 2)) * 12) * 5) % 60;
       this.game.audio.click(0.15, 2200); draw();
     });
-    help.innerHTML += '<br>Clique perto do centro para mover as horas, na borda para os minutos.';
     draw();
     this.dialActions((ok) => { if (ok) onConfirm(H, Mi); });
     this.openPanel('dial');
@@ -287,7 +286,7 @@ export class UI {
           const sy = (row.h - 12) / 0.36;
           for (const b of books.filter((b) => b.shelf === row.i)) spine(b, 20 + (b.x - b.w / 2 + w / 2) * sx, row.top + row.h - 6 - b.h * sy, Math.max(2, b.w * sx - 1), b.h * sy, false);
         }
-        help.innerHTML = 'Toque numa prateleira para ver os livros de perto.';
+        help.innerHTML = '';
       } else {
         const x0 = -w / 2 + half * (w / 2), sx = (LW - 120) / (w / 2), base = LH - 50, sy = (base - 60) / 0.36;
         ctx.fillStyle = '#2a1c10'; ctx.fillRect(60, 30, LW - 120, base - 30);
@@ -299,8 +298,7 @@ export class UI {
         // navegação
         ctx.fillStyle = '#c8b890'; ctx.font = '26px Georgia, serif'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
         ctx.fillText('‹', 28, LH / 2); ctx.fillText('›', LW - 28, LH / 2);
-        ctx.font = '17px "Cormorant Garamond", Georgia, serif'; ctx.textAlign = 'left'; ctx.fillText('◂ a estante inteira', 64, 16);
-        ctx.textAlign = 'right'; ctx.fillText(`prateleira ${nShelves - shelf} de ${nShelves} · ${half ? 'direita' : 'esquerda'}`, LW - 64, 16);
+        ctx.strokeStyle = '#c8b890'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(LW / 2 - 14, 22); ctx.lineTo(LW / 2, 10); ctx.lineTo(LW / 2 + 14, 22); ctx.stroke();
       }
     };
     c.addEventListener('pointerdown', (e) => {
@@ -309,9 +307,9 @@ export class UI {
       if (level === 'case') {
         const row = rows().find((r) => py >= r.top && py < r.top + r.h);
         if (!row) return;
-        level = 'shelf'; shelf = row.i; half = px < LW / 2 ? 0 : 1; pulled = null; help.innerHTML = 'Toque num livro para puxá-lo. As setas mudam de lado.'; this.game.audio.click(0.1, 1800); draw(); return;
+        level = 'shelf'; shelf = row.i; half = px < LW / 2 ? 0 : 1; pulled = null; help.innerHTML = ''; this.game.audio.click(0.1, 1800); draw(); return;
       }
-      if (py < 34 && px < LW / 2) { level = 'case'; pulled = null; draw(); return; }
+      if (py < 34) { level = 'case'; pulled = null; help.innerHTML = ''; draw(); return; }
       if (px < 56 || px > LW - 56) {
         // ordem de leitura: de cima para baixo, da esquerda para a direita
         const dir = px < 56 ? -1 : 1, n = nShelves * 2;

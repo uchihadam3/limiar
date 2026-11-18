@@ -99,7 +99,7 @@ export function camara(game) {
     game.ui.comboDial({
       title: 'O olho de pedra', wheels: [{ values: ring, start: 0 }],
       render: (v) => { const c = document.createElement('canvas'); c.width = c.height = 60; drawSymbol(c.getContext('2d'), v, 30, 30, 24, '#c9a25a', 3); return `<img src="${c.toDataURL()}" width="48" height="48" title="${SYMBOL_NAMES[v]}">`; },
-      help: 'Um anel de pedra em volta do olho fechado, com sete sinais. Gire até o sinal que acorda o olho.',
+      help: 'Um anel de pedra em volta do olho fechado, com sete sinais.',
       onConfirm: (v) => {
         if (v[0] === 'coroa') {
           game.flag('coracao_aberto', true); olho.stoneEye.visible = false;

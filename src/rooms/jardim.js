@@ -128,7 +128,7 @@ export function jardim(game) {
         game.ui.toast('Você arrasta a escada comprida da casa do jardineiro e a apoia na sacada. Ela alcança, por pouco.');
         return;
       }
-      game.ui.toast('Uma sacada no andar de cima, alta demais para alcançar. Daria para subir com uma escada bem comprida.');
+      game.ui.toast('Uma sacada no andar de cima, alta demais para alcançar daqui.');
     },
   });
 

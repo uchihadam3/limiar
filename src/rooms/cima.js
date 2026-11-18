@@ -47,7 +47,7 @@ export function galeria(game) {
   const arch = r.door({
     id: 'escada', wall: 's', at: 0, num: 1, symbol: 'coroa', style: 'arch', to: 'vestibulo', toDoor: 'escada', link: 'escada_principal',
     label: 'a escadaria principal', verb: 'Descer a escadaria principal',
-    lock: { type: 'custom', check: () => !f.escada_livre, msg: () => game.has('pe_de_cabra') ? '' : 'A escadaria principal desce para o Vestíbulo, mas está tomada por entulho: vigas, uma cômoda partida, pedaços do teto.\nTudo está preso por uma viga atravessada. Com uma alavanca, daria para soltar.' },
+    lock: { type: 'custom', check: () => !f.escada_livre, msg: () => game.has('pe_de_cabra') ? '' : 'A escadaria principal desce para o Vestíbulo, mas está tomada por entulho: vigas, uma cômoda partida, pedaços do teto.\nTudo está preso por uma viga atravessada, presa sob o entulho.' },
     behind: (g) => { arch.rubble = stairsBehind(g, { up: false, rubble: !f.escada_livre }); },
   });
   arch.onUse = () => {

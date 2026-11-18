@@ -35,7 +35,7 @@ export function vestibulo(game) {
     link: 'frente', ending: () => (f.clara_junto ? 'clara' : 'porta_frente'), verb: f['open:frente'] ? 'Sair pela porta da frente' : undefined,
     lock: {
       type: 'key', item: 'chave_ferro',
-      msg: 'Correntes grossas e um cadeado de ferro. Do outro lado, vento e chuva. Você precisaria de uma chave pesada.',
+      msg: 'Correntes grossas e um cadeado de ferro. Do outro lado, vento e chuva. A fechadura do cadeado é larga e antiga.',
       msgUnlock: 'A chave de ferro gira. As correntes caem no chão com um estrondo.<br><em>Algo dentro de você hesita: ainda há portas que você não abriu.</em>',
       onUnlock: () => {
         frente.leaf.traverse((o) => { if (o.userData.chain) o.visible = false; });

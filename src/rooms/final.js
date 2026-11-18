@@ -238,7 +238,7 @@ export function outro_lado(game) {
     setTimeout(() => { game.busy = false; game.flag('clara_volta', true); game.transit('vestibulo', 'espelho', { sound: 'step' }); }, 2600);
   };
   r.interact(mirror.group, {
-    label: () => f.clara_junto ? 'Atravessar o espelho com Clara' : 'Voltar pelo espelho', sub: () => f.clara_junto && f.leu_visitante ? 'você pode fechar os olhos' : '',
+    label: () => f.clara_junto ? 'Atravessar o espelho com Clara' : 'Voltar pelo espelho', sub: () => '',
     onUse: () => {
       if (!f.clara_junto) { game.transit('vestibulo', 'espelho', { sound: 'step' }); return; }
       if (f.leu_visitante) {
