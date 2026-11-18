@@ -63,6 +63,7 @@ class Cine {
     const g = this.g;
     this.ups = [];
     this.resetSky();
+    g.camera.fov = 50; g.camera.updateProjectionMatrix();
     if (id === 'corredor') g.state.flags.vulto = true; // o vulto do corredor não aparece nas cenas
     g.loadRoom(id, door);
     // luzes já existentes (apagadas): acender uma depois não obriga o aparelho a recompilar tudo no meio da cena
@@ -544,8 +545,11 @@ const SCENES = {
     const sil = c.add(new THREE.Mesh(new THREE.PlaneGeometry(0.75, 1.17), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(sc), transparent: true, fog: false })));
     sil.position.set(-8.05, 6.05, 15.1); sil.rotation.y = Math.PI; sil.renderOrder = 10;
     r.cine.facade.traverse((o) => { if (o.isSprite) { const p = o.getWorldPosition(new THREE.Vector3()); if (Math.abs(p.x + 8) < 1.5 && p.y > 4) o.visible = false; } });
+    // lente fechada: a janela enche a tela, e o vulto aparece
+    const cam = c.g.camera;
     c.cam(V(0.4, 1.5, -6.8), V(-7.5, 6.0, 15));
-    c.move(8000, V(0.4, 1.5, -6.8), V(-1.4, 2.4, -2.0), V(-7.5, 6.0, 15), V(-8, 6.2, 15));
+    c.tween(9000, (k) => { cam.fov = 50 - k * 38; cam.updateProjectionMatrix(); });
+    c.move(9000, V(0.4, 1.5, -6.8), V(-1.4, 2.4, -2.0), V(-7.5, 6.0, 15), V(-8.05, 6.05, 15.2));
     await c.say(L[4]); await c.say(L[5], 4200);
     await c.fade(1, 1800);
   },
