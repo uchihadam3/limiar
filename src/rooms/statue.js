@@ -43,6 +43,10 @@ export function makeClara() {
   const head = new THREE.Mesh(new THREE.SphereGeometry(0.12, 16, 12), new THREE.MeshStandardMaterial({ color: 0xd8bca0, roughness: 0.7 })); head.position.y = 1.05; body.add(head);
   const hair = new THREE.Mesh(new THREE.SphereGeometry(0.13, 16, 12, 0, Math.PI * 2, 0, Math.PI * 0.6), new THREE.MeshStandardMaterial({ color: 0x3a1a0a, roughness: 0.9 })); hair.position.y = 1.07; hair.rotation.x = -0.3; body.add(hair);
   const braid = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.015, 0.3, 6), hair.material); braid.position.set(0, 0.92, -0.1); body.add(braid);
+  // olhos e boca (ela olha para você)
+  const eyeM = new THREE.MeshBasicMaterial({ color: 0x1a0e08 });
+  for (const sx of [-1, 1]) { const e = new THREE.Mesh(new THREE.SphereGeometry(0.014, 8, 6), eyeM); e.position.set(sx * 0.042, 1.06, 0.108); body.add(e); }
+  const mouth = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.006, 0.01), new THREE.MeshBasicMaterial({ color: 0x8a3a34 })); mouth.position.set(0, 1.005, 0.112); body.add(mouth);
   for (const s of [-1, 1]) { const arm = new THREE.Mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.36, 6), head.material); arm.position.set(s * 0.17, 0.72, 0); arm.rotation.z = s * 0.25; body.add(arm); }
   for (const s of [-1, 1]) { const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.2, 6), new THREE.MeshStandardMaterial({ color: 0xe8e0d0 })); leg.position.set(s * 0.07, 0.1, 0); body.add(leg); }
   g.traverse((o) => { o.castShadow = true; });

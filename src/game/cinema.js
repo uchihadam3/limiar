@@ -605,7 +605,7 @@ const SCENES = {
     const L = lines('espelho');
     let r = c.stage('vestibulo'); audio.setTheme('outro');
     const mirror = r.cine.mirror, MX = 4.42, MY = 1.9, MZ = 2.4;
-    r.cine.mirrorM.emissiveIntensity = 0.5;
+    r.cine.mirrorM.emissiveIntensity = 0.25; r.cine.mirrorM.roughness = 0.55; c.fill(0xffd8b0, 1.4);
     // você, dentro do vidro (como um reflexo)
     const me = c.person({}); me.scale.setScalar(0.55); me.position.set(MX - 0.02, 0.95, MZ); me.rotation.y = -Math.PI / 2; c.setOpacity(me, 0);
     const glass = c.add(new THREE.Mesh(new THREE.PlaneGeometry(1.0, 2.0), new THREE.MeshStandardMaterial({ color: 0x9ab0c0, metalness: 0.6, roughness: 0.1, transparent: true, opacity: 0.28 })));
@@ -661,7 +661,8 @@ const SCENES = {
     words.position.set(MX - 0.08, MY, MZ); words.rotation.y = -Math.PI / 2;
     c.cam(V(3.2, 1.75, 2.4), V(MX, 1.85, MZ));
     const txt = 'BEM-VINDA DE VOLTA', tctx = tc.getContext('2d');
-    tctx.fillStyle = 'rgba(235,240,245,0.9)'; tctx.font = 'bold 74px Georgia, serif'; tctx.textAlign = 'center';
+    r.cine.mirrorM.emissiveIntensity = 0.1; r.cine.mirrorM.roughness = 0.6; c.fill(0xffd8b0, 1.0); c.setOpacity(me3, 0.45);
+    tctx.fillStyle = 'rgba(20,26,32,0.88)'; tctx.font = 'bold 74px Georgia, serif'; tctx.textAlign = 'center';
     const parts = ['BEM-', 'VINDA', 'DE', 'VOLTA'];
     const s7 = c.say(L[5]);
     for (let i = 0; i < txt.length; i++) {
