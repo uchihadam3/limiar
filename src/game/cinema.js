@@ -534,7 +534,8 @@ const SCENES = {
     for (let i = 0; i < 9; i++) { sx.lineWidth = 3 + Math.random() * 5; sx.beginPath(); const x0 = 70 + Math.random() * 116; sx.moveTo(x0, 180 + Math.random() * 120); sx.quadraticCurveTo(x0 + (Math.random() - 0.5) * 160, 120 + Math.random() * 120, x0 + (Math.random() - 0.5) * 220, 40 + Math.random() * 300); sx.stroke(); }
     sx.fillStyle = '#ff6a2a'; sx.beginPath(); sx.arc(110, 118, 6, 0, 7); sx.arc(146, 118, 6, 0, 7); sx.fill();
     const sil = c.add(new THREE.Mesh(new THREE.PlaneGeometry(0.75, 1.17), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(sc), transparent: true, fog: false })));
-    sil.position.set(-8.05, 6.05, 15.3); sil.rotation.y = Math.PI;
+    sil.position.set(-8.05, 6.05, 15.1); sil.rotation.y = Math.PI; sil.renderOrder = 10;
+    r.cine.facade.traverse((o) => { if (o.isSprite) { const p = o.getWorldPosition(new THREE.Vector3()); if (Math.abs(p.x + 8) < 1.5 && p.y > 4) o.visible = false; } });
     c.cam(V(0.4, 1.5, -6.8), V(-7.5, 6.0, 15));
     c.move(8000, V(0.4, 1.5, -6.8), V(-1.4, 2.4, -2.0), V(-7.5, 6.0, 15), V(-8, 6.2, 15));
     await c.say(L[4]); await c.say(L[5], 4200);
