@@ -204,13 +204,20 @@ function drawPoster(ctx, w, h) {
   ctx.fillStyle = 'rgba(90,60,20,0.18)'; for (let i = 0; i < 9; i++) { ctx.beginPath(); ctx.arc(x0 + Math.random() * pw, y0 + Math.random() * ph, 20 + Math.random() * 50, 0, 7); ctx.fill(); }
   ctx.fillStyle = '#2a1a0a'; ctx.textAlign = 'center';
   ctx.font = 'bold 44px Georgia, serif'; ctx.fillText('DESAPARECIDO', w / 2, y0 + 70);
-  // o retrato: você
-  ctx.fillStyle = '#c8b48a'; ctx.fillRect(w / 2 - 95, y0 + 100, 190, 230);
-  ctx.strokeStyle = '#3a2a14'; ctx.lineWidth = 3; ctx.strokeRect(w / 2 - 95, y0 + 100, 190, 230);
-  ctx.fillStyle = '#4a3a24'; ctx.beginPath(); ctx.ellipse(w / 2, y0 + 190, 52, 64, 0, 0, 7); ctx.fill();
-  ctx.fillStyle = '#2a2018'; ctx.beginPath(); ctx.ellipse(w / 2, y0 + 150, 56, 30, 0, Math.PI, 0); ctx.fill();
-  ctx.fillStyle = '#2a2622'; ctx.beginPath(); ctx.moveTo(w / 2 - 95, y0 + 330); ctx.quadraticCurveTo(w / 2, y0 + 230, w / 2 + 95, y0 + 330); ctx.fill();
-  ctx.fillStyle = '#c8b48a'; ctx.fillRect(w / 2 - 22, y0 + 182, 12, 5); ctx.fillRect(w / 2 + 10, y0 + 182, 12, 5);
+  // o retrato: você, numa fotografia sépia
+  const px = w / 2 - 95, py = y0 + 100;
+  const sep = ctx.createLinearGradient(0, py, 0, py + 230); sep.addColorStop(0, '#a89070'); sep.addColorStop(1, '#7a6448');
+  ctx.fillStyle = sep; ctx.fillRect(px, py, 190, 230);
+  ctx.fillStyle = '#3a2e22'; ctx.beginPath(); ctx.moveTo(px + 10, py + 230); ctx.quadraticCurveTo(px + 20, py + 168, w / 2, py + 160); ctx.quadraticCurveTo(px + 170, py + 168, px + 180, py + 230); ctx.fill();
+  ctx.fillStyle = '#c4a888'; ctx.fillRect(w / 2 - 14, py + 128, 28, 36);
+  ctx.beginPath(); ctx.ellipse(w / 2, py + 92, 40, 50, 0, 0, 7); ctx.fill();
+  ctx.fillStyle = '#4a3a2a'; ctx.beginPath(); ctx.ellipse(w / 2, py + 62, 43, 26, 0, Math.PI, 0); ctx.fill(); ctx.fillRect(w / 2 - 43, py + 58, 8, 30); ctx.fillRect(w / 2 + 35, py + 58, 8, 30);
+  ctx.fillStyle = 'rgba(70,56,40,0.55)'; ctx.beginPath(); ctx.moveTo(w / 2 - 36, py + 100); ctx.quadraticCurveTo(w / 2, py + 160, w / 2 + 36, py + 100); ctx.quadraticCurveTo(w / 2 + 18, py + 132, w / 2, py + 134); ctx.quadraticCurveTo(w / 2 - 18, py + 132, w / 2 - 36, py + 100); ctx.fill();
+  ctx.fillStyle = '#2a1e14'; ctx.beginPath(); ctx.ellipse(w / 2 - 15, py + 88, 6, 3.5, 0, 0, 7); ctx.ellipse(w / 2 + 15, py + 88, 6, 3.5, 0, 0, 7); ctx.fill();
+  ctx.strokeStyle = '#4a3a2a'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(w / 2 - 24, py + 78); ctx.lineTo(w / 2 - 7, py + 80); ctx.moveTo(w / 2 + 7, py + 80); ctx.lineTo(w / 2 + 24, py + 78); ctx.stroke();
+  ctx.strokeStyle = 'rgba(80,60,44,0.6)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(w / 2, py + 92); ctx.lineTo(w / 2 - 4, py + 108); ctx.lineTo(w / 2 + 3, py + 110); ctx.stroke();
+  ctx.fillStyle = 'rgba(255,240,210,0.08)'; ctx.fillRect(px, py, 190, 230);
+  ctx.strokeStyle = '#3a2a14'; ctx.lineWidth = 3; ctx.strokeRect(px, py, 190, 230);
   ctx.fillStyle = '#2a1a0a'; ctx.font = 'italic 21px Georgia, serif';
   ctx.fillText('Visto pela última vez numa noite de chuva,', w / 2, y0 + 370);
   ctx.fillText('a caminho da casa dos Brandt.', w / 2, y0 + 398);
