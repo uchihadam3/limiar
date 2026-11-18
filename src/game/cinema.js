@@ -341,7 +341,7 @@ const SCENES = {
     await c.fade(1, 1000);
     r = c.stage('vestibulo'); audio.setTheme('casa');
     const n = lyingPerson(c, 0.6, 3.0);
-    c.cam(V(0.3, 0.75, 0.9), V(-0.1, 0.25, 3.0));
+    c.cam(V(-0.25, 1.25, 0.7), V(-0.25, 0.2, 3.0));
     await c.fade(0, 1400);
     audio.thunder();
     const s4 = c.say(L[4]); await c.wait(2400);
@@ -606,7 +606,7 @@ const SCENES = {
     await c.fade(1, 900);
     r = c.stage('vestibulo'); audio.setTheme('casa');
     const nv = lyingPerson(c, 0.6, 3.0);
-    c.cam(V(0.3, 0.75, 0.9), V(-0.1, 0.25, 3.0));
+    c.cam(V(-0.25, 1.25, 0.7), V(-0.25, 0.2, 3.0));
     await c.fade(0, 1400);
     audio.thunder();
     const s4 = c.say(L[5]); await c.wait(2400);
@@ -666,7 +666,7 @@ const SCENES = {
     const me3 = c.person({}); me3.scale.setScalar(0.55); me3.position.set(MX - 0.02, 0.95, MZ); me3.rotation.y = -Math.PI / 2;
     const g3 = c.add(glass.clone()); g3.position.copy(glass.position); g3.rotation.copy(glass.rotation);
     lyingPerson(c, 0.6, 3.0, 'mulher');
-    c.cam(V(0.3, 0.75, 0.9), V(-0.1, 0.25, 3.0));
+    c.cam(V(-0.25, 1.25, 0.7), V(-0.25, 0.2, 3.0));
     await c.fade(0, 1600); audio.thunder();
     await c.say(yearsB);
     // do lado de dentro, você escreve no vidro
@@ -674,7 +674,7 @@ const SCENES = {
     const tx = new THREE.CanvasTexture(tc);
     const words = c.add(new THREE.Mesh(new THREE.PlaneGeometry(1.0, 2.0), new THREE.MeshBasicMaterial({ map: tx, transparent: true })));
     words.position.set(MX - 0.08, MY, MZ); words.rotation.y = -Math.PI / 2;
-    c.cam(V(3.2, 1.75, 2.4), V(MX, 1.85, MZ));
+    c.cam(V(2.0, 1.9, 2.4), V(MX, 1.95, MZ));
     const txt = 'BEM-VINDA DE VOLTA', tctx = tc.getContext('2d');
     r.cine.mirrorM.emissiveIntensity = 0.1; r.cine.mirrorM.roughness = 0.6; c.fill(0xffd8b0, 1.0); c.setOpacity(me3, 0.45);
     tctx.fillStyle = 'rgba(20,26,32,0.88)'; tctx.font = 'bold 74px Georgia, serif'; tctx.textAlign = 'center';
