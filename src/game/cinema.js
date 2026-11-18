@@ -507,8 +507,16 @@ const SCENES = {
     await c.say(L[1]); await c.say(L[2]); await c.say(L[3]);
     await walking;
     // atrás deles, numa janela do andar de cima, um vulto de raízes
-    const shadow = c.person({ kind: 'sombra' }); shadow.position.set(-8, 5.1, 15.4); shadow.rotation.y = Math.PI; shadow.scale.setScalar(0.85);
-    for (const sx of [-0.04, 0.04]) { const e = c.add(new THREE.Mesh(new THREE.SphereGeometry(0.02, 6, 6), new THREE.MeshBasicMaterial({ color: 0xff6a3a }))); e.position.set(-8 + sx, 6.53, 15.3); }
+    // a silhueta recortada contra a janela acesa
+    const sc = document.createElement('canvas'); sc.width = 256; sc.height = 400; const sx = sc.getContext('2d');
+    sx.fillStyle = '#060403';
+    sx.beginPath(); sx.ellipse(128, 120, 46, 56, 0, 0, 7); sx.fill();
+    sx.beginPath(); sx.moveTo(40, 400); sx.quadraticCurveTo(50, 200, 128, 185); sx.quadraticCurveTo(206, 200, 216, 400); sx.fill();
+    sx.strokeStyle = '#060403'; sx.lineCap = 'round';
+    for (let i = 0; i < 9; i++) { sx.lineWidth = 3 + Math.random() * 5; sx.beginPath(); const x0 = 70 + Math.random() * 116; sx.moveTo(x0, 180 + Math.random() * 120); sx.quadraticCurveTo(x0 + (Math.random() - 0.5) * 160, 120 + Math.random() * 120, x0 + (Math.random() - 0.5) * 220, 40 + Math.random() * 300); sx.stroke(); }
+    sx.fillStyle = '#ff6a2a'; sx.beginPath(); sx.arc(110, 118, 6, 0, 7); sx.arc(146, 118, 6, 0, 7); sx.fill();
+    const sil = c.add(new THREE.Mesh(new THREE.PlaneGeometry(0.75, 1.17), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(sc), transparent: true, fog: false })));
+    sil.position.set(-8.05, 6.05, 15.3); sil.rotation.y = Math.PI;
     c.cam(V(0.4, 1.5, -6.8), V(-7.5, 6.0, 15));
     c.move(8000, V(0.4, 1.5, -6.8), V(-1.4, 2.4, -2.0), V(-7.5, 6.0, 15), V(-8, 6.2, 15));
     await c.say(L[4]); await c.say(L[5], 4200);
