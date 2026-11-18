@@ -65,6 +65,8 @@ class Cine {
     this.resetSky();
     if (id === 'corredor') g.state.flags.vulto = true; // o vulto do corredor não aparece nas cenas
     g.loadRoom(id, door);
+    // luzes já existentes (apagadas): acender uma depois não obriga o aparelho a recompilar tudo no meio da cena
+    this.pool = Array.from({ length: 4 }, () => { const l = new THREE.PointLight(0xffffff, 0, 1, 1.6); g.room.add(l); return l; });
     document.querySelector('#roomTitle').classList.remove('show');
     this.fill(); g.player.spot.intensity = 0;
     return g.room;
@@ -76,7 +78,10 @@ class Cine {
   every(fn) { this.ups.push(fn); return () => { this.ups = this.ups.filter((u) => u !== fn); }; }
   person(opts) { return this.add(makePerson(opts)); }
   clara() { return this.add(makeClara()); }
-  light(color, intensity, dist, p) { const l = new THREE.PointLight(color, intensity, dist, 1.6); l.position.copy(p); return this.add(l); }
+  light(color, intensity, dist, p) {
+    const l = this.pool?.length ? this.pool.shift() : this.add(new THREE.PointLight(color, intensity, dist, 1.6));
+    l.color.set(color); l.intensity = intensity; l.distance = dist; l.position.copy(p); return l;
+  }
   glow(color, scale, p) { const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTexture(color, 'rgba(0,0,0,0)'), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, fog: false })); s.scale.set(scale, scale, 1); s.position.copy(p); return this.add(s); }
 
   wait(ms) {
@@ -166,7 +171,7 @@ function lyingPerson(c, x, z, kind = 'visitante') {
 // esconde as raízes que ficam entre a câmera e o que ela olha
 function clearView(c, roots, from, to) {
   const ray = new THREE.Ray(from, to.clone().sub(from).normalize()), d = from.distanceTo(to), hit = new THREE.Vector3(), box = new THREE.Box3();
-  for (const t of roots) { box.setFromObject(t).expandByScalar(0.15); if (ray.intersectBox(box, hit) && hit.distanceTo(from) < d) t.visible = false; }
+  for (const t of roots) { box.setFromObject(t).expandByScalar(0.6); if ((ray.intersectBox(box, hit) && hit.distanceTo(from) < d) || box.distanceToPoint(from) < 1.2) t.visible = false; }
 }
 function crumble(c, obj, color = 0x6a4a30) {
   // pó caindo
@@ -241,6 +246,7 @@ const SCENES = {
     c.cam(V(0.9, 1.75, -6.4), V(0, 3.6, 15));
     c.move(9000, V(0.9, 1.75, -6.4), V(0.5, 2.2, -2.5), V(0, 3.6, 15), V(0, 4.2, 15));
     const wins = [[1, 2.0], [9, 2.0], [-8, 6.2], [-3, 6.2], [1, 6.2], [9, 6.2]];
+    const wl = [c.light(0xffa050, 0, 14, V(-3, 4.5, 13.8)), c.light(0xffa050, 0, 14, V(6, 4.5, 13.8))];
     const s2 = c.say(L[2], 7600);
     for (const [x, y] of wins) {
       await c.wait(700);
@@ -250,8 +256,8 @@ const SCENES = {
       const head = c.add(new THREE.Mesh(new THREE.CircleGeometry(0.11, 14), kidM)); head.position.set(x + 0.12, y - 0.2, 15.46); head.rotation.y = Math.PI;
       const body = c.add(new THREE.Mesh(new THREE.PlaneGeometry(0.24, 0.55), kidM)); body.position.set(x + 0.12, y - 0.62, 15.46); body.rotation.y = Math.PI;
       const hand = c.add(new THREE.Mesh(new THREE.CircleGeometry(0.06, 10), kidM)); hand.position.set(x - 0.2, y - 0.1, 15.45); hand.rotation.y = Math.PI;
-      c.light(0xffa050, 1.4, 7, V(x, y, 14.6));
       audio.click(0.08, 600 + Math.random() * 400);
+      wl.forEach((l) => { l.intensity = Math.min(3, l.intensity + 0.5); });
     }
     await s2;
     await c.fade(1, 1200);
@@ -336,7 +342,7 @@ const SCENES = {
     await c.fade(0, 1400);
     audio.thunder();
     const s4 = c.say(L[4]); await c.wait(2400);
-    await c.tween(1600, (k) => { n.body.rotation.x = Math.PI / 2 - k * 0.5; });
+    await c.tween(1600, (k) => { n.arms[0].rotation.x = -k * 1.2; n.headMesh.rotation.y = k * 0.5; });
     await s4;
     await c.say(L[5], 4200);
     // a mesa completa
@@ -548,7 +554,10 @@ const SCENES = {
     await crumble(c, r.cine.fig);
     await s1;
     // você se senta; as raízes vêm até você
-    v.position.set(0, 0, -1.25); v.sit();
+    const seat = new THREE.Group();
+    { const wd = new THREE.MeshStandardMaterial({ color: 0x2a1a10, roughness: 0.8 }); const top = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.05, 0.42), wd); top.position.y = 0.45; seat.add(top); for (const [lx, lz] of [[-0.2, -0.18], [0.2, -0.18], [-0.2, 0.18], [0.2, 0.18]]) { const lg = new THREE.Mesh(new THREE.BoxGeometry(0.04, 0.45, 0.04), wd); lg.position.set(lx, 0.225, lz); seat.add(lg); } const back = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.55, 0.04), wd); back.position.set(0, 0.75, 0.2); seat.add(back); }
+    seat.position.set(0, 0, -1.12); seat.rotation.y = 0; c.add(seat);
+    v.position.set(0, 0, -1.25); v.rotation.y = Math.PI; v.sit();
     const rootM = new THREE.MeshStandardMaterial({ color: 0x3a2418, roughness: 0.9 });
     const roots = [];
     for (let i = 0; i < 10; i++) {
@@ -595,7 +604,7 @@ const SCENES = {
     await c.fade(0, 1400);
     audio.thunder();
     const s4 = c.say(L[5]); await c.wait(2400);
-    await c.tween(1600, (k) => { nv.body.rotation.x = Math.PI / 2 - k * 0.5; });
+    await c.tween(1600, (k) => { nv.arms[0].rotation.x = -k * 1.2; nv.headMesh.rotation.y = k * 0.5; });
     await s4; await c.say(L[6], 3800);
     await c.fade(1, 1800);
   },
@@ -785,6 +794,9 @@ const SCENES = {
     await c.fade(1, 1800);
   },
 };
+
+// para testes (só no modo debug)
+export function cineDebug(game) { return { Cine, SCENES, V, clearView, lyingPerson }; }
 
 export async function playCinematic(game, id) {
   const scene = SCENES[id];

@@ -10,7 +10,7 @@ import { newState, loadSave, writeSave, clearSave, loadMeta, writeMeta, START_RO
 import { ROOMS } from '../rooms/index.js';
 import { TouchControls, isTouchDevice } from '../engine/touch.js';
 import { makeClara } from '../rooms/statue.js';
-import { playCinematic } from './cinema.js';
+import { playCinematic, cineDebug } from './cinema.js';
 
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -47,7 +47,7 @@ export class Game {
     this.time = 0;
     this.saveTimer = 0;
     this.debug = new URLSearchParams(location.search).has('debug');
-    if (this.debug) { window.__THREE = THREE; this.roomIds = Object.keys(ROOMS); }
+    if (this.debug) { window.__THREE = THREE; this.roomIds = Object.keys(ROOMS); window.__cineDbg = () => cineDebug(this); }
     this.hemi = new THREE.HemisphereLight(0x8f9cc0, 0x3a2a1c, 0.5);
     this.scene.add(this.hemi);
     if (isTouchDevice()) {
